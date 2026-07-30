@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+  <meta content="#07111f" name="theme-color"/>
+  <meta content="Nicky &amp; Gina — a Celestial Wedding Story." name="description"/>
+  <title>
+   Nicky &amp; Gina — Wedding Invitation
+  </title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&amp;family=Great+Vibes&amp;family=Manrope:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+  <link href="css/styles.css" rel="stylesheet"/>
+ </head>
+ <body class="is-locked">
+  <noscript>
+   This invitation needs JavaScript enabled.
+  </noscript>
+  <div aria-label="Opening invitation" class="prelude" id="prelude">
+   <canvas aria-hidden="true" class="prelude-stars" id="preludeStars">
+   </canvas>
+   <div aria-hidden="true" class="prelude-haze">
+   </div>
+   <div aria-hidden="true" class="prelude-moon">
+   </div>
+   <div aria-hidden="true" class="prelude-cloud cloud-one">
+   </div>
+   <div aria-hidden="true" class="prelude-cloud cloud-two">
+   </div>
+   <div class="prelude-copy">
+    <p class="kicker prelude-beat beat-1">
+     The wedding of
+    </p>
+    <h1 class="prelude-beat beat-2 brand-script">
+     <span>
+      Nicky
+     </span>
+     <i>
+      &amp;
+     </i>
+     <span>
+      Gina
+     </span>
+    </h1>
+    <p class="prelude-date prelude-beat beat-3">
+     11 · October · 2026
+    </p>
+    <p class="opening-line prelude-beat beat-4">
+     Among countless paths,
+     <br/>
+     ours quietly became one.
+    </p>
+    <button class="enter prelude-beat beat-5" id="enterButton" type="button">
+     <span>
+      Enter beneath the stars
+     </span>
+     <svg aria-hidden="true" viewbox="0 0 24 24">
+      <path d="M5 12h14M14 7l5 5-5 5">
+      </path>
+     </svg>
+    </button>
+    <p class="sound-note prelude-beat beat-5">
+     Music may begin after entering
+    </p>
+   </div>
+  </div>
+  <div aria-hidden="true" class="experience" id="experience">
+   <div aria-hidden="true" class="world">
+    <canvas id="starCanvas">
+    </canvas>
+    <div class="sky-glow">
+    </div>
+    <div class="moon-wrap">
+     <div class="moon">
+      <span>
+      </span>
+     </div>
+    </div>
+    <div class="cloud cloud-a">
+    </div>
+    <div class="cloud cloud-b">
+    </div>
+    <div class="cloud cloud-c">
+    </div>
+    <div class="mist">
+    </div>
+    <div class="grain">
+    </div>
+    <div class="vignette">
+    </div>
+   </div>
+   <header class="topbar">
+    <a aria-label="Back to opening" class="monogram brand-mark" href="#prologue">
+     <img alt="Nicky and Gina logo" src="assets/branding/ng-logo-reference.png"/>
+    </a>
+    <div aria-live="polite" class="chapter-indicator">
+     <span id="chapterNumber">
+      00
+     </span>
+     <span class="line">
+     </span>
+     <span id="chapterName">
+      Prologue
+     </span>
+    </div>
+   </header>
+   <button
+    aria-label="Pause background music"
+    aria-pressed="true"
+    class="sound-toggle"
+    id="musicToggle"
+    type="button"
+   >
+    <span aria-hidden="true" class="sound-icon">
+     <svg viewBox="0 0 24 24" role="presentation">
+      <path class="speaker-shape" d="M4 9v6h4l5 4V5L8 9H4z"></path>
+      <path class="speaker-wave" d="M16 8.5c1.2 1.1 1.2 5.9 0 7"></path>
+      <path class="speaker-wave" d="M18.5 6c2.7 2.4 2.7 9.6 0 12"></path>
+      <path class="speaker-muted-mark" d="M15.5 9.5l5 5m0-5l-5 5"></path>
+     </svg>
+    </span>
+    <span aria-hidden="true" class="sound-bars">
+     <i></i>
+     <i></i>
+     <i></i>
+     <i></i>
+    </span>
+    <span class="sound-label">Music on</span>
+   </button>
+   <main>
+    <section class="scene scene-prologue is-active" data-chapter="00" data-title="Prologue" id="prologue">
+     <div class="scene-inner hero-composition">
+      <p class="eyebrow reveal">
+       An interactive wedding story
+      </p>
+      <h2 class="hero-title reveal">
+       <span>
+        Under one sky,
+       </span>
+       <em>
+        two paths became one.
+       </em>
+      </h2>
+      <p class="hero-copy reveal" id="personalGreeting">
+       With grateful hearts, we invite you to share in the beginning of our next chapter.
+      </p>
+      <div class="date-lockup reveal">
+       <span>
+        Sunday
+       </span>
+       <span>
+	     11 · October · 2026
+       </span>
+      </div>
+      <a class="continue-cue reveal" href="#nicky">
+       <span>
+        Meet us
+       </span>
+       <i>
+       </i>
+      </a>
+     </div>
+    </section>
+    <section class="scene scene-person scene-nicky" data-chapter="01" data-title="Nicky" id="nicky">
+     <div class="scene-inner person-layout">
+      <div class="person-copy">
+       <p class="eyebrow reveal">
+        Chapter I · Two lives
+       </p>
+       <h2 class="reveal">
+        Nicky
+       </h2>
+       <p class="person-quote reveal">
+        “A quiet strength, a kind heart.”
+       </p>
+       <p class="person-line reveal">
+        A steady heart, a curious mind, and a quiet belief that the right path is built one thoughtful step at a time.
+       </p>
+       <span class="person-number reveal">
+        01
+       </span>
+      </div>
+      <figure class="portrait-frame portrait-nicky reveal">
+       <img alt="Nicky, the groom, wearing a navy wedding suit" class="portrait-image" decoding="async" loading="eager" src="assets/portraits/groom.webp"/>
+       <figcaption>
+        Nicky · The Groom
+       </figcaption>
+      </figure>
+     </div>
+    </section>
+    <section class="scene scene-person scene-gina" data-chapter="02" data-title="Gina" id="gina">
+     <div class="scene-inner person-layout reverse">
+      <figure class="portrait-frame portrait-gina reveal">
+       <img alt="Gina, the bride, wearing her wedding gown and holding a bouquet" class="portrait-image" decoding="async" loading="lazy" src="assets/portraits/bride.webp"/>
+       <figcaption>
+        Gina · The Bride
+       </figcaption>
+      </figure>
+      <div class="person-copy align-right-copy">
+       <p class="eyebrow reveal">
+        Chapter I · Two lives
+       </p>
+       <h2 class="reveal">
+        Gina
+       </h2>
+       <p class="person-quote reveal">
+        “Grace in every smile, warmth in every moment.”
+       </p>
+       <p class="person-line reveal">
+        A warm presence, a graceful spirit, and the kind of joy that makes ordinary days feel worth remembering.
+       </p>
+       <span class="person-number reveal">
+        02
+       </span>
+      </div>
+     </div>
+    </section>
+    <section class="scene scene-turn" data-chapter="03" data-title="A Chance Encounter" id="chapter-two">
+     <div class="page-panel panel-left">
+     </div>
+     <div class="page-panel panel-right">
+     </div>
+     <div class="scene-inner story-layout">
+      <div class="story-index">
+       03
+      </div>
+      <p class="eyebrow reveal">
+       A chance encounter
+      </p>
+      <h2 class="reveal">
+       It began with a simple hello.
+      </h2>
+      <p class="story-body reveal">
+       In a world of endless possibilities, a single conversation became the first line of a story neither of us expected—but both of us chose to continue.
+      </p>
+      <div class="story-meta reveal">
+       <span>
+        First connected
+       </span>
+       <strong>
+        October 2023
+       </strong>
+      </div>
+      <figure class="story-photo-frame story-photo-connected reveal">
+       <img alt="The keepsakes that marked the beginning of Nicky and Gina's connection" class="story-photo-image" decoding="async" loading="lazy" src="assets/story/first-connected.webp"/>
+       <figcaption>
+        The beginning of our story
+       </figcaption>
+      </figure>
+     </div>
+    </section>
+    <section class="scene scene-story scene-christmas" data-chapter="04" data-title="A Christmas Beginning" id="chapter-three">
+     <div class="scene-inner story-layout align-right">
+      <div class="story-index">
+       04
+      </div>
+      <p class="eyebrow reveal">
+       A Christmas beginning
+      </p>
+      <h2 class="reveal">
+       One evening became the start of many.
+      </h2>
+      <p class="story-body reveal">
+       On that Christmas Eve, we decided to officially become a couple. From that moment onward, ordinary days slowly became shared memories.
+      </p>
+      <div class="story-meta reveal">
+       <span>
+        Officially dating
+       </span>
+       <strong>
+        24 December 2023
+       </strong>
+      </div>
+      <figure class="story-photo-frame story-photo-date reveal">
+       <img alt="Nicky and Gina together after officially beginning their relationship" class="story-photo-image" decoding="async" loading="lazy" src="assets/story/officially-dating.webp"/>
+       <figcaption>
+        Christmas Eve · 24 December 2023
+       </figcaption>
+      </figure>
+     </div>
+    </section>
+    <section class="scene scene-story scene-promise" data-chapter="05" data-title="The Promise" id="promise">
+     <div class="scene-inner promise-layout">
+      <p class="eyebrow reveal">
+       The promise
+      </p>
+      <h2 class="reveal">
+       We chose the same future.
+      </h2>
+      <p class="story-body reveal">
+       With gratitude for every season that brought us here, we promised to keep walking forward together—with patience, kindness, and joy.
+      </p>
+      <div class="story-meta reveal">
+       <span>
+        Proposal
+       </span>
+       <strong>
+        16 January 2026
+       </strong>
+      </div>
+      <figure class="story-photo-frame story-photo-engaged reveal">
+       <img alt="Nicky proposing to Gina beside the lake" class="story-photo-image" decoding="async" loading="lazy" src="assets/story/proposal.webp"/>
+       <figcaption>
+        The promise · 16 January 2026
+       </figcaption>
+      </figure>
+     </div>
+    </section>
+    <section class="scene scene-poster" data-chapter="06" data-title="The Celebration" id="celebration">
+     <div class="scene-inner poster-layout">
+      <p class="eyebrow reveal">
+       Chapter IV · The celebration
+      </p>
+      <h2 class="reveal">
+       <span>
+        Join us
+       </span>
+       <em>
+        beneath the stars.
+       </em>
+      </h2>
+      <div class="event-grid reveal">
+       <div>
+        <span>
+         Date
+        </span>
+        <strong>
+         Sunday
+         <br/>
+         11 October 2026
+        </strong>
+       </div>
+       <div>
+        <span>
+         Time
+        </span>
+        <strong>
+         19:00–21:00 WIB
+        </strong>
+       </div>
+       <div>
+        <span>
+         Place
+        </span>
+        <strong>
+         MDC Hall
+         <br/>
+         Jakarta
+        </strong>
+       </div>
+      </div>
+      <div aria-label="Countdown to wedding" class="countdown reveal">
+       <div>
+        <strong id="days">
+         —
+        </strong>
+        <span>
+         Days
+        </span>
+       </div>
+       <div>
+        <strong id="hours">
+         —
+        </strong>
+        <span>
+         Hours
+        </span>
+       </div>
+       <div>
+        <strong id="minutes">
+         —
+        </strong>
+        <span>
+         Minutes
+        </span>
+       </div>
+       <div>
+        <strong id="seconds">
+         —
+        </strong>
+        <span>
+         Seconds
+        </span>
+       </div>
+      </div>
+     </div>
+    </section>
+    <section class="scene scene-venue" data-chapter="07" data-title="The Place" id="venue">
+     <div class="scene-inner venue-layout">
+      <div class="venue-copy">
+       <p class="eyebrow reveal">
+        The place
+       </p>
+       <h2 class="reveal">
+        An evening
+        <br/>
+        <em>
+         in Jakarta.
+        </em>
+       </h2>
+       <p class="reveal">
+        We look forward to welcoming you at MDC Hall for a relaxed standing celebration beneath our celestial sky.
+       </p>
+       <dl class="venue-details reveal">
+        <div>
+         <dt>
+          Venue
+         </dt>
+         <dd>
+          MDC Hall Jakarta
+         </dd>
+        </div>
+        <div>
+         <dt>
+          Reception
+         </dt>
+         <dd>
+          19:00–21:00 WIB
+         </dd>
+        </div>
+        <div>
+         <dt>
+          Dress palette
+         </dt>
+         <dd>
+          Elegant evening attire
+         </dd>
+        </div>
+       </dl>
+       <a class="venue-link reveal" href="https://www.google.com/maps/dir/?api=1&amp;destination=MDC%20Hall%20Jakarta" id="mapLink" rel="noopener" target="_blank">
+        Open directions
+        <span>
+         ↗
+        </span>
+       </a>
+      </div>
+      <div aria-label="Stylised map illustration" class="celestial-map reveal">
+       <div class="map-orbit orbit-one">
+       </div>
+       <div class="map-orbit orbit-two">
+       </div>
+       <div class="map-route">
+       </div>
+       <span class="map-point point-a">
+       </span>
+       <span class="map-point point-b">
+       </span>
+       <div class="map-destination">
+        <i>
+         ✦
+        </i>
+        <strong>
+         MDC Hall
+        </strong>
+        <small>
+         Jakarta
+        </small>
+       </div>
+       <p>
+        11 October 2026 · 19:00 WIB
+       </p>
+      </div>
+     </div>
+    </section>
+    <section class="scene scene-gallery" data-chapter="08" data-title="A Gallery of Us" id="gallery">
+     <div class="scene-inner gallery-layout">
+      <header class="gallery-heading">
+       <p class="eyebrow reveal">
+        Chapter IV · A gallery of us
+       </p>
+       <h2 class="reveal">
+        Moments held
+        <br/>
+        <em>
+         in moonlight.
+        </em>
+       </h2>
+       <p class="reveal">
+        A quiet exhibition of the days that led us here.
+       </p>
+      </header>
+      <div class="gallery-viewer">
+       <div class="gallery-stage" id="galleryStage">
+        <div class="gallery-slide">
+         <div aria-label="Nicky and Gina looking into each other’s eyes in traditional Japanese attire." class="gallery-image active has-image" id="galleryMain" role="img"></div>
+         <button aria-label="Previous photo" class="gallery-nav prev" type="button">
+          ❮
+         </button>
+         <button aria-label="Next photo" class="gallery-nav next" type="button">
+          ❯
+         </button>
+         <div aria-live="polite" class="gallery-counter">
+          <span id="galleryCurrent">01</span>
+          <i></i>
+          <span id="galleryTotal">12</span>
+         </div>
+        </div>
+       </div>
+       <div aria-live="polite" class="gallery-editorial-copy">
+        <p class="gallery-location" id="galleryLocation">Kyoto, Japan</p>
+        <p class="gallery-caption" id="galleryCaption">A Moment That Felt Like Forever</p>
+       </div>
+       <div aria-label="Choose a gallery photo" class="gallery-filmstrip" id="galleryFilmstrip">
+        <button aria-label="View photo 1 of 12" class="thumb active" data-index="0" type="button">
+         <span>01</span>
+        </button>
+        <button aria-label="View photo 2 of 12" class="thumb" data-index="1" type="button">
+         <span>02</span>
+        </button>
+        <button aria-label="View photo 3 of 12" class="thumb" data-index="2" type="button">
+         <span>03</span>
+        </button>
+        <button aria-label="View photo 4 of 12" class="thumb" data-index="3" type="button">
+         <span>04</span>
+        </button>
+        <button aria-label="View photo 5 of 12" class="thumb" data-index="4" type="button">
+         <span>05</span>
+        </button>
+        <button aria-label="View photo 6 of 12" class="thumb" data-index="5" type="button">
+         <span>06</span>
+        </button>
+        <button aria-label="View photo 7 of 12" class="thumb" data-index="6" type="button">
+         <span>07</span>
+        </button>
+        <button aria-label="View photo 8 of 12" class="thumb" data-index="7" type="button">
+         <span>08</span>
+        </button>
+        <button aria-label="View photo 9 of 12" class="thumb" data-index="8" type="button">
+         <span>09</span>
+        </button>
+        <button aria-label="View photo 10 of 12" class="thumb" data-index="9" type="button">
+         <span>10</span>
+        </button>
+        <button aria-label="View photo 11 of 12" class="thumb" data-index="10" type="button">
+         <span>11</span>
+        </button>
+        <button aria-label="View photo 12 of 12" class="thumb" data-index="11" type="button">
+         <span>12</span>
+        </button>
+       </div>
+      </div>
+     </div>
+    </section>
+    <section class="scene scene-rsvp" data-chapter="09" data-title="The Invitation" id="rsvp">
+     <div class="scene-inner rsvp-layout">
+      <div class="rsvp-intro">
+       <p class="eyebrow reveal">
+        Chapter V · The invitation
+       </p>
+       <h2 class="reveal">
+        Will you join us
+        <br/>
+        <em>
+         beneath the stars?
+        </em>
+       </h2>
+       <p class="reveal">
+        Your presence would make this evening even more meaningful. Kindly respond before 20 September 2026.
+       </p>
+      </div>
+      <form class="rsvp-card reveal" id="rsvpForm" novalidate="">
+       <div aria-live="polite" class="form-status" id="formStatus" role="status">
+       </div>
+       <label>
+        <span>
+         Your name
+        </span>
+        <input autocomplete="name" id="guestName" name="guestName" placeholder="Guest name" required=""/>
+       </label>
+       <fieldset>
+        <legend>
+         Will you attend?
+        </legend>
+        <label class="choice">
+         <input name="attendance" required="" type="radio" value="Attending"/>
+         <span>
+          Joyfully attending
+         </span>
+        </label>
+        <label class="choice">
+         <input name="attendance" type="radio" value="Not attending"/>
+         <span>
+          Regretfully unable
+         </span>
+        </label>
+       </fieldset>
+       <label>
+        <span>
+         Number of guests
+        </span>
+        <select id="guestCount" name="guestCount">
+         <option value="1">
+          1 guest
+         </option>
+         <option value="2">
+          2 guests
+         </option>
+         <option value="3">
+          3 guests
+         </option>
+         <option value="4">
+          4 guests
+         </option>
+        </select>
+       </label>
+       <label>
+        <span>
+         A message for us
+        </span>
+        <textarea id="message" maxlength="500" name="message" placeholder="Share a wish, memory, or kind thought..." rows="4"></textarea>
+       </label>
+       <input id="invitationId" name="invitationId" type="hidden"/>
+       <button class="submit-rsvp" type="submit">
+        <span>
+         Send my response
+        </span>
+        <i aria-hidden="true">
+         →
+        </i>
+       </button>
+       <p class="deadline-note" id="deadlineNote">
+       </p>
+       <p class="privacy-note">
+        Your response is used only for wedding planning and our guestbook.
+       </p>
+      </form>
+      <div class="rsvp-success" hidden="" id="rsvpSuccess">
+       <span class="success-star">
+        ✦
+       </span>
+       <p class="eyebrow">
+        Response received
+       </p>
+       <h3>
+        Thank you,
+        <span id="successName">
+         dear guest
+        </span>
+        .
+       </h3>
+       <p>
+        Your wish has become part of our night sky.
+       </p>
+       <button id="editResponse" type="button">
+        Edit response
+       </button>
+      </div>
+     </div>
+    </section>
+    <section class="scene scene-guestbook" data-chapter="10" data-title="Wishes Among the Stars" id="guestbook">
+     <div class="scene-inner guestbook-layout">
+      <div class="guestbook-copy">
+       <p class="eyebrow reveal">
+        Wishes among the stars
+       </p>
+       <h2 class="reveal">
+        Every kind word
+        <br/>
+        <em>
+         brightens the night.
+        </em>
+       </h2>
+       <p class="reveal">
+        Select a glowing star to read a message shared by our family and friends.
+       </p>
+      </div>
+      <div class="guestbook-browser reveal">
+       <div aria-label="Guestbook messages" aria-live="polite" class="message-sky" id="messageSky">
+       </div>
+       <div class="guestbook-controls" id="guestbookControls" hidden="">
+        <button aria-label="Show newer wishes" class="guestbook-page-button" disabled="" id="newerWishes" type="button">
+         <span aria-hidden="true">←</span>
+         Newer
+        </button>
+        <p aria-live="polite" class="guestbook-page-status" id="guestbookPageStatus">
+        </p>
+        <button aria-label="Show older wishes" class="guestbook-page-button" id="olderWishes" type="button">
+         Older
+         <span aria-hidden="true">→</span>
+        </button>
+       </div>
+      </div>
+      <article class="message-popover" hidden="" id="messagePopover">
+       <button aria-label="Close message" id="closeMessage" type="button">
+        ×
+       </button>
+       <p id="popoverMessage">
+       </p>
+       <strong id="popoverName">
+       </strong>
+      </article>
+     </div>
+    </section>
+    <section class="scene scene-finale" data-chapter="11" data-title="Until Then" id="finale">
+     <div class="scene-inner finale-layout">
+      <p class="eyebrow reveal">
+       Nicky &amp; Gina · 11 October 2026
+      </p>
+      <h2 class="reveal">
+       Until we meet
+       <br/>
+       <em>
+        beneath the same sky.
+       </em>
+      </h2>
+      <p class="reveal">
+       Thank you for being part of our journey. May the days ahead be filled with kindness, peace, and shared joy.
+      </p>
+      <a class="text-link reveal" href="#prologue">
+       Return to the beginning
+      </a>
+     </div>
+    </section>
+   </main>
+   <div aria-hidden="true" class="progress">
+    <span id="progressBar">
+    </span>
+   </div>
+  </div>
+  <audio
+    id="bgMusic"
+    preload="auto"
+    loop
+    playsinline
+>
+    <source src="assets/music.m4a" type="audio/mp4">
+</audio>
+  <script src="js/config.js">
+  </script>
+  <script src="js/app.js">
+  </script>
+ </body>
+</html>
