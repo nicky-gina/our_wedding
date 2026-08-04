@@ -10,6 +10,8 @@
     const experience = document.getElementById('experience');
     const enterButton = document.getElementById('enterButton');
     const chapterNumber = document.getElementById('chapterNumber');
+    const chapterTotal = document.getElementById('chapterTotal');
+    const chapterProgressFill = document.getElementById('chapterProgressFill');
     const chapterName = document.getElementById('chapterName');
     const progressBar = document.getElementById('progressBar');
     const scenes = [...document.querySelectorAll('.scene')];
@@ -244,16 +246,64 @@
         if (shouldResume)
             playMusic();
     });
+    const totalChapters = scenes.length;
+    if (chapterTotal) chapterTotal.textContent = String(totalChapters).padStart(2, '0');
+
+    const updateChapterProgress = scene => {
+        const index = Math.max(0, scenes.indexOf(scene));
+        if (chapterNumber) chapterNumber.textContent = String(index + 1).padStart(2, '0');
+        if (chapterName) chapterName.textContent = scene.dataset.title;
+        if (chapterProgressFill) {
+            chapterProgressFill.style.transform = `scaleX(${(index + 1) / totalChapters})`;
+        }
+    };
+
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (!entry.isIntersecting)
                 return;
             scenes.forEach(scene => scene.classList.toggle('is-active', scene === entry.target));
-            chapterNumber.textContent = entry.target.dataset.chapter;
-            chapterName.textContent = entry.target.dataset.title;
+            updateChapterProgress(entry.target);
         });
     }, { threshold: .52 });
     scenes.forEach(scene => observer.observe(scene));
+    updateChapterProgress(scenes[0]);
+
+    // Story milestones draw their timeline once, when first entering view.
+    const timelineItems = [...document.querySelectorAll('.story-meta')];
+    timelineItems.forEach(item => item.classList.add('timeline-ready'));
+    if (reducedMotion) {
+        timelineItems.forEach(item => item.classList.add('timeline-drawn'));
+    } else {
+        const timelineObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('timeline-drawn');
+                timelineObserver.unobserve(entry.target);
+            });
+        }, { threshold: .55 });
+        timelineItems.forEach(item => timelineObserver.observe(item));
+    }
+
+    // Cinematic interludes open while in view and softly close as they leave.
+    // Only transform and opacity are animated to keep mobile compositing light.
+    const narratives = [...document.querySelectorAll('[data-narrative]')];
+    if (reducedMotion) {
+        narratives.forEach(item => item.classList.add('is-visible'));
+    } else {
+        const narrativeObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                entry.target.classList.toggle(
+                    'is-visible',
+                    entry.isIntersecting && entry.intersectionRatio >= 0.28
+                );
+            });
+        }, {
+            threshold: [0, 0.28, 0.55],
+            rootMargin: '-8% 0px -8% 0px'
+        });
+        narratives.forEach(item => narrativeObserver.observe(item));
+    }
     let ticking = false;
     function updateScroll() {
         const max = document.documentElement.scrollHeight - innerHeight;

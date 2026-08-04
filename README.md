@@ -203,3 +203,11 @@ This patch tightens the stacked groom/bride profile layout, restores the portrai
 
 ## V3.8.5
 Moon scroll parallax now follows a continuous sine-wave loop, eliminating chapter-boundary jumps.
+
+
+## V3.9
+Adds animated milestone timelines, chapter progress, and multilingual scroll narrative interludes. See `V3.9_CHANGELOG.md`.
+
+
+## V3.9.1
+Cinematic transform-and-opacity interludes were added between major story acts.

@@ -96,15 +96,14 @@
 <a aria-label="Back to opening" class="monogram brand-mark" data-i18n-aria-label="accessibility.backToOpening" href="#prologue">
 <img alt="Nicky and Gina logo" src="assets/branding/ng-logo-reference.png"/>
 </a>
-<div aria-live="polite" class="chapter-indicator">
-<span id="chapterNumber">
-      00
-     </span>
-<span class="line">
+<div aria-live="polite" class="chapter-indicator" aria-label="Invitation chapter progress">
+<span class="chapter-count" aria-hidden="true">
+<span id="chapterNumber">01</span>
+<span class="chapter-divider">/</span>
+<span id="chapterTotal">12</span>
 </span>
-<span data-i18n="chapters.prologue" id="chapterName">
-      Prologue
-     </span>
+<span class="line" aria-hidden="true"><i id="chapterProgressFill"></i></span>
+<span data-i18n="chapters.prologue" id="chapterName">Prologue</span>
 </div>
 <div aria-label="Invitation language" class="language-selector" data-i18n-aria-label="language.selectorLabel" role="group"><button aria-label="English" class="language-option" data-language="en" lang="en" type="button">EN</button><button aria-label="Bahasa Indonesia" class="language-option" data-language="id" lang="id" type="button">ID</button><button aria-label="简体中文" class="language-option" data-language="zh-CN" lang="zh-CN" type="button">简</button></div></header>
 <button aria-label="Pause background music" aria-pressed="true" class="sound-toggle" data-i18n-aria-label="music.pauseAria" id="musicToggle" type="button">
@@ -158,6 +157,15 @@
 </a>
 </div>
 </section>
+<aside class="scroll-narrative narrative-curtain" data-narrative>
+  <span class="narrative-panel narrative-panel-left" aria-hidden="true"></span>
+  <span class="narrative-panel narrative-panel-right" aria-hidden="true"></span>
+  <span class="narrative-rule" aria-hidden="true"></span>
+  <div class="scroll-narrative-inner">
+    <span class="narrative-star" aria-hidden="true">✦</span>
+    <p data-i18n="narrative.beforeProfiles">Two lives, quietly moving toward the same horizon.</p>
+  </div>
+</aside>
 <section class="scene scene-person scene-nicky" data-chapter="01" data-i18n-title="chapters.nicky" data-title="Nicky" id="nicky">
 <div class="scene-inner person-layout">
 <div class="person-copy">
@@ -228,6 +236,15 @@
 </div>
 </div>
 </section>
+<aside class="scroll-narrative narrative-timeline" data-narrative>
+  <span class="narrative-panel narrative-panel-left" aria-hidden="true"></span>
+  <span class="narrative-panel narrative-panel-right" aria-hidden="true"></span>
+  <span class="narrative-rule" aria-hidden="true"></span>
+  <div class="scroll-narrative-inner">
+    <span class="narrative-star" aria-hidden="true">✦</span>
+    <p data-i18n="narrative.beforeStory">Every beginning leaves a constellation behind.</p>
+  </div>
+</aside>
 <section class="scene scene-turn" data-chapter="03" data-i18n-title="chapters.connected" data-title="A Chance Encounter" id="chapter-two">
 <div class="page-panel panel-left">
 </div>
@@ -319,6 +336,15 @@
 </figure>
 </div>
 </section>
+<aside class="scroll-narrative narrative-light" data-narrative>
+  <span class="narrative-panel narrative-panel-left" aria-hidden="true"></span>
+  <span class="narrative-panel narrative-panel-right" aria-hidden="true"></span>
+  <span class="narrative-rule" aria-hidden="true"></span>
+  <div class="scroll-narrative-inner">
+    <span class="narrative-star" aria-hidden="true">✦</span>
+    <p data-i18n="narrative.beforeCelebration">And now, the next chapter waits beneath the stars.</p>
+  </div>
+</aside>
 <section class="scene scene-poster" data-chapter="06" data-i18n-title="chapters.celebration" data-title="The Celebration" id="celebration">
 <div class="scene-inner poster-layout">
 <p class="eyebrow reveal" data-i18n="celebration.eyebrow">
@@ -524,6 +550,15 @@
 </div>
 </div>
 </section>
+<aside class="scroll-narrative narrative-pages" data-narrative>
+  <span class="narrative-panel narrative-panel-left" aria-hidden="true"></span>
+  <span class="narrative-panel narrative-panel-right" aria-hidden="true"></span>
+  <span class="narrative-rule" aria-hidden="true"></span>
+  <div class="scroll-narrative-inner">
+    <span class="narrative-star" aria-hidden="true">✦</span>
+    <p data-i18n="narrative.beforeRsvp">Some moments become complete only when shared.</p>
+  </div>
+</aside>
 <section class="scene scene-rsvp" data-chapter="09" data-i18n-title="chapters.rsvp" data-title="The Invitation" id="rsvp">
 <div class="scene-inner rsvp-layout">
 <div class="rsvp-intro">
