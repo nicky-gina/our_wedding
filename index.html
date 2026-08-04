@@ -8,6 +8,7 @@
   <title>
    Nicky &amp; Gina — Wedding Invitation
   </title>
+  <link href="assets/moon/custom-moon.webp" rel="preload" as="image" type="image/webp" fetchpriority="high"/>
   <link href="https://fonts.googleapis.com" rel="preconnect"/>
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&amp;family=Great+Vibes&amp;family=Manrope:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
@@ -23,6 +24,10 @@
    <div aria-hidden="true" class="prelude-haze">
    </div>
    <div aria-hidden="true" class="prelude-moon">
+    <picture>
+     <source srcset="assets/moon/custom-moon.webp" type="image/webp"/>
+     <img alt="" decoding="sync" fetchpriority="high" height="674" src="assets/moon/custom-moon.png" width="721"/>
+    </picture>
    </div>
    <div aria-hidden="true" class="prelude-cloud cloud-one">
    </div>
@@ -53,7 +58,7 @@
     </p>
     <button class="enter prelude-beat beat-5" id="enterButton" type="button">
      <span>
-      Click to enter
+      Click to enter 
      </span>
      <svg aria-hidden="true" viewbox="0 0 24 24">
       <path d="M5 12h14M14 7l5 5-5 5">
@@ -73,8 +78,10 @@
     </div>
     <div class="moon-wrap">
      <div class="moon">
-      <span>
-      </span>
+      <picture>
+       <source srcset="assets/moon/custom-moon.webp" type="image/webp"/>
+       <img alt="" decoding="async" height="674" loading="eager" src="assets/moon/custom-moon.png" width="721"/>
+      </picture>
      </div>
     </div>
     <div class="cloud cloud-a">
@@ -92,7 +99,7 @@
    </div>
    <header class="topbar">
     <a aria-label="Back to opening" class="monogram brand-mark" href="#prologue">
-     <img alt="Nicky and Gina logo" src="assets/branding/ng-logo-reference.png"/>
+     <img alt="Nicky and Gina logo" height="648" src="assets/branding/ng-logo-reference.png" width="695"/>
     </a>
     <div aria-live="polite" class="chapter-indicator">
      <span id="chapterNumber">
@@ -182,7 +189,7 @@
        </span>
       </div>
       <figure class="portrait-frame portrait-nicky reveal">
-       <img alt="Nicky, the groom, wearing a navy wedding suit" class="portrait-image" decoding="async" loading="eager" src="assets/portraits/groom.webp"/>
+       <img alt="Nicky, the groom, wearing a navy wedding suit" class="portrait-image" decoding="async" loading="eager" height="1402" src="assets/portraits/groom.webp" width="1122"/>
        <figcaption>
         Nicky · The Groom
        </figcaption>
@@ -192,7 +199,7 @@
     <section class="scene scene-person scene-gina" data-chapter="02" data-title="Gina" id="gina">
      <div class="scene-inner person-layout reverse">
       <figure class="portrait-frame portrait-gina reveal">
-       <img alt="Gina, the bride, wearing her wedding gown and holding a bouquet" class="portrait-image" decoding="async" loading="lazy" src="assets/portraits/bride.webp"/>
+       <img alt="Gina, the bride, wearing her wedding gown and holding a bouquet" class="portrait-image" decoding="async" height="1402" loading="lazy" src="assets/portraits/bride.webp" width="1122"/>
        <figcaption>
         Gina · The Bride
        </figcaption>
@@ -243,7 +250,7 @@
        </strong>
       </div>
       <figure class="story-photo-frame story-photo-connected reveal">
-       <img alt="The keepsakes that marked the beginning of Nicky and Gina's connection" class="story-photo-image" decoding="async" loading="lazy" src="assets/story/first-connected.webp"/>
+       <img alt="The keepsakes that marked the beginning of Nicky and Gina's connection" class="story-photo-image" decoding="async" loading="lazy" height="1122" src="assets/story/first-connected.webp" width="1402"/>
        <figcaption>
         The beginning of our story
        </figcaption>
@@ -273,7 +280,7 @@
        </strong>
       </div>
       <figure class="story-photo-frame story-photo-date reveal">
-       <img alt="Nicky and Gina together after officially beginning their relationship" class="story-photo-image" decoding="async" loading="lazy" src="assets/story/officially-dating.webp"/>
+       <img alt="Nicky and Gina together after officially beginning their relationship" class="story-photo-image" decoding="async" loading="lazy" height="1372" src="assets/story/officially-dating.webp" width="1029"/>
        <figcaption>
         Christmas Eve · 24 December 2023
        </figcaption>
@@ -300,7 +307,7 @@
        </strong>
       </div>
       <figure class="story-photo-frame story-photo-engaged reveal">
-       <img alt="Nicky proposing to Gina beside the lake" class="story-photo-image" decoding="async" loading="lazy" src="assets/story/proposal.webp"/>
+       <img alt="Nicky proposing to Gina beside the lake" class="story-photo-image" decoding="async" loading="lazy" height="2048" src="assets/story/proposal.webp" width="1365"/>
        <figcaption>
         The promise · 16 January 2026
        </figcaption>
@@ -713,15 +720,15 @@
   </div>
   <audio
     id="bgMusic"
-    preload="auto"
+    preload="metadata"
     loop
     playsinline
 >
     <source src="assets/music.m4a" type="audio/mp4">
 </audio>
-  <script src="js/config.js">
+  <script defer src="js/config.js">
   </script>
-  <script src="js/app.js">
+  <script defer src="js/app.js">
   </script>
  </body>
 </html>
