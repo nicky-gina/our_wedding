@@ -1,744 +1,706 @@
 <!DOCTYPE html>
+
 <html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-  <meta content="#07111f" name="theme-color"/>
-  <meta content="Nicky &amp; Gina — a Celestial Wedding Story." name="description"/>
-  <title>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="#07111f" name="theme-color"/>
+<meta content="Nicky &amp; Gina — a Celestial Wedding Story." name="description"/>
+<title>
    Nicky &amp; Gina — Wedding Invitation
   </title>
-  <link href="https://fonts.googleapis.com" rel="preconnect"/>
-  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&amp;family=Great+Vibes&amp;family=Manrope:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
-  <link href="css/styles.css" rel="stylesheet"/>
- </head>
- <body class="is-locked">
-  <noscript>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&amp;family=Great+Vibes&amp;family=Manrope:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+<link as="image" fetchpriority="high" href="assets/moon/custom-moon.png" rel="preload" type="image/png"/>
+<link href="css/styles.css" rel="stylesheet"/>
+</head>
+<body class="is-locked"><a class="skip-link" data-i18n="accessibility.skipToContent" href="#main-content">Skip to invitation content</a>
+<noscript>
    This invitation needs JavaScript enabled.
   </noscript>
-  <div aria-label="Opening invitation" class="prelude" id="prelude">
-   <canvas aria-hidden="true" class="prelude-stars" id="preludeStars">
-   </canvas>
-   <div aria-hidden="true" class="prelude-haze">
-   </div>
-   <div aria-hidden="true" class="prelude-moon">
-   </div>
-   <div aria-hidden="true" class="prelude-cloud cloud-one">
-   </div>
-   <div aria-hidden="true" class="prelude-cloud cloud-two">
-   </div>
-   <div class="prelude-copy">
-    <p class="kicker prelude-beat beat-1">
+<div aria-label="Opening invitation" aria-labelledby="opening-title" aria-modal="true" class="prelude" id="prelude" role="dialog">
+<canvas aria-hidden="true" class="prelude-stars" id="preludeStars">
+</canvas>
+<div aria-hidden="true" class="prelude-haze">
+</div>
+<div aria-hidden="true" class="prelude-moon">
+<img alt="" class="moon-image" decoding="sync" fetchpriority="high" height="674" src="assets/moon/custom-moon.png" width="721"/>
+</div>
+<div aria-hidden="true" class="prelude-cloud cloud-one">
+</div>
+<div aria-hidden="true" class="prelude-cloud cloud-two">
+</div>
+<div class="prelude-copy">
+<p class="kicker prelude-beat beat-1" data-i18n="opening.weddingOf">
      The wedding of
     </p>
-    <h1 class="prelude-beat beat-2 brand-script">
-     <span>
+<h1 class="prelude-beat beat-2 brand-script" id="opening-title">
+<span>
       Nicky
      </span>
-     <i>
+<i>
       &amp;
      </i>
-     <span>
+<span>
       Gina
      </span>
-    </h1>
-    <p class="prelude-date prelude-beat beat-3">
+</h1>
+<p class="prelude-date prelude-beat beat-3" data-i18n="common.weddingDateDots">
      11 · October · 2026
     </p>
-    <p class="opening-line prelude-beat beat-4">
+<p class="opening-line prelude-beat beat-4" data-i18n-html="opening.tagline">
      Among countless paths,
      <br/>
      ours quietly became one.
     </p>
-    <button class="enter prelude-beat beat-5" id="enterButton" type="button">
-     <span>
+<button class="enter prelude-beat beat-5" id="enterButton" type="button">
+<span data-i18n="opening.enter">
       Click to enter 
      </span>
-     <svg aria-hidden="true" viewbox="0 0 24 24">
-      <path d="M5 12h14M14 7l5 5-5 5">
-      </path>
-     </svg>
-    </button>
-    <p class="sound-note prelude-beat beat-5">
+<svg aria-hidden="true" viewbox="0 0 24 24">
+<path d="M5 12h14M14 7l5 5-5 5">
+</path>
+</svg>
+</button>
+<p class="sound-note prelude-beat beat-5" data-i18n="opening.musicNote">
      Music may begin after entering
     </p>
-   </div>
-  </div>
-  <div aria-hidden="true" class="experience" id="experience">
-   <div aria-hidden="true" class="world">
-    <canvas id="starCanvas">
-    </canvas>
-    <div class="sky-glow">
-    </div>
-    <div class="moon-wrap">
-     <div class="moon">
-      <span>
-      </span>
-     </div>
-    </div>
-    <div class="cloud cloud-a">
-    </div>
-    <div class="cloud cloud-b">
-    </div>
-    <div class="cloud cloud-c">
-    </div>
-    <div class="mist">
-    </div>
-    <div class="grain">
-    </div>
-    <div class="vignette">
-    </div>
-   </div>
-   <header class="topbar">
-    <a aria-label="Back to opening" class="monogram brand-mark" href="#prologue">
-     <img alt="Nicky and Gina logo" src="assets/branding/ng-logo-reference.png"/>
-    </a>
-    <div aria-live="polite" class="chapter-indicator">
-     <span id="chapterNumber">
+</div>
+</div>
+<div aria-hidden="true" class="experience" id="experience">
+<div aria-hidden="true" class="world">
+<canvas id="starCanvas">
+</canvas>
+<div class="sky-glow">
+</div>
+<div class="moon-wrap">
+<div class="moon">
+<img alt="" class="moon-image" decoding="async" height="674" loading="eager" src="assets/moon/custom-moon.png" width="721"/>
+</div>
+</div>
+<div class="cloud cloud-a">
+</div>
+<div class="cloud cloud-b">
+</div>
+<div class="cloud cloud-c">
+</div>
+<div class="mist">
+</div>
+<div class="grain">
+</div>
+<div class="vignette">
+</div>
+</div>
+<header class="topbar">
+<a aria-label="Back to opening" class="monogram brand-mark" data-i18n-aria-label="accessibility.backToOpening" href="#prologue">
+<img alt="Nicky and Gina logo" src="assets/branding/ng-logo-reference.png"/>
+</a>
+<div aria-live="polite" class="chapter-indicator">
+<span id="chapterNumber">
       00
      </span>
-     <span class="line">
-     </span>
-     <span id="chapterName">
+<span class="line">
+</span>
+<span data-i18n="chapters.prologue" id="chapterName">
       Prologue
      </span>
-    </div>
-   </header>
-   <button
-    aria-label="Pause background music"
-    aria-pressed="true"
-    class="sound-toggle"
-    id="musicToggle"
-    type="button"
-   >
-    <span aria-hidden="true" class="sound-icon">
-     <svg viewBox="0 0 24 24" role="presentation">
-      <path class="speaker-shape" d="M4 9v6h4l5 4V5L8 9H4z"></path>
-      <path class="speaker-wave" d="M16 8.5c1.2 1.1 1.2 5.9 0 7"></path>
-      <path class="speaker-wave" d="M18.5 6c2.7 2.4 2.7 9.6 0 12"></path>
-      <path class="speaker-muted-mark" d="M15.5 9.5l5 5m0-5l-5 5"></path>
-     </svg>
-    </span>
-    <span aria-hidden="true" class="sound-bars">
-     <i></i>
-     <i></i>
-     <i></i>
-     <i></i>
-    </span>
-    <span class="sound-label">Music on</span>
-   </button>
-   <main>
-    <section class="scene scene-prologue is-active" data-chapter="00" data-title="Prologue" id="prologue">
-     <div class="scene-inner hero-composition">
-      <p class="eyebrow reveal">
+</div>
+<div aria-label="Invitation language" class="language-selector" data-i18n-aria-label="language.selectorLabel" role="group"><button aria-label="English" class="language-option" data-language="en" lang="en" type="button">EN</button><button aria-label="Bahasa Indonesia" class="language-option" data-language="id" lang="id" type="button">ID</button><button aria-label="简体中文" class="language-option" data-language="zh-CN" lang="zh-CN" type="button">简</button></div></header>
+<button aria-label="Pause background music" aria-pressed="true" class="sound-toggle" data-i18n-aria-label="music.pauseAria" id="musicToggle" type="button">
+<span aria-hidden="true" class="sound-icon">
+<svg role="presentation" viewbox="0 0 24 24">
+<path class="speaker-shape" d="M4 9v6h4l5 4V5L8 9H4z"></path>
+<path class="speaker-wave" d="M16 8.5c1.2 1.1 1.2 5.9 0 7"></path>
+<path class="speaker-wave" d="M18.5 6c2.7 2.4 2.7 9.6 0 12"></path>
+<path class="speaker-muted-mark" d="M15.5 9.5l5 5m0-5l-5 5"></path>
+</svg>
+</span>
+<span aria-hidden="true" class="sound-bars">
+<i></i>
+<i></i>
+<i></i>
+<i></i>
+</span>
+<span class="sound-label" data-i18n="music.on">Music on</span>
+</button>
+<main id="main-content">
+<section class="scene scene-prologue is-active" data-chapter="00" data-i18n-title="chapters.prologue" data-title="Prologue" id="prologue">
+<div class="scene-inner hero-composition">
+<p class="eyebrow reveal" data-i18n="prologue.eyebrow">
        An interactive wedding story
       </p>
-      <h2 class="hero-title reveal">
-       <span>
+<h2 class="hero-title reveal" data-i18n-html="prologue.titleHtml">
+<span>
         Under one sky,
        </span>
-       <em>
+<em>
         two paths became one.
        </em>
-      </h2>
-      <p class="hero-copy reveal" id="personalGreeting">
+</h2>
+<p class="hero-copy reveal" data-i18n="prologue.greeting" id="personalGreeting">
        With grateful hearts, we invite you to share in the beginning of our next chapter.
       </p>
-      <div class="date-lockup reveal">
-       <span>
+<div class="date-lockup reveal">
+<span data-i18n="common.sunday">
         Sunday
        </span>
-       <span>
+<span data-i18n="common.weddingDateDots">
 	     11 · October · 2026
        </span>
-      </div>
-      <a class="continue-cue reveal" href="#nicky">
-       <span>
+</div>
+<a class="continue-cue reveal" href="#nicky">
+<span data-i18n="prologue.meetUs">
         Meet us
        </span>
-       <i>
-       </i>
-      </a>
-     </div>
-    </section>
-    <section class="scene scene-person scene-nicky" data-chapter="01" data-title="Nicky" id="nicky">
-     <div class="scene-inner person-layout">
-      <div class="person-copy">
-       <p class="eyebrow reveal">
+<i>
+</i>
+</a>
+</div>
+</section>
+<section class="scene scene-person scene-nicky" data-chapter="01" data-i18n-title="chapters.nicky" data-title="Nicky" id="nicky">
+<div class="scene-inner person-layout">
+<div class="person-copy">
+<p class="eyebrow reveal" data-i18n="profiles.chapter">
         Chapter I · Two lives
        </p>
-       <h2 class="reveal">
+<h2 class="reveal">
         Nicky Louis
        </h2>
-       <p class="person-quote reveal">
+<p class="person-quote reveal" data-i18n="profiles.nickyQuote">
         “A quiet strength, a kind heart.”
        </p>
-       <p class="person-line reveal">
+<p class="person-line reveal" data-i18n="profiles.nickyBio">
         A steady heart, a curious mind, and a quiet belief that the right path is built one thoughtful step at a time.
        </p>
-       <div class="parent-info reveal">
-        <p class="parent-info-en">
+<div class="parent-info reveal">
+<p class="parent-info-en">
          First son of Mr. 刘承瓚 and Mrs. 许适巧
         </p>
-        <p class="parent-info-zh" lang="zh-Hans">
+<p class="parent-info-zh" lang="zh-Hans">
          刘承瓚先生与许适巧女士之长子
         </p>
-       </div>
-       <span class="person-number reveal">
+</div>
+<span class="person-number reveal">
         01
        </span>
-      </div>
-      <figure class="portrait-frame portrait-nicky reveal">
-       <img alt="Nicky, the groom, wearing a navy wedding suit" class="portrait-image" decoding="async" loading="eager" src="assets/portraits/groom.webp"/>
-       <figcaption>
+</div>
+<figure class="portrait-frame portrait-nicky reveal">
+<img alt="Nicky, the groom, wearing a navy wedding suit" class="portrait-image" decoding="async" loading="eager" src="assets/portraits/groom.webp"/>
+<figcaption>
         Nicky · The Groom
        </figcaption>
-      </figure>
-     </div>
-    </section>
-    <section class="scene scene-person scene-gina" data-chapter="02" data-title="Gina" id="gina">
-     <div class="scene-inner person-layout reverse">
-      <figure class="portrait-frame portrait-gina reveal">
-       <img alt="Gina, the bride, wearing her wedding gown and holding a bouquet" class="portrait-image" decoding="async" loading="lazy" src="assets/portraits/bride.webp"/>
-       <figcaption>
+</figure>
+</div>
+</section>
+<section class="scene scene-person scene-gina" data-chapter="02" data-i18n-title="chapters.gina" data-title="Gina" id="gina">
+<div class="scene-inner person-layout reverse">
+<figure class="portrait-frame portrait-gina reveal">
+<img alt="Gina, the bride, wearing her wedding gown and holding a bouquet" class="portrait-image" decoding="async" loading="lazy" src="assets/portraits/bride.webp"/>
+<figcaption>
         Gina · The Bride
        </figcaption>
-      </figure>
-      <div class="person-copy align-right-copy">
-       <p class="eyebrow reveal">
+</figure>
+<div class="person-copy align-right-copy">
+<p class="eyebrow reveal" data-i18n="profiles.chapter">
         Chapter I · Two lives
        </p>
-       <h2 class="reveal">
+<h2 class="reveal">
         Gina Archelya U
        </h2>
-       <p class="person-quote reveal">
+<p class="person-quote reveal" data-i18n="profiles.ginaQuote">
         “Grace in every smile, warmth in every moment.”
        </p>
-       <p class="person-line reveal">
+<p class="person-line reveal" data-i18n="profiles.ginaBio">
         A warm presence, a graceful spirit, and the kind of joy that makes ordinary days feel worth remembering.
        </p>
-       <div class="parent-info reveal">
-        <p class="parent-info-en">
+<div class="parent-info reveal">
+<p class="parent-info-en">
          Third daughter of Mr. Sofjan Effendy and the late Mrs. Tjia Lie Jung
         </p>
-        <p class="parent-info-zh" lang="zh-Hans">
+<p class="parent-info-zh" lang="zh-Hans">
          Sofjan Effendy 先生与已故 Tjia Lie Jung 女士之三女
         </p>
-       </div>
-       <span class="person-number reveal">
+</div>
+<span class="person-number reveal">
         02
        </span>
-      </div>
-     </div>
-    </section>
-    <section class="scene scene-turn" data-chapter="03" data-title="A Chance Encounter" id="chapter-two">
-     <div class="page-panel panel-left">
-     </div>
-     <div class="page-panel panel-right">
-     </div>
-     <div class="scene-inner story-layout">
-      <div class="story-index">
+</div>
+</div>
+</section>
+<section class="scene scene-turn" data-chapter="03" data-i18n-title="chapters.connected" data-title="A Chance Encounter" id="chapter-two">
+<div class="page-panel panel-left">
+</div>
+<div class="page-panel panel-right">
+</div>
+<div class="scene-inner story-layout">
+<div class="story-index">
        03
       </div>
-      <p class="eyebrow reveal">
+<p class="eyebrow reveal" data-i18n="story.connectedEyebrow">
        A chance encounter
       </p>
-      <h2 class="reveal">
+<h2 class="reveal" data-i18n="story.connectedTitle">
        It began with a simple hello.
       </h2>
-      <p class="story-body reveal">
+<p class="story-body reveal" data-i18n="story.connectedBody">
        In a world of endless possibilities, a single conversation became the first line of a story neither of us expected—but both of us chose to continue.
       </p>
-      <div class="story-meta reveal">
-       <span>
+<div class="story-meta reveal">
+<span data-i18n="story.connectedLabel">
         First connected
        </span>
-       <strong>
+<strong data-i18n="story.connectedDate">
         October 2023
        </strong>
-      </div>
-      <figure class="story-photo-frame story-photo-connected reveal">
-       <img alt="The keepsakes that marked the beginning of Nicky and Gina's connection" class="story-photo-image" decoding="async" loading="lazy" src="assets/story/first-connected.webp"/>
-       <figcaption>
+</div>
+<figure class="story-photo-frame story-photo-connected reveal">
+<img alt="The keepsakes that marked the beginning of Nicky and Gina's connection" class="story-photo-image" decoding="async" loading="lazy" src="assets/story/first-connected.webp"/>
+<figcaption>
         The beginning of our story
        </figcaption>
-      </figure>
-     </div>
-    </section>
-    <section class="scene scene-story scene-christmas" data-chapter="04" data-title="A Christmas Beginning" id="chapter-three">
-     <div class="scene-inner story-layout align-right">
-      <div class="story-index">
+</figure>
+</div>
+</section>
+<section class="scene scene-story scene-christmas" data-chapter="04" data-i18n-title="chapters.dating" data-title="A Christmas Beginning" id="chapter-three">
+<div class="scene-inner story-layout align-right">
+<div class="story-index">
        04
       </div>
-      <p class="eyebrow reveal">
+<p class="eyebrow reveal" data-i18n="story.datingEyebrow">
        A Christmas beginning
       </p>
-      <h2 class="reveal">
+<h2 class="reveal" data-i18n="story.datingTitle">
        One evening became the start of many.
       </h2>
-      <p class="story-body reveal">
+<p class="story-body reveal" data-i18n="story.datingBody">
        On that Christmas Eve, we decided to officially become a couple. From that moment onward, ordinary days slowly became shared memories.
       </p>
-      <div class="story-meta reveal">
-       <span>
+<div class="story-meta reveal">
+<span data-i18n="story.datingLabel">
         Officially dating
        </span>
-       <strong>
+<strong data-i18n="story.datingDate">
         24 December 2023
        </strong>
-      </div>
-      <figure class="story-photo-frame story-photo-date reveal">
-       <img alt="Nicky and Gina together after officially beginning their relationship" class="story-photo-image" decoding="async" loading="lazy" src="assets/story/officially-dating.webp"/>
-       <figcaption>
+</div>
+<figure class="story-photo-frame story-photo-date reveal">
+<img alt="Nicky and Gina together after officially beginning their relationship" class="story-photo-image" decoding="async" loading="lazy" src="assets/story/officially-dating.webp"/>
+<figcaption>
         Christmas Eve · 24 December 2023
        </figcaption>
-      </figure>
-     </div>
-    </section>
-    <section class="scene scene-story scene-promise" data-chapter="05" data-title="The Promise" id="promise">
-     <div class="scene-inner promise-layout">
-      <p class="eyebrow reveal">
+</figure>
+</div>
+</section>
+<section class="scene scene-story scene-promise" data-chapter="05" data-i18n-title="chapters.proposal" data-title="The Promise" id="promise">
+<div class="scene-inner promise-layout">
+<p class="eyebrow reveal" data-i18n="story.proposalEyebrow">
        The promise
       </p>
-      <h2 class="reveal">
+<h2 class="reveal" data-i18n="story.proposalTitle">
        We chose the same future.
       </h2>
-      <p class="story-body reveal">
+<p class="story-body reveal" data-i18n="story.proposalBody">
        With gratitude for every season that brought us here, we promised to keep walking forward together—with patience, kindness, and joy.
       </p>
-      <div class="story-meta reveal">
-       <span>
+<div class="story-meta reveal">
+<span data-i18n="story.proposalLabel">
         Proposal
        </span>
-       <strong>
+<strong data-i18n="story.proposalDate">
         16 January 2026
        </strong>
-      </div>
-      <figure class="story-photo-frame story-photo-engaged reveal">
-       <img alt="Nicky proposing to Gina beside the lake" class="story-photo-image" decoding="async" loading="lazy" src="assets/story/proposal.webp"/>
-       <figcaption>
+</div>
+<figure class="story-photo-frame story-photo-engaged reveal">
+<img alt="Nicky proposing to Gina beside the lake" class="story-photo-image" decoding="async" loading="lazy" src="assets/story/proposal.webp"/>
+<figcaption>
         The promise · 16 January 2026
        </figcaption>
-      </figure>
-     </div>
-    </section>
-    <section class="scene scene-poster" data-chapter="06" data-title="The Celebration" id="celebration">
-     <div class="scene-inner poster-layout">
-      <p class="eyebrow reveal">
+</figure>
+</div>
+</section>
+<section class="scene scene-poster" data-chapter="06" data-i18n-title="chapters.celebration" data-title="The Celebration" id="celebration">
+<div class="scene-inner poster-layout">
+<p class="eyebrow reveal" data-i18n="celebration.eyebrow">
        Chapter IV · The celebration
       </p>
-      <h2 class="reveal">
-       <span>
+<h2 class="reveal" data-i18n-html="celebration.titleHtml">
+<span>
         Join us
        </span>
-       <em>
+<em>
         beneath the stars.
        </em>
-      </h2>
-      <div class="event-grid reveal">
-       <div>
-        <span>
+</h2>
+<div class="event-grid reveal">
+<div>
+<span data-i18n="common.date">
          Date
         </span>
-        <strong>
+<strong data-i18n="celebration.dateValue">
          Sunday, 11 October 2026
         </strong>
-       </div>
-       <div>
-        <span>
+</div>
+<div>
+<span data-i18n="common.time">
          Time
         </span>
-        <strong>
+<strong data-i18n="celebration.timeValue">
          18:30 – 20:30 WIB
         </strong>
-       </div>
-       <div>
-        <span>
+</div>
+<div>
+<span data-i18n="common.venue">
          Venue
         </span>
-        <strong>
+<strong>
          MDC Hall
          <br/>
          Jakarta
         </strong>
-       </div>
-      </div>
-      <div aria-label="Countdown to wedding" class="countdown reveal">
-       <div>
-        <strong id="days">
+</div>
+</div>
+<div aria-label="Countdown to wedding" class="countdown reveal">
+<div>
+<strong id="days">
          —
         </strong>
-        <span>
+<span data-i18n="countdown.days">
          Days
         </span>
-       </div>
-       <div>
-        <strong id="hours">
+</div>
+<div>
+<strong id="hours">
          —
         </strong>
-        <span>
+<span data-i18n="countdown.hours">
          Hours
         </span>
-       </div>
-       <div>
-        <strong id="minutes">
+</div>
+<div>
+<strong id="minutes">
          —
         </strong>
-        <span>
+<span data-i18n="countdown.minutes">
          Minutes
         </span>
-       </div>
-       <div>
-        <strong id="seconds">
+</div>
+<div>
+<strong id="seconds">
          —
         </strong>
-        <span>
+<span data-i18n="countdown.seconds">
          Seconds
         </span>
-       </div>
-      </div>
-     </div>
-    </section>
-    <section class="scene scene-venue" data-chapter="07" data-title="The Place" id="venue">
-     <div class="scene-inner venue-layout">
-      <div class="venue-copy">
-       <p class="eyebrow reveal">
+</div>
+</div>
+</div>
+</section>
+<section class="scene scene-venue" data-chapter="07" data-i18n-title="chapters.venue" data-title="The Place" id="venue">
+<div class="scene-inner venue-layout">
+<div class="venue-copy">
+<p class="eyebrow reveal" data-i18n="venue.eyebrow">
         The place
        </p>
-       <h2 class="reveal">
-        An evening
+<h2 class="reveal" data-i18n-html="venue.titleHtml">
+        A night to celebrate
         <br/>
-        <em>
-         in Jakarta.
-        </em>
-       </h2>
-       <p class="reveal">
-        We look forward to welcoming you at MDC Hall for a relaxed standing celebration beneath our celestial sky.
+</h2>
+<p class="reveal" data-i18n="venue.description">
+        We look forward to welcoming you for a celebration beneath our celestial sky.
        </p>
-       <dl class="venue-details reveal">
-        <div>
-         <dt>
+<dl class="venue-details reveal">
+<div>
+<dt data-i18n="common.venue">
           Venue
          </dt>
-         <dd>
-          MDC Hall Jakarta<br/>
-		  Wisma 76, Letjen S. Parman St No.Kav 76, RT.4/RW.3, <br/>
-		  Slipi, Palmerah, West Jakarta City, Jakarta 11410
+<dd>
+          MDC Hall<br/>
+		  Wisma 76, Floor 26 <br/> 
+		  Letjen S. Parman Kav 76, RT.4/RW.3<br/>
+		  Slipi, Palmerah, Jakarta Barat
          </dd>
-        </div>
-        <div>
-         <dt>
+</div>
+<div>
+<dt data-i18n="venue.reception">
           Reception
          </dt>
-         <dd>
-          18:30– 20:30 WIB
+<dd>
+          18:30 – 20:30 WIB
          </dd>
-        </div>
-        <div>
-         <dt>
-          Dress palette
-         </dt>
-         <dd>
-          Elegant evening attire
-         </dd>
-        </div>
-       </dl>
-      </div>
-      <div class="venue-map-frame">
-		  <div class="venue-map-inner">
-			<iframe
-			  class="venue-map-embed"
-			  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.5510052147556!2d106.795626375731!3d-6.190781660654837!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f7ae2ebdc6f5%3A0x45d28c592dfff8b2!2sMDC%20Hall%20Jakarta!5e0!3m2!1sen!2sid!4v1785398387423!5m2!1sen!2sid"
-			  title="MDC Hall Jakarta location"
-			  loading="lazy"
-			  referrerpolicy="no-referrer-when-downgrade"
-			  allowfullscreen
-			></iframe>
-		  </div>
-
-		  <p class="venue-map-date">
+</div>
+</dl>
+</div>
+<div class="venue-map-frame">
+<div class="venue-map-inner">
+<iframe allowfullscreen="" class="venue-map-embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.5510052147556!2d106.795626375731!3d-6.190781660654837!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f7ae2ebdc6f5%3A0x45d28c592dfff8b2!2sMDC%20Hall%20Jakarta!5e0!3m2!1sen!2sid!4v1785398387423!5m2!1sen!2sid" title="MDC Hall Jakarta location"></iframe>
+</div>
+<p class="venue-map-date" data-i18n="venue.mapDate">
 			11 October 2026 · 18:30 WIB
 		  </p>
-		</div>
-	  </div>
-	  <div>
-	  <br/>
-		<a class="venue-link reveal" href="https://www.google.com/maps/dir/?api=1&amp;destination=MDC%20Hall%20Jakarta" id="mapLink" rel="noopener" target="_blank">
-			Open directions
-			<span>
-			↗
-			</span>
-		</a>
-	   </div>
-    </section>
-    <section class="scene scene-gallery" data-chapter="08" data-title="A Gallery of Us" id="gallery">
-     <div class="scene-inner gallery-layout">
-      <header class="gallery-heading">
-       <p class="eyebrow reveal">
+</div>
+</div>
+<div>
+<br/>
+<a class="venue-link reveal" href="https://www.google.com/maps/dir/?api=1&amp;destination=MDC%20Hall%20Jakarta" id="mapLink" rel="noopener" target="_blank"><span data-i18n="venue.openDirections">Open directions</span> <span aria-hidden="true">↗</span></a>
+</div>
+</section>
+<section class="scene scene-gallery" data-chapter="08" data-i18n-title="chapters.gallery" data-title="A Gallery of Us" id="gallery">
+<div class="scene-inner gallery-layout">
+<header class="gallery-heading">
+<p class="eyebrow reveal" data-i18n="gallery.eyebrow">
         Chapter IV · A gallery of us
        </p>
-       <h2 class="reveal">
+<h2 class="reveal" data-i18n-html="gallery.titleHtml">
         Moments held
         <br/>
-        <em>
+<em>
          in moonlight.
         </em>
-       </h2>
-       <p class="reveal">
+</h2>
+<p class="reveal" data-i18n="gallery.description">
         A quiet exhibition of the days that led us here.
        </p>
-      </header>
-      <div class="gallery-viewer">
-       <div class="gallery-stage" id="galleryStage">
-        <div class="gallery-slide">
-         <div aria-label="Nicky and Gina looking into each other’s eyes in traditional Japanese attire." class="gallery-image active has-image" id="galleryMain" role="img"></div>
-         <button aria-label="Previous photo" class="gallery-nav prev" type="button">
+</header>
+<div class="gallery-viewer">
+<div class="gallery-stage" id="galleryStage">
+<div class="gallery-slide">
+<div aria-label="Nicky and Gina looking into each other’s eyes in traditional Japanese attire." class="gallery-image active has-image" id="galleryMain" role="img"></div>
+<button aria-label="Previous photo" class="gallery-nav prev" data-i18n-aria-label="gallery.previousAria" type="button">
           ❮
          </button>
-         <button aria-label="Next photo" class="gallery-nav next" type="button">
+<button aria-label="Next photo" class="gallery-nav next" data-i18n-aria-label="gallery.nextAria" type="button">
           ❯
          </button>
-         <div aria-live="polite" class="gallery-counter">
-          <span id="galleryCurrent">01</span>
-          <i></i>
-          <span id="galleryTotal">12</span>
-         </div>
-        </div>
-       </div>
-       <div aria-live="polite" class="gallery-editorial-copy">
-        <p class="gallery-location" id="galleryLocation">Kyoto, Japan</p>
-        <p class="gallery-caption" id="galleryCaption">A Moment That Felt Like Forever</p>
-       </div>
-       <div aria-label="Choose a gallery photo" class="gallery-filmstrip" id="galleryFilmstrip">
-        <button aria-label="View photo 1 of 12" class="thumb active" data-index="0" type="button">
-         <span>01</span>
-        </button>
-        <button aria-label="View photo 2 of 12" class="thumb" data-index="1" type="button">
-         <span>02</span>
-        </button>
-        <button aria-label="View photo 3 of 12" class="thumb" data-index="2" type="button">
-         <span>03</span>
-        </button>
-        <button aria-label="View photo 4 of 12" class="thumb" data-index="3" type="button">
-         <span>04</span>
-        </button>
-        <button aria-label="View photo 5 of 12" class="thumb" data-index="4" type="button">
-         <span>05</span>
-        </button>
-        <button aria-label="View photo 6 of 12" class="thumb" data-index="5" type="button">
-         <span>06</span>
-        </button>
-        <button aria-label="View photo 7 of 12" class="thumb" data-index="6" type="button">
-         <span>07</span>
-        </button>
-        <button aria-label="View photo 8 of 12" class="thumb" data-index="7" type="button">
-         <span>08</span>
-        </button>
-        <button aria-label="View photo 9 of 12" class="thumb" data-index="8" type="button">
-         <span>09</span>
-        </button>
-        <button aria-label="View photo 10 of 12" class="thumb" data-index="9" type="button">
-         <span>10</span>
-        </button>
-        <button aria-label="View photo 11 of 12" class="thumb" data-index="10" type="button">
-         <span>11</span>
-        </button>
-        <button aria-label="View photo 12 of 12" class="thumb" data-index="11" type="button">
-         <span>12</span>
-        </button>
-       </div>
-      </div>
-     </div>
-    </section>
-    <section class="scene scene-rsvp" data-chapter="09" data-title="The Invitation" id="rsvp">
-     <div class="scene-inner rsvp-layout">
-      <div class="rsvp-intro">
-       <p class="eyebrow reveal">
+<div aria-live="polite" class="gallery-counter">
+<span id="galleryCurrent">01</span>
+<i></i>
+<span id="galleryTotal">12</span>
+</div>
+</div>
+</div>
+<div aria-live="polite" class="gallery-editorial-copy">
+<p class="gallery-location" id="galleryLocation">Kyoto, Japan</p>
+<p class="gallery-caption" id="galleryCaption">A Moment That Felt Like Forever</p>
+</div>
+<div aria-label="Choose a gallery photo" class="gallery-filmstrip" id="galleryFilmstrip">
+<button aria-label="View photo 1 of 12" class="thumb active" data-index="0" type="button">
+<span>01</span>
+</button>
+<button aria-label="View photo 2 of 12" class="thumb" data-index="1" type="button">
+<span>02</span>
+</button>
+<button aria-label="View photo 3 of 12" class="thumb" data-index="2" type="button">
+<span>03</span>
+</button>
+<button aria-label="View photo 4 of 12" class="thumb" data-index="3" type="button">
+<span>04</span>
+</button>
+<button aria-label="View photo 5 of 12" class="thumb" data-index="4" type="button">
+<span>05</span>
+</button>
+<button aria-label="View photo 6 of 12" class="thumb" data-index="5" type="button">
+<span>06</span>
+</button>
+<button aria-label="View photo 7 of 12" class="thumb" data-index="6" type="button">
+<span>07</span>
+</button>
+<button aria-label="View photo 8 of 12" class="thumb" data-index="7" type="button">
+<span>08</span>
+</button>
+<button aria-label="View photo 9 of 12" class="thumb" data-index="8" type="button">
+<span>09</span>
+</button>
+<button aria-label="View photo 10 of 12" class="thumb" data-index="9" type="button">
+<span>10</span>
+</button>
+<button aria-label="View photo 11 of 12" class="thumb" data-index="10" type="button">
+<span>11</span>
+</button>
+<button aria-label="View photo 12 of 12" class="thumb" data-index="11" type="button">
+<span>12</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<section class="scene scene-rsvp" data-chapter="09" data-i18n-title="chapters.rsvp" data-title="The Invitation" id="rsvp">
+<div class="scene-inner rsvp-layout">
+<div class="rsvp-intro">
+<p class="eyebrow reveal" data-i18n="rsvp.eyebrow">
         Chapter V · The invitation
        </p>
-       <h2 class="reveal">
+<h2 class="reveal" data-i18n-html="rsvp.titleHtml">
         Will you join us
         <br/>
-        <em>
+<em>
          beneath the stars?
         </em>
-       </h2>
-       <p class="reveal">
+</h2>
+<p class="reveal" data-i18n="rsvp.description">
         Your presence would make this evening even more meaningful. Kindly respond before 20 September 2026.
        </p>
-      </div>
-      <form class="rsvp-card reveal" id="rsvpForm" novalidate="">
-       <div aria-live="polite" class="form-status" id="formStatus" role="status">
-       </div>
-       <label>
-        <span>
+</div>
+<form class="rsvp-card reveal" id="rsvpForm" novalidate="">
+<div aria-live="assertive" class="form-status" id="formStatus" role="alert">
+</div>
+<label>
+<span data-i18n="rsvp.nameLabel">
          Your name
         </span>
-        <input autocomplete="name" id="guestName" name="guestName" placeholder="Guest name" required=""/>
-        <small class="prefilled-name-note" id="prefilledNameNote" hidden="">Pre-filled from your personal invitation link. You may correct it if needed.</small>
-       </label>
-       <fieldset>
-        <legend>
+<input autocomplete="name" id="guestName" name="guestName" placeholder="Guest name" required=""/>
+<small class="prefilled-name-note" data-i18n="rsvp.prefilledNote" hidden="" id="prefilledNameNote">Pre-filled from your personal invitation link. You may correct it if needed.</small>
+</label>
+<fieldset>
+<legend data-i18n="rsvp.attendanceLegend">
          Will you attend?
         </legend>
-        <label class="choice">
-         <input name="attendance" required="" type="radio" value="Attending"/>
-         <span>
+<label class="choice">
+<input name="attendance" required="" type="radio" value="Attending"/>
+<span data-i18n="rsvp.attending">
           Joyfully attending
          </span>
-        </label>
-        <label class="choice">
-         <input name="attendance" type="radio" value="Not attending"/>
-         <span>
+</label>
+<label class="choice">
+<input name="attendance" type="radio" value="Not attending"/>
+<span data-i18n="rsvp.unable">
           Regretfully unable
          </span>
-        </label>
-       </fieldset>
-       <label>
-        <span>
+</label>
+</fieldset>
+<label>
+<span data-i18n="rsvp.guestCountLabel">
          Number of guests
         </span>
-        <select id="guestCount" name="guestCount">
-         <option value="1">
+<select id="guestCount" name="guestCount">
+<option data-i18n="rsvp.oneGuest" value="1">
           1 guest
          </option>
-         <option value="2">
+<option data-i18n="rsvp.twoGuests" value="2">
           2 guests
          </option>
-         <option value="3">
+<option data-i18n="rsvp.threeGuests" value="3">
           3 guests
          </option>
-         <option value="4">
+<option data-i18n="rsvp.fourGuests" value="4">
           4 guests
          </option>
-        </select>
-       </label>
-       <label>
-        <span>
+</select>
+</label>
+<label>
+<span data-i18n="rsvp.messageLabel">
          A message for us
         </span>
-        <textarea id="message" maxlength="500" name="message" placeholder="Share a wish, memory, or kind thought..." rows="4"></textarea>
-       </label>
-       <input id="invitationId" name="invitationId" type="hidden"/>
-       <button class="submit-rsvp" type="submit">
-        <span>
+<textarea autocomplete="off" id="message" maxlength="500" name="message" placeholder="Share a wish, memory, or kind thought..." rows="4"></textarea>
+</label>
+<input id="invitationId" name="invitationId" type="hidden"/>
+<button class="submit-rsvp" type="submit">
+<span data-i18n="rsvp.submit">
          Send my response
         </span>
-        <i aria-hidden="true">
+<i aria-hidden="true">
          →
         </i>
-       </button>
-       <p class="deadline-note" id="deadlineNote">
-       </p>
-       <p class="privacy-note">
+</button>
+<p class="deadline-note" id="deadlineNote">
+</p>
+<p class="privacy-note" data-i18n="rsvp.privacy">
         Your response is used only for wedding planning and our guestbook.
        </p>
-      </form>
-      <div class="rsvp-success" hidden="" id="rsvpSuccess">
-       <span class="success-star">
+</form>
+<div aria-atomic="true" aria-live="polite" class="rsvp-success" hidden="" id="rsvpSuccess" role="status">
+<span class="success-star">
         ✦
        </span>
-       <p class="eyebrow">
+<p class="eyebrow" data-i18n="rsvp.successEyebrow">
         Response received
        </p>
-       <h3>
+<h3 data-i18n-template="rsvp.successTitle">
         Thank you,
         <span id="successName">
          dear guest
         </span>
         .
        </h3>
-       <p>
+<p data-i18n="rsvp.successBody">
         Your wish has become part of our night sky.
        </p>
-       <button id="editResponse" type="button">
+<button data-i18n="rsvp.edit" id="editResponse" type="button">
         Edit response
        </button>
-      </div>
-     </div>
-    </section>
-    <section class="scene scene-guestbook" data-chapter="10" data-title="Wishes Among the Stars" id="guestbook">
-     <div class="scene-inner guestbook-layout">
-      <div class="guestbook-copy">
-       <p class="eyebrow reveal">
+</div>
+</div>
+</section>
+<section class="scene scene-guestbook" data-chapter="10" data-i18n-title="chapters.guestbook" data-title="Wishes Among the Stars" id="guestbook">
+<div class="scene-inner guestbook-layout">
+<div class="guestbook-copy">
+<p class="eyebrow reveal" data-i18n="guestbook.eyebrow">
         Wishes among the stars
        </p>
-       <h2 class="reveal">
+<h2 class="reveal" data-i18n-html="guestbook.title">
         Every kind word
         <br/>
-        <em>
+<em>
          brightens the night.
         </em>
-       </h2>
-       <p class="reveal">
+</h2>
+<p class="reveal" data-i18n="guestbook.description">
         Select a glowing star to read a message shared by our family and friends.
        </p>
-      </div>
-      <div class="guestbook-browser reveal">
-       <div aria-label="Guestbook messages" aria-live="polite" class="message-sky" id="messageSky">
-       </div>
-       <div class="guestbook-controls" id="guestbookControls" hidden="">
-        <button aria-label="Show newer wishes" class="guestbook-page-button" disabled="" id="newerWishes" type="button">
-         <span aria-hidden="true">←</span>
-         Newer
-        </button>
-        <p aria-live="polite" class="guestbook-page-status" id="guestbookPageStatus">
-        </p>
-        <button aria-label="Show older wishes" class="guestbook-page-button" id="olderWishes" type="button">
-         Older
-         <span aria-hidden="true">→</span>
-        </button>
-       </div>
-      </div>
-      <article class="message-popover" hidden="" id="messagePopover">
-       <button aria-label="Close message" id="closeMessage" type="button">
+</div>
+<div class="guestbook-browser reveal">
+<div aria-label="Guestbook messages" aria-live="polite" class="message-sky" id="messageSky">
+</div>
+<div class="guestbook-controls" hidden="" id="guestbookControls">
+<button aria-label="Show newer wishes" class="guestbook-page-button" data-i18n-aria-label="guestbook.newerAria" disabled="" id="newerWishes" type="button"><span aria-hidden="true">←</span> <span data-i18n="guestbook.newer">Newer</span></button>
+<p aria-live="polite" class="guestbook-page-status" id="guestbookPageStatus">
+</p>
+<button aria-label="Show older wishes" class="guestbook-page-button" data-i18n-aria-label="guestbook.olderAria" id="olderWishes" type="button"><span data-i18n="guestbook.older">Older</span> <span aria-hidden="true">→</span></button>
+</div>
+</div>
+<article aria-describedby="popoverMessage" aria-labelledby="popoverName" aria-modal="true" class="message-popover" hidden="" id="messagePopover" role="dialog">
+<button aria-label="Close message" data-i18n-aria-label="guestbook.closeAria" id="closeMessage" type="button">
         ×
        </button>
-       <p id="popoverMessage">
-       </p>
-       <strong id="popoverName">
-       </strong>
-      </article>
-     </div>
-    </section>
-    <section class="scene scene-finale" data-chapter="11" data-title="Until Then" id="finale">
-     <div class="scene-inner finale-layout">
-      <p class="eyebrow reveal">
+<p id="popoverMessage">
+</p>
+<strong id="popoverName">
+</strong>
+</article>
+</div>
+</section>
+<section class="scene scene-finale" data-chapter="11" data-i18n-title="chapters.finale" data-title="Until Then" id="finale">
+<div class="scene-inner finale-layout">
+<p class="eyebrow reveal" data-i18n="finale.eyebrow">
        Nicky &amp; Gina · 11 October 2026
       </p>
-      <h2 class="reveal">
+<h2 class="reveal" data-i18n-html="finale.titleHtml">
        Until we meet
        <br/>
-       <em>
+<em>
         beneath the same sky.
        </em>
-      </h2>
-      <p class="reveal">
+</h2>
+<p class="reveal" data-i18n="finale.body">
        Thank you for being part of our journey. May the days ahead be filled with kindness, peace, and shared joy.
       </p>
-      <a class="text-link reveal" href="#prologue">
+<a class="text-link reveal" data-i18n="finale.return" href="#prologue">
        Return to the beginning
       </a>
-     </div>
-    </section>
-   </main>
-   <div aria-hidden="true" class="progress">
-    <span id="progressBar">
-    </span>
-   </div>
-  </div>
-  <audio
-    id="bgMusic"
-    preload="auto"
-    loop
-    playsinline
->
-    <source src="assets/music.m4a" type="audio/mp4">
+</div>
+</section>
+</main>
+<div aria-hidden="true" class="progress">
+<span id="progressBar">
+</span>
+</div>
+</div>
+<audio id="bgMusic" loop="" playsinline="" preload="auto">
+<source src="assets/music.m4a" type="audio/mp4"/>
 </audio>
-  <script src="js/config.js">
-  </script>
-  <script src="js/app.js">
-  </script>
- </body>
+<script src="js/i18n.js"></script><script src="js/config.js">
+</script>
+<script src="js/app.js">
+</script>
+<div aria-atomic="true" aria-live="polite" class="sr-only" id="languageAnnouncement"></div></body>
 </html>

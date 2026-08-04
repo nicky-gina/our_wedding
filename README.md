@@ -164,3 +164,30 @@ The three story milestones now use optimized images from `assets/story/`. Origin
 - The top-right music control can pause or resume playback.
 - The guest's choice is remembered in local storage.
 - Playback pauses while the browser tab is hidden and resumes only when music was enabled before leaving.
+
+
+## Bilingual parent information
+The groom and bride pages include editable English and Simplified Chinese parent-information placeholders. Replace the bracketed names directly in `index.html`.
+
+
+## V3.7 — Accessibility & Multilingual Support
+- Added English, Bahasa Indonesia, and Simplified Chinese language switching.
+- Automatically detects the browser language on first visit and remembers the guest's choice.
+- Translates static content, personalized greetings, RSVP states, guestbook controls, chapter names, and gallery captions.
+- Preserves the bilingual English/Chinese parent-information blocks on both profile pages.
+- Added a skip link, stronger keyboard focus states, live announcements, improved landmarks, and additional ARIA semantics.
+- Respects the existing reduced-motion behavior.
+
+
+## V3.8 Visual Polish
+See `V3.8_CHANGELOG.md` for the readability, typography, transition, and depth updates.
+
+
+## V3.8.1 moon stability patch
+- Replaced the pseudo-element moon renderer with a real transparent PNG image.
+- Removed GPU `drop-shadow()` filters from the moon image layer.
+- Added high-priority moon preloading for the landing screen.
+- Preserved all V3.8 multilingual, accessibility, typography, transition and depth improvements.
+
+## V3.8.2
+This patch tightens the stacked groom/bride profile layout, restores the portrait framing, and improves parent-information readability near the moon. See `V3.8.2_CHANGELOG.md`.

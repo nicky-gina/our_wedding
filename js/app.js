@@ -18,6 +18,7 @@
     const musicToggle = document.getElementById('musicToggle');
     const musicPreferenceKey = 'editorialInvitationMusicEnabled';
     const musicTargetVolume = 0.45;
+    const t = (key, vars) => window.inviteI18n?.t(key, vars) || key;
     let invitationOpened = false;
     let musicFadeTimer = null;
 
@@ -31,12 +32,12 @@
         musicToggle.setAttribute('aria-pressed', String(isPlaying));
         musicToggle.setAttribute(
             'aria-label',
-            isPlaying ? 'Pause background music' : 'Play background music'
+            isPlaying ? t('music.pauseAria') : t('music.playAria')
         );
 
         const label = musicToggle.querySelector('.sound-label');
         if (label)
-            label.textContent = isPlaying ? 'Music on' : 'Music off';
+            label.textContent = isPlaying ? t('music.on') : t('music.off');
     };
 
     const stopMusicFade = () => {
@@ -162,6 +163,8 @@
         });
     }
 
+    window.addEventListener('editorial:language-changed', () => updateMusicToggle(Boolean(music && !music.paused)));
+
     document.addEventListener('visibilitychange', () => {
         if (!music || !invitationOpened)
             return;
@@ -197,9 +200,8 @@
         const max = document.documentElement.scrollHeight - innerHeight;
         progressBar.style.width = `${max > 0 ? (scrollY / max) * 100 : 0}%`;
         if (!reducedMotion) {
-            document.querySelector('.moon-wrap').style.transform = `translate3d(0,${scrollY * .023}px,0)`;
-            document.querySelector('.cloud-a').style.marginLeft = `${scrollY * .012}px`;
-            document.querySelector('.cloud-b').style.marginRight = `${scrollY * .009}px`;
+            const viewportProgress = Math.max(-1, Math.min(1, (scrollY % innerHeight) / innerHeight));
+            document.documentElement.style.setProperty('--scene-depth-y', `${viewportProgress * 34}px`);
         }
         ticking = false;
     }
@@ -220,6 +222,7 @@
     const config = window.EDITORIAL_INVITE_CONFIG || {};
     const $ = (selector, root = document) => root.querySelector(selector);
     const params = new URLSearchParams(location.search);
+    const t = (key, vars) => window.inviteI18n?.t(key, vars) || key;
 
     // Personalised invitation links use:
     //   ?guest=Guest%20Name&id=NG-2026-001
@@ -242,7 +245,7 @@
     const invitationId = $('#invitationId');
 
     if (guestParam) {
-        greeting.textContent = `Dear ${guestParam}, with grateful hearts, we invite you to share in the beginning of our next chapter.`;
+        greeting.textContent = t('prologue.personalGreeting', { name: guestParam });
         nameInput.value = guestParam;
         nameInput.dataset.prefilled = 'true';
         const prefilledNote = $('#prefilledNameNote');
@@ -336,7 +339,7 @@
             guestCount: String(data.get('guestCount') || '1'),
             message: String(data.get('message') || '').trim(),
             rsvpTime: new Date().toISOString(),
-            language: navigator.language || 'en',
+            language: window.inviteI18n?.language || navigator.language || 'en',
             device: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
             pageUrl: location.href
         };
@@ -349,7 +352,7 @@
             renderGuestbook();
         }
         catch (error) {
-            status.textContent = 'We could not send your response. Please check your connection and try again.';
+            status.textContent = t('rsvp.error');
             console.error(error);
         }
         finally {
@@ -397,7 +400,7 @@
     function uniqueMessages(items) {
         const unique = new Map();
         items.forEach(item => {
-            const name = String(item?.guestName || 'Guest').trim();
+            const name = String(item?.guestName || t('guestbook.guest')).trim();
             const message = String(item?.message || '').trim();
             const key = `${name}|${message}`;
             if (message && !unique.has(key))
@@ -416,7 +419,7 @@
         }
         const first = ((currentPage - 1) * PAGE_SIZE) + 1;
         const last = Math.min(currentPage * PAGE_SIZE, totalMessages);
-        pageStatus.textContent = `Wishes ${first}–${last} of ${totalMessages}`;
+        pageStatus.textContent = t('guestbook.pageStatus', { first, last, total: totalMessages });
     }
     function renderGuestbook() {
         sky.innerHTML = '';
@@ -426,7 +429,7 @@
         if (!messages.length) {
             const empty = document.createElement('p');
             empty.className = 'message-sky-empty';
-            empty.textContent = 'The first wishes will soon appear among these stars.';
+            empty.textContent = t('guestbook.empty');
             sky.appendChild(empty);
         }
         messages.forEach((item, index) => {
@@ -434,7 +437,7 @@
             const button = document.createElement('button');
             button.type = 'button';
             button.className = 'guest-star';
-            button.setAttribute('aria-label', `Read message from ${item.guestName}`);
+            button.setAttribute('aria-label', t('guestbook.readFrom', { name: item.guestName }));
             button.style.left = `${pos.left}%`;
             button.style.top = `${pos.top}%`;
             button.style.animationDelay = `${pos.delay}ms`;
@@ -469,6 +472,13 @@
         totalMessages = Number(cached.total) || cached.messages.length;
         totalPages = Math.max(1, Number(cached.totalPages) || 1);
     }
+    window.addEventListener('editorial:language-changed', () => {
+        if (guestParam) greeting.textContent = t('prologue.personalGreeting', { name: guestParam });
+        else greeting.textContent = t('prologue.greeting');
+        const successHeading = success?.querySelector('h3');
+        if (successHeading) successHeading.textContent = t('rsvp.successTitle', { name: successName?.textContent || t('guestbook.guest') });
+        renderGuestbook();
+    });
     renderGuestbook();
 })();
 
@@ -483,6 +493,7 @@
     const config = window.EDITORIAL_INVITE_CONFIG || {};
     const $ = (s, r = document) => r.querySelector(s);
     const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+    const t = (key, vars) => window.inviteI18n?.t(key, vars) || key;
     // Replace exhibition placeholders from config without changing markup.
     const gallery = config.galleryImages || {};
     $$('[data-image]').forEach(figure => {
@@ -511,15 +522,23 @@
     syncAttendance();
     const deadline = new Date(config.rsvpDeadline || '2026-09-20T23:59:59+07:00');
     if (Date.now() > deadline.getTime()) {
-        note.textContent = 'The RSVP date has passed. Please contact Nicky or Gina directly.';
+        note.textContent = t('rsvp.deadlinePassed');
         if (config.closeRsvpAfterDeadline) {
             form.classList.add('is-closed');
             $$('input,select,textarea,button', form).forEach(el => el.disabled = true);
         }
     }
     else {
-        note.textContent = `Kindly respond by ${new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(deadline)}.`;
+        const locale = window.inviteI18n?.language === 'zh-CN' ? 'zh-CN' : window.inviteI18n?.language === 'id' ? 'id-ID' : 'en-GB';
+        note.textContent = t('rsvp.deadline', { date: new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(deadline) });
     }
+    window.addEventListener('editorial:language-changed', () => {
+        if (Date.now() > deadline.getTime()) note.textContent = t('rsvp.deadlinePassed');
+        else {
+            const locale = window.inviteI18n?.language === 'zh-CN' ? 'zh-CN' : window.inviteI18n?.language === 'id' ? 'id-ID' : 'en-GB';
+            note.textContent = t('rsvp.deadline', { date: new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(deadline) });
+        }
+    });
     // Paginated shared guestbook endpoint. Only one small page is rendered at a time.
     async function loadSharedGuestbook(page = 1, pageSize = 24) {
         if (!config.googleAppsScriptUrl || !config.enableSharedGuestbook)
@@ -577,6 +596,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const location = document.getElementById('galleryLocation');
     const caption = document.getElementById('galleryCaption');
     const thumbs = [...document.querySelectorAll('.gallery-filmstrip .thumb')];
+    const t = (key, vars) => window.inviteI18n?.t(key, vars) || key;
 
     if (!main || !stage || !items.length || thumbs.length !== items.length)
         return;
@@ -596,7 +616,9 @@ document.addEventListener('DOMContentLoaded', () => {
         thumbs.forEach((thumb, index) => {
             const item = items[index];
             thumb.style.backgroundImage = `linear-gradient(rgba(2,7,14,.08),rgba(2,7,14,.24)),url("${item.thumbnail}")`;
-            thumb.title = `${item.location} — ${item.caption}`;
+            const local = window.inviteI18n?.galleryItem(index) || [item.location, item.caption];
+            thumb.title = `${local[0]} — ${local[1]}`;
+            thumb.setAttribute('aria-label', `${String(index + 1).padStart(2, '0')}: ${local[1]}`);
         });
     }
 
@@ -613,16 +635,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const item = items[idx];
         main.style.backgroundImage = `linear-gradient(180deg,transparent 58%,rgba(2,7,14,.22)),url("${item.image}")`;
         main.classList.add('has-image');
-        main.setAttribute('aria-label', item.alt || item.caption);
+        main.setAttribute('aria-label', item.alt || (window.inviteI18n?.galleryItem(idx)?.[1] || item.caption));
 
         if (current)
             current.textContent = item.number;
         if (total)
             total.textContent = String(items.length).padStart(2, '0');
+        const local = window.inviteI18n?.galleryItem(idx) || [item.location, item.caption];
         if (location)
-            location.textContent = item.location;
+            location.textContent = local[0];
         if (caption)
-            caption.textContent = item.caption;
+            caption.textContent = local[1];
 
         thumbs.forEach((thumb, index) => {
             const active = index === idx;
@@ -679,6 +702,11 @@ document.addEventListener('DOMContentLoaded', () => {
             render(idx + 1);
         if (event.key === 'ArrowLeft')
             render(idx - 1);
+    });
+
+    window.addEventListener('editorial:language-changed', () => {
+        initialiseThumbnails();
+        applyFrame();
     });
 
     initialiseThumbnails();

@@ -3365,3 +3365,537 @@ html, body {
   letter-spacing: 0.04em;
   text-transform: none;
 }
+
+
+/* =========================================================
+   V3.7 — ACCESSIBILITY & MULTILINGUAL SUPPORT
+   ========================================================= */
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1000;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--ivory);
+  color: var(--night);
+  font-size: 0.8rem;
+  font-weight: 500;
+  transform: translateY(-180%);
+  transition: transform 180ms ease;
+}
+.skip-link:focus { transform: translateY(0); }
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+.language-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid rgba(220, 228, 239, 0.22);
+  border-radius: 999px;
+  background: rgba(7, 17, 31, 0.58);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.language-option {
+  min-width: 34px;
+  min-height: 30px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(220, 228, 239, 0.72);
+  cursor: pointer;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  transition: background 180ms ease, color 180ms ease;
+}
+.language-option:hover,
+.language-option.is-active {
+  background: rgba(242, 238, 231, 0.14);
+  color: var(--ivory);
+}
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid rgba(242, 238, 231, 0.95);
+  outline-offset: 4px;
+}
+[lang="zh-CN"] body {
+  font-family: "Manrope", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+}
+[lang="zh-CN"] .hero-title,
+[lang="zh-CN"] .person-copy h2,
+[lang="zh-CN"] .story-layout h2,
+[lang="zh-CN"] .poster-layout h2,
+[lang="zh-CN"] .venue-copy h2,
+[lang="zh-CN"] .gallery-heading h2,
+[lang="zh-CN"] .rsvp-intro h2,
+[lang="zh-CN"] .guestbook-copy h2,
+[lang="zh-CN"] .finale-layout h2 {
+  letter-spacing: 0.02em;
+  line-height: 1.02;
+}
+@media (max-width: 800px) {
+  .topbar { gap: 12px; }
+  .language-selector { margin-left: auto; }
+  .language-option { min-width: 32px; padding-inline: 7px; }
+}
+@media (max-width: 390px) {
+  .language-option { min-width: 29px; min-height: 28px; padding-inline: 6px; font-size: 0.62rem; }
+}
+@media (forced-colors: active) {
+  .language-selector, .language-option { border: 1px solid ButtonText; }
+}
+
+/* ========================================================================== 
+   V3.8 — Visual Polish
+   Readability, premium typography, cinematic transitions, and subtle depth.
+   ========================================================================== */
+
+:root {
+  --text-primary: #f7f4ee;
+  --text-secondary: #d5dde8;
+  --text-muted-premium: #aeb9c8;
+  --moon-safe-shadow: 0 2px 18px rgba(2, 8, 18, 0.56);
+  --scene-depth-y: 0px;
+}
+
+/* --------------------------------------------------------------------------
+   1. Readability against bright celestial elements
+   -------------------------------------------------------------------------- */
+
+.scene {
+  isolation: isolate;
+}
+
+.scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 78% 18%, transparent 0 12%, rgba(4, 12, 25, 0.08) 30%, transparent 54%),
+    linear-gradient(90deg, rgba(3, 10, 21, 0.18), transparent 48%, rgba(3, 10, 21, 0.08));
+  opacity: 0.72;
+}
+
+.scene-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-title,
+.person-copy h2,
+.story-layout h2,
+.promise-layout h2,
+.poster-layout h2,
+.venue-copy h2,
+.gallery-heading h2,
+.rsvp-intro h2,
+.guestbook-copy h2,
+.finale-layout h2 {
+  color: var(--text-primary);
+  text-shadow: var(--moon-safe-shadow);
+  text-wrap: balance;
+}
+
+.hero-copy,
+.person-line,
+.story-body,
+.venue-copy > p,
+.gallery-heading > p:last-child,
+.rsvp-intro > p:last-child,
+.guestbook-copy > p:last-child,
+.finale-layout > p:not(.eyebrow) {
+  color: var(--text-secondary);
+  text-shadow: 0 1px 12px rgba(2, 8, 18, 0.44);
+}
+
+.eyebrow,
+.kicker,
+.story-meta span,
+.venue-details dt,
+.gallery-location,
+.gallery-counter,
+.chapter-indicator,
+.prelude-date {
+  color: #d9e1ec;
+  text-shadow: 0 1px 10px rgba(2, 8, 18, 0.62);
+}
+
+/* Localized veil only where the bright moon most often intersects copy. */
+.hero-composition::before,
+.person-copy::before,
+.story-layout::before,
+.venue-copy::before,
+.gallery-heading::before {
+  content: "";
+  position: absolute;
+  inset: -2.2rem -3rem;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(4, 12, 25, 0.28), rgba(4, 12, 25, 0.10) 48%, transparent 74%);
+  filter: blur(18px);
+  opacity: 0.78;
+}
+
+/* --------------------------------------------------------------------------
+   2. Premium typography and editorial rhythm
+   -------------------------------------------------------------------------- */
+
+body {
+  font-kerning: normal;
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+}
+
+p {
+  hanging-punctuation: first last;
+}
+
+.hero-title,
+.person-copy h2,
+.story-layout h2,
+.promise-layout h2,
+.poster-layout h2,
+.venue-copy h2,
+.gallery-heading h2,
+.rsvp-intro h2,
+.guestbook-copy h2,
+.finale-layout h2 {
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures discretionary-ligatures;
+  letter-spacing: -0.032em;
+}
+
+.hero-title {
+  line-height: 0.88;
+}
+
+.person-line,
+.story-body,
+.venue-copy > p,
+.hero-copy {
+  line-height: 1.86;
+  max-width: 62ch;
+}
+
+.eyebrow,
+.kicker,
+.chapter-indicator,
+.story-meta span,
+.venue-details dt {
+  letter-spacing: 0.245em;
+}
+
+.story-meta strong,
+.event-grid strong,
+.venue-details dd {
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* Prevent isolated final words in major headings where supported. */
+.hero-title,
+.story-layout h2,
+.promise-layout h2,
+.poster-layout h2,
+.venue-copy h2,
+.gallery-heading h2,
+.rsvp-intro h2,
+.guestbook-copy h2 {
+  text-wrap: balance;
+}
+
+/* --------------------------------------------------------------------------
+   3. Cinematic section transitions
+   -------------------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 34px, 0) scale(0.992);
+  filter: blur(5px);
+  transition:
+    opacity 1.05s var(--ease),
+    transform 1.25s var(--ease),
+    filter 0.95s ease;
+  will-change: opacity, transform, filter;
+}
+
+.scene.is-active .reveal {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: blur(0);
+}
+
+.scene .portrait-frame.reveal,
+.scene .story-photo-frame.reveal,
+.scene .gallery-viewer.reveal,
+.scene .celestial-map.reveal,
+.scene .venue-map-frame.reveal {
+  transform: translate3d(0, 44px, 0) scale(0.975);
+  clip-path: inset(7% 0 7% 0 round 2px);
+  transition:
+    opacity 1.1s var(--ease),
+    transform 1.35s var(--ease),
+    clip-path 1.35s var(--ease),
+    filter 1s ease;
+}
+
+.scene.is-active .portrait-frame.reveal,
+.scene.is-active .story-photo-frame.reveal,
+.scene.is-active .gallery-viewer.reveal,
+.scene.is-active .celestial-map.reveal,
+.scene.is-active .venue-map-frame.reveal {
+  transform: translate3d(0, 0, 0) scale(1);
+  clip-path: inset(0 0 0 0 round 2px);
+}
+
+.scene::before {
+  transition: opacity 1.4s ease, transform 1.8s var(--ease);
+}
+
+/* Give each chapter a subtle film-like entrance without page-flip gimmicks. */
+.scene:not(.is-active) .scene-inner {
+  transform: translate3d(0, 12px, 0);
+}
+
+.scene.is-active .scene-inner {
+  transform: translate3d(0, 0, 0);
+  transition: transform 1.45s var(--ease);
+}
+
+/* --------------------------------------------------------------------------
+   4. Subtle celestial depth
+   -------------------------------------------------------------------------- */
+
+.world {
+  perspective: 1100px;
+}
+
+.sky-glow {
+  transform: translate3d(0, calc(var(--scene-depth-y) * -0.12), 0) scale(1.04);
+  will-change: transform;
+}
+
+.moon-wrap {
+  transform: translate3d(0, calc(var(--scene-depth-y) * 0.34), 0);
+  will-change: transform;
+}
+
+.cloud-a {
+  transform: translate3d(calc(var(--scene-depth-y) * 0.11), calc(var(--scene-depth-y) * -0.05), 0);
+}
+
+.cloud-b {
+  transform: translate3d(calc(var(--scene-depth-y) * -0.08), calc(var(--scene-depth-y) * 0.035), 0);
+}
+
+.cloud-c {
+  transform: translate3d(calc(var(--scene-depth-y) * 0.05), calc(var(--scene-depth-y) * -0.02), 0);
+}
+
+.mist {
+  transform: translate3d(0, calc(var(--scene-depth-y) * -0.025), 0);
+}
+
+/* Subtle highlight response; deliberately not synchronized to music. */
+.scene.is-active .portrait-frame,
+.scene.is-active .story-photo-frame,
+.scene.is-active .gallery-slide,
+.scene.is-active .rsvp-card,
+.scene.is-active .message-sky,
+.scene.is-active .venue-map-frame,
+.scene.is-active .celestial-map {
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(217, 228, 242, 0.035),
+    inset 0 1px 0 rgba(235, 242, 255, 0.035);
+}
+
+/* --------------------------------------------------------------------------
+   5. Responsive and accessibility safeguards
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 800px) {
+  .scene::after {
+    background:
+      radial-gradient(circle at 80% 14%, transparent 0 10%, rgba(4, 12, 25, 0.11) 30%, transparent 55%),
+      linear-gradient(90deg, rgba(3, 10, 21, 0.18), transparent 72%);
+  }
+
+  .hero-composition::before,
+  .person-copy::before,
+  .story-layout::before,
+  .venue-copy::before,
+  .gallery-heading::before {
+    inset: -1.4rem -1rem;
+    opacity: 0.88;
+  }
+
+  .reveal {
+    transform: translate3d(0, 24px, 0) scale(0.995);
+    filter: blur(3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .scene .portrait-frame.reveal,
+  .scene .story-photo-frame.reveal,
+  .scene .gallery-viewer.reveal,
+  .scene .celestial-map.reveal,
+  .scene .venue-map-frame.reveal,
+  .scene-inner,
+  .sky-glow,
+  .moon-wrap,
+  .cloud,
+  .mist {
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+    transition: opacity 0.01ms linear !important;
+  }
+}
+
+
+/* ========================================================================== 
+   V3.8.1 — Stable moon rendering
+   Replaces the GPU-filtered pseudo-element with a real transparent image.
+   ========================================================================== */
+
+.prelude-moon,
+.moon {
+  position: absolute;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.moon {
+  position: relative;
+}
+
+.prelude-moon::before,
+.prelude-moon::after,
+.moon::before,
+.moon::after {
+  content: none !important;
+  display: none !important;
+  background-image: none !important;
+  filter: none !important;
+  box-shadow: none !important;
+}
+
+.moon-image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  object-position: center;
+  opacity: 1;
+  filter: none !important;
+  box-shadow: none !important;
+  mix-blend-mode: normal;
+  background: transparent;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Keep the existing moon entrance animation on the container only. */
+.prelude-moon .moon-image,
+.moon .moon-image {
+  transform: none !important;
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .moon-image {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   V3.8.2 — Couple profile spacing, portrait framing, and moon-safe copy
+   ========================================================================== */
+
+/* Restore a deliberate two-line editorial frame around both portraits. */
+.portrait-frame {
+  padding: 10px;
+  border: 1px solid rgba(194, 211, 232, 0.24);
+  background: rgba(6, 18, 34, 0.18);
+  box-sizing: border-box;
+}
+
+.portrait-frame::before {
+  inset: -7px;
+  border-color: rgba(194, 211, 232, 0.16);
+}
+
+.portrait-image {
+  border: 1px solid rgba(218, 230, 244, 0.22);
+  box-sizing: border-box;
+}
+
+/* Improve legibility only behind the compact parent-information block. */
+.parent-info {
+  position: relative;
+  isolation: isolate;
+}
+
+.parent-info::before {
+  content: "";
+  position: absolute;
+  inset: -12px -16px -10px;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(3, 11, 23, 0.34) 0%,
+    rgba(3, 11, 23, 0.18) 52%,
+    transparent 78%
+  );
+  filter: blur(8px);
+}
+
+@media (max-width: 800px) {
+  /* Keep the copy and portrait visually connected on stacked layouts. */
+  .person-layout,
+  .person-layout.reverse {
+    gap: 24px;
+  }
+
+  .parent-info {
+    margin-bottom: 0;
+  }
+
+  .portrait-frame {
+    padding: 8px;
+  }
+
+  .portrait-frame::before {
+    inset: -5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .person-layout,
+  .person-layout.reverse {
+    gap: 20px;
+  }
+}
