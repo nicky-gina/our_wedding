@@ -375,6 +375,13 @@
     const invitationId = $('#invitationId');
 
     if (guestParam) {
+        /*
+         * The i18n layer applies every `[data-i18n]` value on DOMContentLoaded.
+         * Remove the generic greeting hook for personalised links so that pass
+         * cannot overwrite “Dear <guest name>…”. Language changes are handled
+         * explicitly by the `editorial:language-changed` listener below.
+         */
+        greeting.removeAttribute('data-i18n');
         greeting.textContent = t('prologue.personalGreeting', { name: guestParam });
         nameInput.value = guestParam;
         nameInput.dataset.prefilled = 'true';
