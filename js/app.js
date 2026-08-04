@@ -220,17 +220,37 @@
     const config = window.EDITORIAL_INVITE_CONFIG || {};
     const $ = (selector, root = document) => root.querySelector(selector);
     const params = new URLSearchParams(location.search);
-    const guestParam = (params.get('guest') || '').trim();
-    const idParam = (params.get('id') || '').trim();
+
+    // Personalised invitation links use:
+    //   ?guest=Guest%20Name&id=NG-2026-001
+    // The ID is optional, but recommended because it gives each invitation a
+    // stable RSVP record that can be updated when the same link is reopened.
+    const normaliseGuestName = value => String(value || '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 100);
+
+    const guestParam = normaliseGuestName(params.get('guest'));
+    const idParam = String(params.get('id') || '')
+        .trim()
+        .slice(0, 100);
+
     const storageKey = 'editorial-v2-rsvp-responses';
     const responseKey = `editorial-v2-rsvp-${idParam || guestParam || 'guest'}`;
     const greeting = $('#personalGreeting');
     const nameInput = $('#guestName');
     const invitationId = $('#invitationId');
+
     if (guestParam) {
+        greeting.textContent = `Dear ${guestParam}, with grateful hearts, we invite you to share in the beginning of our next chapter.`;
         nameInput.value = guestParam;
-        greeting.textContent = `${guestParam}, with grateful hearts, we invite you to share in the beginning of our next chapter.`;
+        nameInput.dataset.prefilled = 'true';
+        const prefilledNote = $('#prefilledNameNote');
+        if (prefilledNote) {
+            prefilledNote.hidden = false;
+        }
     }
+
     invitationId.value = idParam || `${config.invitationPrefix || 'NG'}-${Date.now().toString(36).toUpperCase()}`;
     const pad = value => String(value).padStart(2, '0');
     function updateCountdown() {
