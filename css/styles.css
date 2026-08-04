@@ -4449,3 +4449,171 @@ p {
     transform: none !important;
   }
 }
+
+
+/* =========================================================
+   V3.10 — GALLERY EXPERIENCE
+   Swipe momentum, progressive loading and cinematic entry.
+   ========================================================= */
+.gallery-stage {
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+.gallery-stage.is-dragging {
+  cursor: grabbing;
+}
+
+.gallery-stage.is-dragging .gallery-image {
+  transition: none !important;
+}
+
+.gallery-filmstrip .thumb {
+  background-color: rgba(13, 31, 55, .72);
+}
+
+.gallery-filmstrip .thumb:not(.is-loaded)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 24%, rgba(255,255,255,.08) 43%, transparent 62%);
+  transform: translateX(-120%);
+  animation: galleryThumbLoading 1.8s ease-in-out infinite;
+}
+
+.gallery-filmstrip .thumb.is-loaded::before {
+  display: none;
+}
+
+.gallery-viewer {
+  --gallery-entry-duration: 1.05s;
+}
+
+.gallery-viewer:not(.is-gallery-ready) .gallery-slide {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0) scale(.985);
+}
+
+.gallery-viewer.is-gallery-ready .gallery-slide {
+  animation: galleryCinematicEntry var(--gallery-entry-duration) cubic-bezier(.22,1,.36,1) both;
+}
+
+.gallery-viewer.is-gallery-ready .gallery-editorial-copy,
+.gallery-viewer.is-gallery-ready .gallery-filmstrip {
+  animation: galleryDetailsEntry .8s cubic-bezier(.22,1,.36,1) .28s both;
+}
+
+.gallery-slide::before,
+.gallery-slide::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  bottom: 0;
+  width: 51%;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(8,23,43,.96), rgba(6,17,33,.9));
+  transition: transform 1.05s cubic-bezier(.22,1,.36,1), opacity .75s ease;
+}
+
+.gallery-slide::before {
+  left: 0;
+}
+
+.gallery-slide::after {
+  right: 0;
+}
+
+.gallery-viewer.is-gallery-ready .gallery-slide::before {
+  transform: translate3d(-102%,0,0);
+  opacity: .18;
+}
+
+.gallery-viewer.is-gallery-ready .gallery-slide::after {
+  transform: translate3d(102%,0,0);
+  opacity: .18;
+}
+
+@keyframes galleryThumbLoading {
+  55%, 100% { transform: translateX(120%); }
+}
+
+@keyframes galleryCinematicEntry {
+  from {
+    opacity: 0;
+    transform: translate3d(0,18px,0) scale(.985);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0,0,0) scale(1);
+  }
+}
+
+@keyframes galleryDetailsEntry {
+  from {
+    opacity: 0;
+    transform: translate3d(0,10px,0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0,0,0);
+  }
+}
+
+@media (max-width: 800px) {
+  .gallery-viewer {
+    --gallery-entry-duration: .78s;
+  }
+
+  .gallery-slide::before,
+  .gallery-slide::after {
+    transition-duration: .78s, .58s;
+  }
+
+  .gallery-slide .gallery-image.is-changing {
+    filter: none;
+    transform: scale(1.012);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-viewer:not(.is-gallery-ready) .gallery-slide,
+  .gallery-viewer.is-gallery-ready .gallery-slide,
+  .gallery-viewer.is-gallery-ready .gallery-editorial-copy,
+  .gallery-viewer.is-gallery-ready .gallery-filmstrip {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .gallery-slide::before,
+  .gallery-slide::after,
+  .gallery-filmstrip .thumb:not(.is-loaded)::before {
+    display: none;
+  }
+}
+
+/* =========================================================
+   V3.10.1 — INTERLUDE RULE COLLISION FIX
+   Keep the cinematic divider rule clear of the interlude copy.
+   The rule remains part of the reveal, but sits above the text
+   rather than passing through multi-line headings on mobile.
+   ========================================================= */
+.scroll-narrative .narrative-rule {
+  top: calc(50% - clamp(82px, 9vw, 118px));
+}
+
+@media (max-width: 800px) {
+  .scroll-narrative .narrative-rule {
+    top: calc(50% - clamp(78px, 19vw, 104px));
+    width: min(72vw, 390px);
+  }
+}
+
+@media (max-width: 420px) {
+  .scroll-narrative .narrative-rule {
+    top: calc(50% - 88px);
+  }
+}
