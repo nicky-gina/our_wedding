@@ -3467,6 +3467,7 @@ html, body {
   --text-muted-premium: #aeb9c8;
   --moon-safe-shadow: 0 2px 18px rgba(2, 8, 18, 0.56);
   --scene-depth-y: 0px;
+  --moon-scroll-y: 0px;
 }
 
 /* --------------------------------------------------------------------------
@@ -3898,4 +3899,82 @@ p {
   .person-layout.reverse {
     gap: 20px;
   }
+}
+
+
+/* ==========================================================================
+   V3.8.3 — Mobile renderer stability and smoother moon motion
+   ========================================================================== */
+
+/*
+ * Keep the original gentle floating animation on .moon-wrap.
+ * Scroll depth is applied to the child .moon instead, so two systems no
+ * longer compete for the same transform property.
+ */
+.moon-wrap {
+  transform: none !important;
+  will-change: auto;
+}
+
+.moon {
+  transform: translate3d(0, var(--moon-scroll-y), 0);
+  will-change: transform;
+}
+
+/*
+ * The blurred veil previously created a very large off-screen GPU surface.
+ * The gradient itself is sufficient for readability without filter blur.
+ */
+.hero-composition::before,
+.person-copy::before,
+.story-layout::before,
+.venue-copy::before,
+.gallery-heading::before {
+  filter: none;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(4, 12, 25, 0.34),
+    rgba(4, 12, 25, 0.14) 50%,
+    transparent 78%
+  );
+}
+
+/* Blur transitions are attractive on desktop but expensive on mobile GPUs. */
+@media (max-width: 800px) {
+  .reveal,
+  .scene.is-active .reveal {
+    filter: none !important;
+    will-change: opacity, transform;
+  }
+
+  .scene .portrait-frame.reveal,
+  .scene .story-photo-frame.reveal,
+  .scene .gallery-viewer.reveal,
+  .scene .celestial-map.reveal,
+  .scene .venue-map-frame.reveal {
+    clip-path: none;
+    filter: none !important;
+  }
+
+  .sky-glow,
+  .moon,
+  .cloud,
+  .mist {
+    will-change: auto;
+  }
+
+  .cloud {
+    filter: blur(10px);
+  }
+
+  /* Lightweight moon-only parallax remains active on mobile. */
+  .moon {
+    transform: translate3d(0, var(--moon-scroll-y), 0);
+    will-change: transform;
+  }
+}
+
+/* Release compositing hints once an element has completed its entrance. */
+.scene.is-active .reveal {
+  will-change: auto;
 }

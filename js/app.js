@@ -96,45 +96,104 @@
     resetOpeningPosition();
     addEventListener('pageshow', resetOpeningPosition);
     function createStars(canvas, count, bright = false) {
-        const ctx = canvas.getContext('2d');
-        let stars = [], raf = 0;
+        if (!canvas)
+            return () => {};
+
+        const ctx = canvas.getContext('2d', { alpha: true });
+        let stars = [];
+        let raf = 0;
+        let running = false;
+
         const resize = () => {
-            const dpr = Math.min(devicePixelRatio || 1, 2);
-            canvas.width = innerWidth * dpr;
-            canvas.height = innerHeight * dpr;
-            canvas.style.width = `${innerWidth}px`;
-            canvas.style.height = `${innerHeight}px`;
+            const mobile = matchMedia('(max-width: 800px)').matches;
+            const dpr = Math.min(devicePixelRatio || 1, mobile ? 1.25 : 1.75);
+            const width = Math.max(1, innerWidth);
+            const height = Math.max(1, innerHeight);
+
+            canvas.width = Math.round(width * dpr);
+            canvas.height = Math.round(height * dpr);
+            canvas.style.width = `${width}px`;
+            canvas.style.height = `${height}px`;
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            stars = Array.from({ length: Math.max(70, Math.round(count * innerWidth / 1440)) }, () => ({
-                x: Math.random() * innerWidth, y: Math.random() * innerHeight,
-                r: Math.random() * (bright ? 1.45 : 1.15) + .15,
-                a: Math.random() * .65 + .18, s: Math.random() * .012 + .004, p: Math.random() * Math.PI * 2
+
+            const responsiveCount = Math.max(
+                mobile ? 45 : 70,
+                Math.round(count * width / 1440)
+            );
+
+            stars = Array.from({ length: responsiveCount }, () => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                r: Math.random() * (bright ? 1.35 : 1.05) + 0.15,
+                a: Math.random() * 0.65 + 0.18,
+                s: Math.random() * 0.012 + 0.004,
+                p: Math.random() * Math.PI * 2
             }));
         };
-        const draw = (t = 0) => {
+
+        const draw = (time = 0) => {
+            if (!running)
+                return;
+
             ctx.clearRect(0, 0, innerWidth, innerHeight);
+
             stars.forEach(star => {
-                const alpha = reducedMotion ? star.a : star.a + Math.sin(t * star.s + star.p) * .18;
+                const alpha = reducedMotion
+                    ? star.a
+                    : star.a + Math.sin(time * star.s + star.p) * 0.18;
+
                 ctx.beginPath();
-                ctx.fillStyle = `rgba(225,236,255,${Math.max(.05, alpha)})`;
+                ctx.fillStyle = `rgba(225,236,255,${Math.max(0.05, alpha)})`;
                 ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
                 ctx.fill();
             });
+
             if (!reducedMotion)
                 raf = requestAnimationFrame(draw);
         };
+
+        const start = () => {
+            if (running || document.hidden)
+                return;
+            running = true;
+            draw();
+        };
+
+        const stop = () => {
+            running = false;
+            cancelAnimationFrame(raf);
+            raf = 0;
+        };
+
+        const handleVisibility = () => {
+            if (document.hidden)
+                stop();
+            else
+                start();
+        };
+
         resize();
-        draw();
+        start();
         addEventListener('resize', resize, { passive: true });
-        return () => cancelAnimationFrame(raf);
+        document.addEventListener('visibilitychange', handleVisibility);
+
+        return () => {
+            stop();
+            removeEventListener('resize', resize);
+            document.removeEventListener('visibilitychange', handleVisibility);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        };
     }
-    createStars(document.getElementById('preludeStars'), 180, true);
-    createStars(document.getElementById('starCanvas'), 250, false);
+
+    const stopPreludeStars = createStars(document.getElementById('preludeStars'), 150, true);
+    const stopWorldStars = createStars(document.getElementById('starCanvas'), 210, false);
     enterButton.addEventListener('click', () => {
         // Reset before unlocking so the invitation always opens on the prologue,
         // never at a browser-restored or gallery-induced scroll position.
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
         prelude.classList.add('is-hidden');
+        stopPreludeStars();
+        window.setTimeout(() => prelude.remove(), 1600);
         experience.classList.add('is-visible');
         experience.setAttribute('aria-hidden', 'false');
         body.classList.remove('is-locked');
@@ -199,9 +258,30 @@
     function updateScroll() {
         const max = document.documentElement.scrollHeight - innerHeight;
         progressBar.style.width = `${max > 0 ? (scrollY / max) * 100 : 0}%`;
-        if (!reducedMotion) {
-            const viewportProgress = Math.max(-1, Math.min(1, (scrollY % innerHeight) / innerHeight));
-            document.documentElement.style.setProperty('--scene-depth-y', `${viewportProgress * 34}px`);
+        const allowMotion = !reducedMotion;
+        const isMobile = matchMedia('(max-width: 800px)').matches;
+        if (allowMotion) {
+            const viewportHeight = Math.max(innerHeight, 1);
+
+            /*
+             * Use a continuous sine wave instead of scrollY % innerHeight.
+             * One complete down-and-up cycle spans two viewport heights,
+             * so crossing a chapter boundary never resets the moon position.
+             */
+            const scrollPhase = (scrollY / viewportHeight) * Math.PI;
+            const smoothWave = Math.sin(scrollPhase);
+
+            document.documentElement.style.setProperty(
+                '--scene-depth-y',
+                isMobile ? '0px' : `${smoothWave * 24}px`
+            );
+            document.documentElement.style.setProperty(
+                '--moon-scroll-y',
+                `${smoothWave * (isMobile ? 18 : 24)}px`
+            );
+        } else {
+            document.documentElement.style.setProperty('--scene-depth-y', '0px');
+            document.documentElement.style.setProperty('--moon-scroll-y', '0px');
         }
         ticking = false;
     }
@@ -569,7 +649,7 @@
     });
     loadSharedGuestbook(1, 24);
     // Slow photographic parallax, disabled for reduced motion.
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !matchMedia('(max-width: 800px)').matches) {
         let ticking = false;
         const update = () => {
             $$('.gallery-piece').forEach(piece => {

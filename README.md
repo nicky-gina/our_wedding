@@ -191,3 +191,15 @@ See `V3.8_CHANGELOG.md` for the readability, typography, transition, and depth u
 
 ## V3.8.2
 This patch tightens the stacked groom/bride profile layout, restores the portrait framing, and improves parent-information readability near the moon. See `V3.8.2_CHANGELOG.md`.
+
+
+## V3.8.3 mobile stability patch
+- Prevents mobile renderer crashes caused by excessive simultaneous GPU layers.
+- Stops the opening star canvas after entry and pauses canvas work in background tabs.
+- Reduces mobile canvas resolution and star count.
+- Disables expensive blur reveals and scroll depth on mobile.
+- Separates moon floating animation from desktop scroll parallax for smoother motion.
+
+
+## V3.8.5
+Moon scroll parallax now follows a continuous sine-wave loop, eliminating chapter-boundary jumps.
