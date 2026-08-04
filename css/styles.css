@@ -1128,6 +1128,37 @@ main {
   color:#b7c2cf
 }
 
+.parent-info {
+  max-width:440px;
+  margin-top:28px;
+  padding-top:18px;
+  border-top:1px solid rgba(220,232,246,.16)
+}
+
+.parent-info p {
+  margin:0
+}
+
+.parent-info-en {
+  font-family:var(--serif);
+  font-size:clamp(14px,1.25vw,20px);
+  line-height:1.55;
+  color:var(--ivory)
+}
+
+.parent-info-zh {
+  margin-top:7px!important;
+  font-family:"Noto Serif SC","Songti SC","SimSun",serif;
+  font-size:clamp(10px,1vw,15px);
+  line-height:1.65;
+  letter-spacing:.035em;
+  color:rgba(220,228,239,.72)
+}
+
+.align-right-copy .parent-info {
+  margin-left:auto
+}
+
 .person-number {
   position:absolute;
   right:0;
@@ -1336,6 +1367,9 @@ main {
     text-align:left
   }
   .align-right-copy .person-line {
+    margin-left:0
+  }
+  .align-right-copy .parent-info {
     margin-left:0
   }
   .align-right-copy .person-number {
