@@ -211,3 +211,14 @@ Adds animated milestone timelines, chapter progress, and multilingual scroll nar
 
 ## V3.9.1
 Cinematic transform-and-opacity interludes were added between major story acts.
+
+
+## V3.10 — Gallery Experience
+- Velocity-aware swipe momentum and elastic drag feedback.
+- Progressive thumbnail loading and current/adjacent full-image preloading.
+- Lightweight cinematic gallery opening with reduced-motion fallback.
+
+
+## V3.10.2 — Personalized Greeting Fix
+- Prevents the initial multilingual translation pass from replacing the personalized prologue greeting with the generic greeting.
+- Personalized greetings still update when the language is changed.
