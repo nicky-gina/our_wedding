@@ -719,46 +719,111 @@
 document.addEventListener('DOMContentLoaded', () => {
     const config = window.EDITORIAL_INVITE_CONFIG || {};
     const items = Array.isArray(config.galleryItems) ? config.galleryItems : [];
+    const gallerySection = document.getElementById('gallery');
+    const viewer = gallerySection?.querySelector('.gallery-viewer');
     const main = document.getElementById('galleryMain');
     const stage = document.getElementById('galleryStage');
     const current = document.getElementById('galleryCurrent');
     const total = document.getElementById('galleryTotal');
     const location = document.getElementById('galleryLocation');
     const caption = document.getElementById('galleryCaption');
+    const filmstrip = document.getElementById('galleryFilmstrip');
     const thumbs = [...document.querySelectorAll('.gallery-filmstrip .thumb')];
-    const t = (key, vars) => window.inviteI18n?.t(key, vars) || key;
 
     if (!main || !stage || !items.length || thumbs.length !== items.length)
         return;
 
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const loadedFullImages = new Set();
+    const loadedThumbnails = new Set();
     let idx = 0;
-    let startX = 0;
+    let galleryActivated = false;
     let dragging = false;
+    let startX = 0;
+    let lastX = 0;
+    let lastTime = 0;
+    let velocityX = 0;
+    let dragOffset = 0;
+    let renderTimer = 0;
 
-    function preloadImages() {
-        items.slice(1, 4).forEach(item => {
-            const image = new Image();
-            image.src = item.image;
+    function loadImage(src, cache) {
+        if (!src || cache.has(src))
+            return;
+        cache.add(src);
+        const image = new Image();
+        image.decoding = 'async';
+        image.src = src;
+    }
+
+    function preloadAround(index) {
+        [-1, 0, 1].forEach(offset => {
+            const item = items[(index + offset + items.length) % items.length];
+            loadImage(item?.image, loadedFullImages);
         });
     }
 
-    function initialiseThumbnails() {
+    function loadThumbnail(index) {
+        const thumb = thumbs[index];
+        const item = items[index];
+        if (!thumb || !item || loadedThumbnails.has(item.thumbnail))
+            return;
+        loadedThumbnails.add(item.thumbnail);
+        thumb.style.backgroundImage = `linear-gradient(rgba(2,7,14,.08),rgba(2,7,14,.24)),url("${item.thumbnail}")`;
+        thumb.classList.add('is-loaded');
+    }
+
+    function updateThumbnailMetadata() {
         thumbs.forEach((thumb, index) => {
             const item = items[index];
-            thumb.style.backgroundImage = `linear-gradient(rgba(2,7,14,.08),rgba(2,7,14,.24)),url("${item.thumbnail}")`;
             const local = window.inviteI18n?.galleryItem(index) || [item.location, item.caption];
             thumb.title = `${local[0]} — ${local[1]}`;
             thumb.setAttribute('aria-label', `${String(index + 1).padStart(2, '0')}: ${local[1]}`);
         });
     }
 
+    function initialiseProgressiveThumbnails() {
+        updateThumbnailMetadata();
+
+        if (!('IntersectionObserver' in window)) {
+            thumbs.forEach((_, index) => loadThumbnail(index));
+            return;
+        }
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting)
+                    return;
+                const index = Number(entry.target.dataset.index);
+                loadThumbnail(index);
+                observer.unobserve(entry.target);
+            });
+        }, {
+            root: filmstrip,
+            rootMargin: '0px 180px',
+            threshold: 0.01
+        });
+
+        thumbs.forEach(thumb => observer.observe(thumb));
+    }
+
     function centreActiveThumb(behavior = 'smooth') {
         const active = thumbs[idx];
-        const strip = active?.closest('.gallery-filmstrip');
-        if (!active || !strip)
+        if (!active || !filmstrip)
             return;
-        const target = active.offsetLeft - (strip.clientWidth - active.offsetWidth) / 2;
-        strip.scrollTo({ left: Math.max(0, target), behavior });
+        const target = active.offsetLeft - (filmstrip.clientWidth - active.offsetWidth) / 2;
+        filmstrip.scrollTo({ left: Math.max(0, target), behavior });
+    }
+
+    function resetDragVisual(animate = true) {
+        stage.classList.toggle('is-dragging', false);
+        main.style.transition = animate ? '' : 'none';
+        main.style.transform = '';
+        main.style.opacity = '';
+        if (!animate) {
+            requestAnimationFrame(() => {
+                main.style.transition = '';
+            });
+        }
     }
 
     function applyFrame({ centreThumb = false, behavior = 'smooth' } = {}) {
@@ -771,6 +836,7 @@ document.addEventListener('DOMContentLoaded', () => {
             current.textContent = item.number;
         if (total)
             total.textContent = String(items.length).padStart(2, '0');
+
         const local = window.inviteI18n?.galleryItem(idx) || [item.location, item.caption];
         if (location)
             location.textContent = local[0];
@@ -783,63 +849,129 @@ document.addEventListener('DOMContentLoaded', () => {
             thumb.setAttribute('aria-current', active ? 'true' : 'false');
         });
 
+        loadThumbnail(idx);
+        preloadAround(idx);
         if (centreThumb)
             centreActiveThumb(behavior);
     }
 
-    function render(nextIndex) {
+    function render(nextIndex, direction = 0) {
+        window.clearTimeout(renderTimer);
         idx = (nextIndex + items.length) % items.length;
+        resetDragVisual(false);
+        main.dataset.direction = String(direction || 0);
         main.classList.add('is-changing');
         location?.classList.add('is-changing');
         caption?.classList.add('is-changing');
 
-        window.setTimeout(() => {
-            applyFrame({ centreThumb: true });
+        renderTimer = window.setTimeout(() => {
+            applyFrame({ centreThumb: true, behavior: reducedMotion ? 'auto' : 'smooth' });
             requestAnimationFrame(() => {
                 main.classList.remove('is-changing');
                 location?.classList.remove('is-changing');
                 caption?.classList.remove('is-changing');
             });
-        }, 180);
+        }, reducedMotion ? 0 : 150);
     }
 
-    document.querySelector('.gallery-nav.next')?.addEventListener('click', () => render(idx + 1));
-    document.querySelector('.gallery-nav.prev')?.addEventListener('click', () => render(idx - 1));
-    thumbs.forEach((thumb, index) => thumb.addEventListener('click', () => render(index)));
+    function navigate(delta) {
+        render(idx + delta, Math.sign(delta));
+    }
+
+    function activateGallery() {
+        if (galleryActivated)
+            return;
+        galleryActivated = true;
+        viewer?.classList.add('is-gallery-ready');
+        initialiseProgressiveThumbnails();
+        applyFrame({ behavior: 'auto' });
+    }
+
+    document.querySelector('.gallery-nav.next')?.addEventListener('click', () => navigate(1));
+    document.querySelector('.gallery-nav.prev')?.addEventListener('click', () => navigate(-1));
+    thumbs.forEach((thumb, index) => thumb.addEventListener('click', () => {
+        const delta = index === idx ? 0 : (index > idx ? 1 : -1);
+        render(index, delta);
+    }));
 
     stage.addEventListener('pointerdown', event => {
-        if (event.target.closest('button'))
+        if (event.target.closest('button') || event.pointerType === 'mouse' && event.button !== 0)
             return;
-        startX = event.clientX;
+        activateGallery();
         dragging = true;
+        startX = lastX = event.clientX;
+        lastTime = performance.now();
+        velocityX = 0;
+        dragOffset = 0;
+        stage.classList.add('is-dragging');
         stage.setPointerCapture?.(event.pointerId);
     });
 
-    stage.addEventListener('pointerup', event => {
+    stage.addEventListener('pointermove', event => {
+        if (!dragging)
+            return;
+        const now = performance.now();
+        const elapsed = Math.max(8, now - lastTime);
+        const delta = event.clientX - lastX;
+        velocityX = velocityX * 0.68 + (delta / elapsed) * 0.32;
+        lastX = event.clientX;
+        lastTime = now;
+        dragOffset = event.clientX - startX;
+
+        const resistance = 0.72;
+        const translated = dragOffset * resistance;
+        const progress = Math.min(1, Math.abs(dragOffset) / Math.max(1, stage.clientWidth));
+        main.style.transform = `translate3d(${translated}px,0,0) scale(${1 - progress * 0.018})`;
+        main.style.opacity = String(1 - progress * 0.28);
+    });
+
+    function finishDrag(event) {
         if (!dragging)
             return;
         dragging = false;
-        const distance = event.clientX - startX;
-        if (Math.abs(distance) > 42)
-            render(idx + (distance < 0 ? 1 : -1));
+        stage.releasePointerCapture?.(event.pointerId);
+
+        const distanceThreshold = Math.min(78, stage.clientWidth * 0.16);
+        const velocityThreshold = 0.42;
+        const shouldNavigate = Math.abs(dragOffset) >= distanceThreshold || Math.abs(velocityX) >= velocityThreshold;
+        const direction = dragOffset < 0 || (Math.abs(dragOffset) < 8 && velocityX < 0) ? 1 : -1;
+
+        if (shouldNavigate)
+            navigate(direction);
+        else
+            resetDragVisual(true);
+    }
+
+    stage.addEventListener('pointerup', finishDrag);
+    stage.addEventListener('pointercancel', event => {
+        dragging = false;
+        stage.releasePointerCapture?.(event.pointerId);
+        resetDragVisual(true);
     });
 
-    stage.addEventListener('pointercancel', () => { dragging = false; });
     document.addEventListener('keydown', event => {
-        if (!document.getElementById('gallery')?.classList.contains('is-active'))
+        if (!gallerySection?.classList.contains('is-active'))
             return;
         if (event.key === 'ArrowRight')
-            render(idx + 1);
+            navigate(1);
         if (event.key === 'ArrowLeft')
-            render(idx - 1);
+            navigate(-1);
     });
 
     window.addEventListener('editorial:language-changed', () => {
-        initialiseThumbnails();
+        updateThumbnailMetadata();
         applyFrame();
     });
 
-    initialiseThumbnails();
-    applyFrame({ behavior: 'auto' });
-    preloadImages();
+    if ('IntersectionObserver' in window && gallerySection) {
+        const activationObserver = new IntersectionObserver(entries => {
+            if (!entries.some(entry => entry.isIntersecting))
+                return;
+            activateGallery();
+            activationObserver.disconnect();
+        }, { rootMargin: '450px 0px', threshold: 0.01 });
+        activationObserver.observe(gallerySection);
+    } else {
+        activateGallery();
+    }
 });
