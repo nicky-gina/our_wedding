@@ -82,6 +82,10 @@ function doGet(e) {
       return getGuestbook_(e);
     }
 
+    if (action === 'rsvp') {
+      return getRsvp_(e);
+    }
+
     return json_({
       ok: true,
       service: 'Editorial Invitation V3 RSVP',
@@ -91,6 +95,16 @@ function doGet(e) {
     console.error(error);
     return json_({ ok: false, error: String(error.message || error) });
   }
+}
+
+function getRsvp_(e) {
+  const invitationId = clean_(e && e.parameter && e.parameter.id, 100);
+  if (!invitationId) throw new Error('Invitation ID is required.');
+  const sheet = getResponsesSheet_();
+  const rowNumber = findInvitationRow_(sheet, invitationId);
+  if (!rowNumber) return json_({ ok: true, found: false });
+  const row = sheet.getRange(rowNumber, 1, 1, HEADERS.length).getValues()[0];
+  return json_({ ok:true, found:true, response:{ invitationId:String(row[0]||''), guestName:String(row[1]||''), attendance:String(row[2]||''), guestCount:String(row[3]||'1'), message:String(row[4]||''), rsvpTime:row[5] instanceof Date ? row[5].toISOString() : String(row[5]||''), language:String(row[6]||''), device:String(row[7]||''), pageUrl:String(row[8]||'') } });
 }
 
 function getGuestbook_(e) {

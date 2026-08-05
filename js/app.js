@@ -427,94 +427,123 @@
     const form = $('#rsvpForm');
     const status = $('#formStatus');
     const success = $('#rsvpSuccess');
-    const successName = $('#successName');
+    const successEyebrow = $('#successEyebrow');
+    const successTitle = $('#successTitle');
+    const successBody = $('#successBody');
+    const successAttendance = $('#successAttendance');
+    const successGuests = $('#successGuests');
+    const successMessage = $('#successMessage');
     const editButton = $('#editResponse');
+    const cancelEditButton = $('#cancelRsvpEdit');
+    const existingNote = $('#rsvpExistingNote');
+    const submitLabel = $('#rsvpSubmitLabel');
+    let savedPayload = null;
+    let isEditingExisting = false;
+
     function getResponses() {
-        try {
-            return JSON.parse(localStorage.getItem(storageKey) || '[]');
-        }
-        catch (_) {
-            return [];
-        }
+        try { return JSON.parse(localStorage.getItem(storageKey) || '[]'); }
+        catch (_) { return []; }
     }
     function saveLocal(payload) {
         const responses = getResponses();
         const index = responses.findIndex(item => item.invitationId === payload.invitationId);
-        if (index >= 0)
-            responses[index] = payload;
-        else
-            responses.push(payload);
+        if (index >= 0) responses[index] = payload; else responses.push(payload);
         localStorage.setItem(storageKey, JSON.stringify(responses));
         localStorage.setItem(responseKey, JSON.stringify(payload));
     }
+    function attendanceLabel(value) { return value === 'Attending' ? t('rsvp.attending') : t('rsvp.unable'); }
+    function guestCountLabel(payload) {
+        if (payload.attendance === 'Not attending') return '—';
+        const count = Math.min(4, Math.max(1, Number(payload.guestCount) || 1));
+        return t(`rsvp.${['oneGuest','twoGuests','threeGuests','fourGuests'][count - 1]}`);
+    }
     function populate(payload) {
-        if (!payload)
-            return;
+        if (!payload) return;
         nameInput.value = payload.guestName || '';
-        const radio = $(`input[name="attendance"][value="${CSS.escape(payload.attendance || '')}"]`);
-        if (radio)
-            radio.checked = true;
         $('#guestCount').value = payload.guestCount || '1';
         $('#message').value = payload.message || '';
         invitationId.value = payload.invitationId || invitationId.value;
-    }
-    try {
-        populate(JSON.parse(localStorage.getItem(responseKey) || 'null'));
-    }
-    catch (_) { }
-    async function submitRemote(payload) {
-        if (!config.googleAppsScriptUrl)
-            return { mode: 'local' };
-        const response = await fetch(config.googleAppsScriptUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
+        [...form.querySelectorAll('input[name="attendance"]')].forEach(radio => {
+            const selected = radio.value === payload.attendance;
+            radio.checked = selected;
+            radio.closest('.choice')?.classList.toggle('is-selected', selected);
         });
-        if (!response.ok)
-            throw new Error(`Submission failed (${response.status})`);
-        const result = await response.json().catch(() => ({ ok: true }));
-        if (result && result.ok === false)
-            throw new Error(result.error || 'The RSVP service rejected the response.');
+        const unable = payload.attendance === 'Not attending';
+        $('#guestCount').disabled = unable;
+        if (unable) $('#guestCount').value = '1';
+    }
+    function renderSuccess(payload, { updated = false, animate = true } = {}) {
+        if (!payload) return;
+        savedPayload = payload;
+        const name = payload.guestName || t('guestbook.guest');
+        successEyebrow.textContent = t(updated ? 'rsvp.updatedEyebrow' : 'rsvp.successEyebrow');
+        successTitle.textContent = t(updated ? 'rsvp.updatedTitle' : 'rsvp.successTitle', { name });
+        successBody.textContent = t(payload.attendance === 'Attending' ? 'rsvp.successAttending' : 'rsvp.successUnable');
+        successAttendance.textContent = attendanceLabel(payload.attendance);
+        successGuests.textContent = guestCountLabel(payload);
+        successMessage.textContent = payload.message || t('rsvp.noMessage');
+        form.hidden = true; success.hidden = false;
+        success.classList.toggle('is-updated', updated);
+        success.classList.remove('is-celebrating');
+        if (animate && !matchMedia('(prefers-reduced-motion: reduce)').matches)
+            requestAnimationFrame(() => success.classList.add('is-celebrating'));
+        isEditingExisting = false;
+    }
+    function beginEditing() {
+        if (savedPayload) populate(savedPayload);
+        success.hidden = true; form.hidden = false;
+        isEditingExisting = Boolean(savedPayload);
+        existingNote.hidden = !isEditingExisting;
+        cancelEditButton.hidden = !isEditingExisting;
+        submitLabel.textContent = t(isEditingExisting ? 'rsvp.updateSubmit' : 'rsvp.submit');
+        form.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+    }
+    function readLocalResponse() {
+        try { return JSON.parse(localStorage.getItem(responseKey) || 'null'); }
+        catch (_) { return null; }
+    }
+    async function lookupRemoteResponse() {
+        if (!idParam || !config.googleAppsScriptUrl) return null;
+        const separator = config.googleAppsScriptUrl.includes('?') ? '&' : '?';
+        const response = await fetch(`${config.googleAppsScriptUrl}${separator}action=rsvp&id=${encodeURIComponent(idParam)}`, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`RSVP lookup failed (${response.status})`);
+        const result = await response.json();
+        if (result?.ok === false) throw new Error(result.error || 'RSVP lookup rejected.');
+        return result?.found ? result.response : null;
+    }
+    async function restoreExistingResponse() {
+        const local = readLocalResponse();
+        if (local) { populate(local); renderSuccess(local, { animate: false }); }
+        if (!idParam || !config.googleAppsScriptUrl) return;
+        try {
+            const remote = await lookupRemoteResponse();
+            if (remote) { saveLocal(remote); populate(remote); renderSuccess(remote, { animate: false }); }
+        } catch (error) { console.info(t('rsvp.lookupError'), error); }
+    }
+    async function submitRemote(payload) {
+        if (!config.googleAppsScriptUrl) return { mode: 'local', updated: Boolean(savedPayload) };
+        const response = await fetch(config.googleAppsScriptUrl, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(payload) });
+        if (!response.ok) throw new Error(`Submission failed (${response.status})`);
+        const result = await response.json().catch(() => ({ ok:true }));
+        if (result?.ok === false) throw new Error(result.error || 'The RSVP service rejected the response.');
         return result;
     }
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        status.textContent = '';
-        if (!form.reportValidity())
-            return;
-        const submit = $('.submit-rsvp', form);
-        submit.disabled = true;
-        submit.classList.add('is-loading');
+    form.addEventListener('submit', async event => {
+        event.preventDefault(); status.textContent = '';
+        if (!form.reportValidity()) return;
+        const submit = $('.submit-rsvp', form); submit.disabled = true; submit.classList.add('is-loading');
         const data = new FormData(form);
-        const payload = {
-            invitationId: invitationId.value,
-            guestName: String(data.get('guestName') || '').trim(),
-            attendance: String(data.get('attendance') || ''),
-            guestCount: String(data.get('guestCount') || '1'),
-            message: String(data.get('message') || '').trim(),
-            rsvpTime: new Date().toISOString(),
-            language: window.inviteI18n?.language || navigator.language || 'en',
-            device: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
-            pageUrl: location.href
-        };
+        const payload = { invitationId:invitationId.value, guestName:String(data.get('guestName')||'').trim(), attendance:String(data.get('attendance')||''), guestCount:String(data.get('guestCount')||'1'), message:String(data.get('message')||'').trim(), rsvpTime:new Date().toISOString(), language:window.inviteI18n?.language||navigator.language||'en', device:/Mobi|Android/i.test(navigator.userAgent)?'mobile':'desktop', pageUrl:location.href };
         try {
-            await submitRemote(payload);
-            saveLocal(payload);
-            successName.textContent = payload.guestName;
-            form.hidden = true;
-            success.hidden = false;
-            renderGuestbook();
-        }
-        catch (error) {
-            status.textContent = t('rsvp.error');
-            console.error(error);
-        }
-        finally {
-            submit.disabled = false;
-            submit.classList.remove('is-loading');
-        }
+            const result = await submitRemote(payload);
+            const updated = Boolean(result?.updated || savedPayload || isEditingExisting);
+            saveLocal(payload); renderSuccess(payload, { updated }); renderGuestbook();
+        } catch (error) { status.textContent = t('rsvp.error'); console.error(error); }
+        finally { submit.disabled = false; submit.classList.remove('is-loading'); }
     });
-    editButton.addEventListener('click', () => { success.hidden = true; form.hidden = false; form.scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+    editButton.addEventListener('click', beginEditing);
+    cancelEditButton.addEventListener('click', () => savedPayload && renderSuccess(savedPayload, { animate:false }));
+    restoreExistingResponse();
     const sky = $('#messageSky');
     const popover = $('#messagePopover');
     const controls = $('#guestbookControls');
@@ -629,8 +658,9 @@
     window.addEventListener('editorial:language-changed', () => {
         if (guestParam) applyPersonalisation();
         else greeting.textContent = t('prologue.greeting');
-        const successHeading = success?.querySelector('h3');
-        if (successHeading) successHeading.textContent = t('rsvp.successTitle', { name: successName?.textContent || t('guestbook.guest') });
+        if (savedPayload) renderSuccess(savedPayload, { updated: success.classList.contains('is-updated'), animate: false });
+        submitLabel.textContent = t(isEditingExisting ? 'rsvp.updateSubmit' : 'rsvp.submit');
+        if (!cancelEditButton.hidden) cancelEditButton.textContent = t('rsvp.cancelEdit');
         renderGuestbook();
     });
     renderGuestbook();

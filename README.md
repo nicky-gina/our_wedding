@@ -222,3 +222,7 @@ Cinematic transform-and-opacity interludes were added between major story acts.
 ## V3.10.2 — Personalized Greeting Fix
 - Prevents the initial multilingual translation pass from replacing the personalized prologue greeting with the generic greeting.
 - Personalized greetings still update when the language is changed.
+
+
+## V3.11 RSVP enhancements
+Returning guests can retrieve and update an RSVP using the invitation ID in their personal link. Redeploy `backend/Code.gs` after updating the Apps Script project.

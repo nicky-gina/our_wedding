@@ -577,6 +577,10 @@
        </p>
 </div>
 <form class="rsvp-card reveal" id="rsvpForm" novalidate="">
+<div aria-live="polite" class="rsvp-existing-note" hidden id="rsvpExistingNote">
+<span aria-hidden="true">✦</span>
+<p data-i18n="rsvp.returningNote">We found a response saved for this invitation. You can update it below.</p>
+</div>
 <div aria-live="assertive" class="form-status" id="formStatus" role="alert">
 </div>
 <label>
@@ -623,40 +627,37 @@
 <textarea autocomplete="off" id="message" maxlength="500" name="message" placeholder="Share a wish, memory, or kind thought..." rows="4"></textarea>
 </label>
 <input id="invitationId" name="invitationId" type="hidden"/>
+<div class="rsvp-form-actions">
 <button class="submit-rsvp" type="submit">
-<span data-i18n="rsvp.submit">
-         Send my response
-        </span>
-<i aria-hidden="true">
-         →
-        </i>
+<span data-i18n="rsvp.submit" id="rsvpSubmitLabel">Send my response</span>
+<i aria-hidden="true">→</i>
 </button>
+<button class="cancel-rsvp-edit" data-i18n="rsvp.cancelEdit" hidden id="cancelRsvpEdit" type="button">Cancel editing</button>
+</div>
 <p class="deadline-note" id="deadlineNote">
 </p>
 <p class="privacy-note" data-i18n="rsvp.privacy">
         Your response is used only for wedding planning and our guestbook.
        </p>
 </form>
-<div aria-atomic="true" aria-live="polite" class="rsvp-success" hidden="" id="rsvpSuccess" role="status">
-<span class="success-star">
-        ✦
-       </span>
-<p class="eyebrow" data-i18n="rsvp.successEyebrow">
-        Response received
-       </p>
-<h3 data-i18n-template="rsvp.successTitle">
-        Thank you,
-        <span id="successName">
-         dear guest
-        </span>
-        .
-       </h3>
-<p data-i18n="rsvp.successBody">
-        Your wish has become part of our night sky.
-       </p>
-<button data-i18n="rsvp.edit" id="editResponse" type="button">
-        Edit response
-       </button>
+<div aria-atomic="true" aria-live="polite" class="rsvp-success" hidden id="rsvpSuccess" role="status">
+<div class="rsvp-success-sky" aria-hidden="true">
+<span class="success-orbit success-orbit-one"></span><span class="success-orbit success-orbit-two"></span>
+<span class="success-particle particle-one">✦</span><span class="success-particle particle-two">✦</span><span class="success-particle particle-three">✦</span>
+<span class="success-star">✦</span>
+</div>
+<div class="rsvp-success-content">
+<p class="eyebrow" id="successEyebrow">Response received</p>
+<h3 id="successTitle">Thank you, dear guest.</h3>
+<p class="rsvp-success-message" id="successBody">Your response has been written among the stars.</p>
+<dl class="rsvp-summary" aria-label="RSVP summary">
+<div><dt data-i18n="rsvp.summaryAttendance">Attendance</dt><dd id="successAttendance">—</dd></div>
+<div><dt data-i18n="rsvp.summaryGuests">Guests</dt><dd id="successGuests">—</dd></div>
+<div class="rsvp-summary-message"><dt data-i18n="rsvp.summaryMessage">Your message</dt><dd id="successMessage">—</dd></div>
+</dl>
+<p class="rsvp-return-note" data-i18n="rsvp.returnNote">Keep this personal invitation link to view or update your response later.</p>
+<button data-i18n="rsvp.edit" id="editResponse" type="button">Edit response</button>
+</div>
 </div>
 </div>
 </section>
