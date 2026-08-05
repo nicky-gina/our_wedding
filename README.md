@@ -1,8 +1,8 @@
-# Editorial Invitation V3.13 — Tiered Typography Finish
+# Editorial Invitation V4.0 — Production Release
 
 A cinematic, celestial, editorial-style digital wedding invitation for **Nicky & Gina**.
 
-**Current release:** V3.13  
+**Current release:** V4.0  
 **Production date:** 11 October 2026, 19:00 WIB  
 **Venue:** MDC Hall Jakarta
 
@@ -451,3 +451,47 @@ These fixes are part of the current baseline and should be preserved during futu
 ## Future milestone
 
 The next planned release is **V4.0 — Final Code Polish and production hardening**, including structural cleanup, removal of dead or duplicated code, final regression testing, and deployment documentation review.
+
+
+## V4.0 — Final Code Polish and production hardening
+
+V4.0 preserves the V3.13 design and guest experience while making the project safer and easier to maintain.
+
+### Runtime structure
+
+The former monolithic `js/app.js` was divided along its existing independent boundaries:
+
+- `js/core.js` — opening sequence, music, celestial world, chapter progress, reveals and scroll motion
+- `js/rsvp-guestbook.js` — personalization, countdown, RSVP retrieval/editing/submission and guestbook UI
+- `js/venue-gallery.js` — venue behavior, Google Sheets requests and gallery interaction
+- `js/i18n.js` — English, Indonesian and Simplified Chinese dictionaries
+- `js/config.js` — wedding settings, endpoints and gallery configuration
+
+The script order in `index.html` is intentional and must be preserved.
+
+### Regression-risk cleanup
+
+- Removed the obsolete filtered pseudo-element moon renderer.
+- Retained only the stable transparent `<img>` moon path.
+- Removed an unused gallery placeholder initializer.
+- Removed unused story-photo placeholder styling.
+- Preserved portrait framing, real-wishes-only behavior and mobile renderer safeguards.
+
+### Production hardening
+
+- Added canonical, Open Graph and social-sharing metadata.
+- Added privacy-oriented search metadata so personalized URLs are not indexed.
+- Added a web app manifest, favicon and home-screen icons.
+- Added intrinsic image dimensions to reduce layout shift.
+- Added safer external-map link behavior.
+- Added a dependency-free validator for JavaScript parsing, required files, required DOM IDs, local asset references, moon safeguards and portrait-frame safeguards.
+
+Run:
+
+```bash
+npm run validate
+```
+
+No package installation is required.
+
+---

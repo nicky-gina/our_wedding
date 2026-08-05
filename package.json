@@ -1,0 +1,9 @@
+{
+  "name": "nicky-gina-editorial-invitation",
+  "private": true,
+  "version": "4.0.0",
+  "description": "Celestial editorial wedding invitation",
+  "scripts": {
+    "validate": "node tools/validate-project.mjs"
+  }
+}

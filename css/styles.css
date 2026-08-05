@@ -2923,60 +2923,6 @@ html, body {
   }
 }
 
-/* Iteration 4.8 — custom moon asset replacement */
-
-.prelude-moon, .moon {
-  background: transparent !important;
-  box-shadow: none !important;
-  overflow: visible;
-}
-
-.prelude-moon::before, .moon::before {
-  display:none !important;
-  content:none !important;
-}
-
-.prelude-moon::after, .moon::after {
-  content:"";
-  position:absolute;
-  inset:0;
-  background-image:url("../assets/moon/custom-moon.png");
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size:contain;
-  filter: drop-shadow(0 0 16px rgba(185,221,255,.32)) drop-shadow(0 0 42px rgba(125,178,255,.18));
-}
-
-.prelude-moon {
-  width:min(42vw,380px);
-}
-
-.moon-wrap {
-  width:clamp(180px,28vw,430px);
-}
-
-@media (max-width:800px) {
-  .moon-wrap {
-    right:-4vw;
-    top:10vh;
-    width:56vw;
-  }
-  .prelude-moon {
-    width:min(70vw,330px);
-    top:6vh;
-  }
-}
-
-@media (max-width:480px) {
-  .prelude-moon {
-    width:min(72vw,310px);
-  }
-  .moon-wrap {
-    width:58vw;
-    right:-2vw;
-  }
-}
-
 /* ========================================================================== 
    Iteration 4.11 — Story milestone photo placeholders
    ========================================================================== */
