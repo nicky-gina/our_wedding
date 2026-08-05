@@ -226,3 +226,7 @@ Cinematic transform-and-opacity interludes were added between major story acts.
 
 ## V3.11 RSVP enhancements
 Returning guests can retrieve and update an RSVP using the invitation ID in their personal link. Redeploy `backend/Code.gs` after updating the Apps Script project.
+
+
+## V3.12
+Adds scalable guestbook search, random discovery, animated new-star creation, and a polished accessible wish dialog. Update the Apps Script deployment using the included `backend/Code.gs`.

@@ -86,6 +86,10 @@ function doGet(e) {
       return getRsvp_(e);
     }
 
+    if (action === 'randomWish') {
+      return getRandomWish_();
+    }
+
     return json_({
       ok: true,
       service: 'Editorial Invitation V3 RSVP',
@@ -113,6 +117,7 @@ function getGuestbook_(e) {
   const requestedPage = Number((e && e.parameter && e.parameter.page) || 1);
   const requestedPageSize = Number((e && e.parameter && e.parameter.pageSize) || 24);
   const pageSize = Math.max(1, Math.min(48, Math.floor(requestedPageSize) || 24));
+  const search = clean_(e && e.parameter && e.parameter.search, 80).toLowerCase();
 
   if (lastRow < 2) {
     return json_({ ok: true, messages: [], page: 1, pageSize, total: 0, totalPages: 1 });
@@ -126,6 +131,7 @@ function getGuestbook_(e) {
       guestName: String(row[0] || 'Guest'),
       message: String(row[3] || '')
     }))
+    .filter(item => !search || `${item.guestName} ${item.message}`.toLowerCase().includes(search))
     .reverse();
 
   const total = allMessages.length;
@@ -135,6 +141,24 @@ function getGuestbook_(e) {
   const messages = allMessages.slice(start, start + pageSize);
 
   return json_({ ok: true, messages, page, pageSize, total, totalPages });
+}
+
+
+function getRandomWish_() {
+  const sheet = getResponsesSheet_();
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return json_({ ok: true, message: null });
+
+  const values = sheet.getRange(2, 2, lastRow - 1, 4).getValues();
+  const messages = values
+    .filter(row => String(row[3] || '').trim())
+    .map(row => ({
+      guestName: String(row[0] || 'Guest'),
+      message: String(row[3] || '')
+    }));
+
+  if (!messages.length) return json_({ ok: true, message: null });
+  return json_({ ok: true, message: messages[Math.floor(Math.random() * messages.length)] });
 }
 
 function getResponsesSheet_() {

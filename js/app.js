@@ -537,7 +537,10 @@
         try {
             const result = await submitRemote(payload);
             const updated = Boolean(result?.updated || savedPayload || isEditingExisting);
-            saveLocal(payload); renderSuccess(payload, { updated }); renderGuestbook();
+            saveLocal(payload);
+            window.dispatchEvent(new CustomEvent('editorial:rsvp-saved', { detail: payload }));
+            renderSuccess(payload, { updated });
+            renderGuestbook();
         } catch (error) { status.textContent = t('rsvp.error'); console.error(error); }
         finally { submit.disabled = false; submit.classList.remove('is-loading'); }
     });
@@ -546,8 +549,13 @@
     restoreExistingResponse();
     const sky = $('#messageSky');
     const popover = $('#messagePopover');
+    const popoverBackdrop = $('#messagePopoverBackdrop');
     const controls = $('#guestbookControls');
     const pageStatus = $('#guestbookPageStatus');
+    const searchStatus = $('#guestbookSearchStatus');
+    const searchInput = $('#guestbookSearch');
+    const discoverButton = $('#discoverWish');
+    const anotherWishButton = $('#anotherWish');
     const newerButton = $('#newerWishes');
     const olderButton = $('#olderWishes');
     const PAGE_SIZE = 24;
@@ -555,11 +563,18 @@
     let totalPages = 1;
     let totalMessages = 0;
     let sharedPageMessages = [];
+    let searchQuery = '';
+    let searchTimer = 0;
+    let previouslyFocusedElement = null;
+    let newlySubmittedKey = '';
     const defaultMessages = [
         { guestName: 'A shared wish', message: 'May your life together be filled with patience, kindness, and laughter.' },
         { guestName: 'From the night sky', message: 'May every ordinary day become a memory worth keeping.' },
         { guestName: 'A quiet blessing', message: 'May you always find peace in one another’s presence.' }
     ];
+    function messageKey(item) {
+        return `${String(item?.guestName || '').trim()}|${String(item?.message || '').trim()}`;
+    }
     function seededPosition(seed) {
         let hash = 0;
         for (let i = 0; i < seed.length; i++)
@@ -567,18 +582,35 @@
         return { left: 8 + Math.abs(hash % 84), top: 10 + Math.abs((hash >> 4) % 76), delay: Math.abs(hash % 4000) };
     }
     function openMessage(item) {
+        if (!item) return;
+        previouslyFocusedElement = document.activeElement;
         $('#popoverMessage').textContent = `“${item.message}”`;
         $('#popoverName').textContent = `— ${item.guestName}`;
+        popoverBackdrop.hidden = false;
         popover.hidden = false;
+        document.body.classList.add('is-reading-wish');
+        requestAnimationFrame(() => {
+            popoverBackdrop.classList.add('is-visible');
+            popover.classList.add('is-visible');
+            $('#closeMessage').focus({ preventScroll: true });
+        });
+    }
+    function closeMessage() {
+        popoverBackdrop.classList.remove('is-visible');
+        popover.classList.remove('is-visible');
+        document.body.classList.remove('is-reading-wish');
+        setTimeout(() => {
+            popover.hidden = true;
+            popoverBackdrop.hidden = true;
+            previouslyFocusedElement?.focus?.({ preventScroll: true });
+        }, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 280);
     }
     function getCachedGuestbookPage() {
         try {
             const cached = JSON.parse(localStorage.getItem('editorial-v3-guestbook-page') || '{}');
             return cached && Array.isArray(cached.messages) ? cached : null;
         }
-        catch (_) {
-            return null;
-        }
+        catch (_) { return null; }
     }
     function uniqueMessages(items) {
         const unique = new Map();
@@ -586,33 +618,52 @@
             const name = String(item?.guestName || t('guestbook.guest')).trim();
             const message = String(item?.message || '').trim();
             const key = `${name}|${message}`;
-            if (message && !unique.has(key))
-                unique.set(key, { guestName: name, message });
+            if (message && !unique.has(key)) unique.set(key, { guestName: name, message });
         });
         return [...unique.values()];
+    }
+    function localSearchMessages(query) {
+        const normalized = query.trim().toLocaleLowerCase();
+        const items = uniqueMessages([
+            ...getResponses().filter(item => item.message),
+            ...sharedPageMessages,
+            ...defaultMessages
+        ]);
+        if (!normalized) return items;
+        return items.filter(item => `${item.guestName} ${item.message}`.toLocaleLowerCase().includes(normalized));
     }
     function updatePageControls() {
         const hasMultiplePages = totalPages > 1;
         controls.hidden = !hasMultiplePages;
         newerButton.disabled = currentPage <= 1;
         olderButton.disabled = currentPage >= totalPages;
-        if (!hasMultiplePages) {
-            pageStatus.textContent = '';
-            return;
-        }
+        if (!hasMultiplePages) { pageStatus.textContent = ''; return; }
         const first = ((currentPage - 1) * PAGE_SIZE) + 1;
         const last = Math.min(currentPage * PAGE_SIZE, totalMessages);
         pageStatus.textContent = t('guestbook.pageStatus', { first, last, total: totalMessages });
+    }
+    function updateSearchStatus() {
+        if (!searchQuery) { searchStatus.textContent = ''; return; }
+        searchStatus.textContent = totalMessages
+            ? t('guestbook.searchResults', { count: totalMessages, query: searchQuery })
+            : t('guestbook.noSearchResults', { query: searchQuery });
     }
     function renderGuestbook() {
         sky.innerHTML = '';
         const localMessages = getResponses().filter(item => item.message);
         const fallback = currentPage === 1 ? [...localMessages, ...defaultMessages] : [];
-        const messages = uniqueMessages([...sharedPageMessages, ...fallback]).slice(0, PAGE_SIZE);
+        let messages = uniqueMessages([...sharedPageMessages, ...fallback]);
+        if (searchQuery && !window.EDITORIAL_INVITE_CONFIG?.googleAppsScriptUrl) {
+            messages = localSearchMessages(searchQuery);
+            totalMessages = messages.length;
+            totalPages = Math.max(1, Math.ceil(totalMessages / PAGE_SIZE));
+            messages = messages.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+        }
+        messages = messages.slice(0, PAGE_SIZE);
         if (!messages.length) {
             const empty = document.createElement('p');
             empty.className = 'message-sky-empty';
-            empty.textContent = t('guestbook.empty');
+            empty.textContent = searchQuery ? t('guestbook.noSearchResults', { query: searchQuery }) : t('guestbook.empty');
             sky.appendChild(empty);
         }
         messages.forEach((item, index) => {
@@ -625,21 +676,82 @@
             button.style.top = `${pos.top}%`;
             button.style.animationDelay = `${pos.delay}ms`;
             button.innerHTML = '<span>✦</span>';
+            if (messageKey(item) === newlySubmittedKey) {
+                button.classList.add('is-new');
+                button.addEventListener('animationend', () => button.classList.remove('is-new'), { once: true });
+            }
             button.addEventListener('click', () => openMessage(item));
             sky.appendChild(button);
         });
+        newlySubmittedKey = '';
         sky.classList.remove('is-loading');
         updatePageControls();
+        updateSearchStatus();
     }
     function requestPage(page) {
         const nextPage = Math.max(1, Math.min(totalPages || page, page));
+        const config = window.EDITORIAL_INVITE_CONFIG || {};
+        if (!config.googleAppsScriptUrl || !config.enableSharedGuestbook) {
+            currentPage = nextPage;
+            renderGuestbook();
+            return;
+        }
         sky.classList.add('is-loading');
         sky.innerHTML = '';
-        window.dispatchEvent(new CustomEvent('editorial:guestbook-page-request', { detail: { page: nextPage, pageSize: PAGE_SIZE } }));
+        window.dispatchEvent(new CustomEvent('editorial:guestbook-page-request', {
+            detail: { page: nextPage, pageSize: PAGE_SIZE, search: searchQuery }
+        }));
     }
-    $('#closeMessage').addEventListener('click', () => { popover.hidden = true; });
+    async function discoverRandomWish() {
+        discoverButton.disabled = true;
+        anotherWishButton.disabled = true;
+        try {
+            const config = window.EDITORIAL_INVITE_CONFIG || {};
+            if (config.googleAppsScriptUrl && config.enableSharedGuestbook) {
+                const separator = config.googleAppsScriptUrl.includes('?') ? '&' : '?';
+                const response = await fetch(`${config.googleAppsScriptUrl}${separator}action=randomWish`, { cache: 'no-store' });
+                if (!response.ok) throw new Error(`Random wish request failed with ${response.status}.`);
+                const payload = await response.json();
+                if (payload?.message?.message) { openMessage(payload.message); return; }
+            }
+            const available = localSearchMessages('');
+            if (available.length) openMessage(available[Math.floor(Math.random() * available.length)]);
+        }
+        catch (error) {
+            console.info('Random wish unavailable; using local wishes.', error);
+            const available = localSearchMessages('');
+            if (available.length) openMessage(available[Math.floor(Math.random() * available.length)]);
+        }
+        finally {
+            discoverButton.disabled = false;
+            anotherWishButton.disabled = false;
+        }
+    }
+    $('#closeMessage').addEventListener('click', closeMessage);
+    popoverBackdrop.addEventListener('click', closeMessage);
     newerButton.addEventListener('click', () => requestPage(currentPage - 1));
     olderButton.addEventListener('click', () => requestPage(currentPage + 1));
+    discoverButton.addEventListener('click', discoverRandomWish);
+    anotherWishButton.addEventListener('click', discoverRandomWish);
+    searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+            searchQuery = searchInput.value.trim();
+            currentPage = 1;
+            requestPage(1);
+        }, 320);
+    });
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && !popover.hidden) closeMessage();
+        if (event.key === 'Tab' && !popover.hidden) {
+            const focusable = [...popover.querySelectorAll('button:not(:disabled)')];
+            if (!focusable.length) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+            else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        }
+    });
     window.addEventListener('editorial:shared-messages', event => {
         const detail = event.detail || {};
         sharedPageMessages = Array.isArray(detail.messages) ? detail.messages : [];
@@ -661,6 +773,14 @@
         if (savedPayload) renderSuccess(savedPayload, { updated: success.classList.contains('is-updated'), animate: false });
         submitLabel.textContent = t(isEditingExisting ? 'rsvp.updateSubmit' : 'rsvp.submit');
         if (!cancelEditButton.hidden) cancelEditButton.textContent = t('rsvp.cancelEdit');
+        renderGuestbook();
+    });
+    window.addEventListener('editorial:rsvp-saved', event => {
+        const item = event.detail || {};
+        if (item.message) newlySubmittedKey = messageKey(item);
+        currentPage = 1;
+        searchQuery = '';
+        searchInput.value = '';
         renderGuestbook();
     });
     renderGuestbook();
@@ -724,12 +844,13 @@
         }
     });
     // Paginated shared guestbook endpoint. Only one small page is rendered at a time.
-    async function loadSharedGuestbook(page = 1, pageSize = 24) {
+    async function loadSharedGuestbook(page = 1, pageSize = 24, search = '') {
         if (!config.googleAppsScriptUrl || !config.enableSharedGuestbook)
             return;
         try {
             const separator = config.googleAppsScriptUrl.includes('?') ? '&' : '?';
-            const url = `${config.googleAppsScriptUrl}${separator}action=guestbook&page=${encodeURIComponent(page)}&pageSize=${encodeURIComponent(pageSize)}`;
+            const searchPart = search ? `&search=${encodeURIComponent(search)}` : '';
+            const url = `${config.googleAppsScriptUrl}${separator}action=guestbook&page=${encodeURIComponent(page)}&pageSize=${encodeURIComponent(pageSize)}${searchPart}`;
             const response = await fetch(url, { cache: 'no-store' });
             if (!response.ok)
                 throw new Error(`Guestbook request failed with ${response.status}.`);
@@ -739,7 +860,9 @@
                 : json;
             if (!Array.isArray(payload.messages))
                 throw new Error('Guestbook response did not include messages.');
-            localStorage.setItem('editorial-v3-guestbook-page', JSON.stringify(payload));
+            // Keep the startup cache unfiltered. Search result pages should not
+            // replace the normal first-page cache used on the next visit.
+            if (!search) localStorage.setItem('editorial-v3-guestbook-page', JSON.stringify(payload));
             window.dispatchEvent(new CustomEvent('editorial:shared-messages', { detail: payload }));
         }
         catch (error) {
@@ -749,7 +872,7 @@
     }
     window.addEventListener('editorial:guestbook-page-request', event => {
         const detail = event.detail || {};
-        loadSharedGuestbook(Number(detail.page) || 1, Number(detail.pageSize) || 24);
+        loadSharedGuestbook(Number(detail.page) || 1, Number(detail.pageSize) || 24, String(detail.search || ''));
     });
     loadSharedGuestbook(1, 24);
     // Slow photographic parallax, disabled for reduced motion.
