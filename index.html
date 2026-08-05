@@ -700,12 +700,21 @@
 </div>
 <div class="message-popover-backdrop" hidden="" id="messagePopoverBackdrop"></div>
 <article aria-describedby="popoverMessage" aria-labelledby="popoverName" aria-modal="true" class="message-popover" hidden="" id="messagePopover" role="dialog">
-<div aria-hidden="true" class="message-popover-star">✦</div>
+<span aria-hidden="true" class="message-popover-corner corner-top-left"></span>
+<span aria-hidden="true" class="message-popover-corner corner-top-right"></span>
+<span aria-hidden="true" class="message-popover-corner corner-bottom-left"></span>
+<span aria-hidden="true" class="message-popover-corner corner-bottom-right"></span>
+<button aria-label="Close message" data-i18n-aria-label="guestbook.closeAria" id="closeMessage" type="button"><span aria-hidden="true">×</span></button>
+<div aria-hidden="true" class="message-popover-star"><span>✦</span></div>
 <p class="message-popover-eyebrow" data-i18n="guestbook.wishEyebrow">A wish among the stars</p>
-<button aria-label="Close message" data-i18n-aria-label="guestbook.closeAria" id="closeMessage" type="button">×</button>
 <p id="popoverMessage"></p>
 <strong id="popoverName"></strong>
-<button class="message-popover-random" data-i18n="guestbook.another" id="anotherWish" type="button">Discover another wish</button>
+<div aria-hidden="true" class="message-popover-divider"><span></span></div>
+<button aria-busy="false" class="message-popover-random" id="anotherWish" type="button">
+<span aria-hidden="true" class="message-popover-random-icon">✦</span>
+<span aria-hidden="true" class="message-popover-random-spinner"></span>
+<span data-i18n="guestbook.another" id="anotherWishLabel">Discover another wish</span>
+</button>
 </article>
 </div>
 </section>

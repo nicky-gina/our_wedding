@@ -4849,3 +4849,578 @@ body.is-reading-wish {
     transition: none !important;
   }
 }
+
+/* ================================================================
+   V3.12.1 — Premium celestial wish card
+   Lightweight: opacity/transform only; no backdrop blur or image filters.
+   ================================================================ */
+
+.message-popover {
+  --wish-frame: rgba(214, 190, 148, .82);
+  --wish-frame-soft: rgba(214, 190, 148, .38);
+  --wish-copy: #f3eee5;
+  width: min(calc(100vw - 36px), 590px);
+  max-height: min(84svh, 760px);
+  padding: clamp(72px, 9vh, 94px) clamp(30px, 6vw, 66px) clamp(34px, 5vh, 48px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--wish-frame);
+  border-radius: 0;
+  background:
+    radial-gradient(circle at 50% 4%, rgba(107, 139, 181, .13), transparent 32%),
+    linear-gradient(155deg, rgba(7, 24, 45, .995), rgba(2, 11, 23, .995));
+  color: var(--wish-copy);
+  box-shadow:
+    0 28px 90px rgba(0, 0, 0, .72),
+    inset 0 0 70px rgba(78, 111, 154, .055);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(214, 190, 148, .35) transparent;
+}
+
+.message-popover::-webkit-scrollbar {
+  width: 4px;
+}
+
+.message-popover::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(214, 190, 148, .35);
+}
+
+.message-popover::before {
+  inset: 11px;
+  border: 1px solid var(--wish-frame-soft);
+}
+
+.message-popover::after {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  z-index: 0;
+  border: 1px solid rgba(214, 190, 148, .08);
+  pointer-events: none;
+}
+
+.message-popover > * {
+  position: relative;
+  z-index: 2;
+}
+
+.message-popover-corner {
+  position: absolute;
+  z-index: 3;
+  width: 30px;
+  height: 30px;
+  pointer-events: none;
+}
+
+.message-popover-corner::before,
+.message-popover-corner::after {
+  content: "";
+  position: absolute;
+  background: var(--wish-frame);
+}
+
+.message-popover-corner::before {
+  width: 18px;
+  height: 1px;
+}
+
+.message-popover-corner::after {
+  width: 1px;
+  height: 18px;
+}
+
+.message-popover-corner.corner-top-left {
+  left: -1px;
+  top: -1px;
+  border-top-left-radius: 17px;
+  box-shadow: -5px -5px 0 -4px var(--wish-frame);
+}
+
+.message-popover-corner.corner-top-left::before,
+.message-popover-corner.corner-bottom-left::before {
+  left: 0;
+}
+
+.message-popover-corner.corner-top-left::after,
+.message-popover-corner.corner-top-right::after {
+  top: 0;
+}
+
+.message-popover-corner.corner-top-right {
+  right: -1px;
+  top: -1px;
+  transform: scaleX(-1);
+}
+
+.message-popover-corner.corner-bottom-left {
+  left: -1px;
+  bottom: -1px;
+  transform: scaleY(-1);
+}
+
+.message-popover-corner.corner-bottom-right {
+  right: -1px;
+  bottom: -1px;
+  transform: scale(-1);
+}
+
+.message-popover button#closeMessage {
+  display: grid;
+  place-items: center;
+  right: 22px;
+  top: 20px;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid rgba(214, 190, 148, .5);
+  border-radius: 50%;
+  background: rgba(4, 15, 29, .56);
+  color: var(--wish-copy);
+  font-family: var(--sans);
+  font-size: 27px;
+  font-weight: 200;
+  line-height: 1;
+  transition: transform .22s ease, border-color .22s ease, background .22s ease;
+}
+
+.message-popover button#closeMessage:hover {
+  transform: rotate(5deg);
+  border-color: rgba(239, 220, 183, .9);
+  background: rgba(20, 43, 70, .72);
+}
+
+.message-popover-star {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 0 auto 27px;
+  color: #e3c99c;
+  font-size: 38px;
+  filter: none;
+}
+
+.message-popover-star::before,
+.message-popover-star::after {
+  content: "";
+  width: clamp(30px, 8vw, 58px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(214, 190, 148, .65));
+}
+
+.message-popover-star::after {
+  transform: scaleX(-1);
+}
+
+.message-popover-star span {
+  display: inline-block;
+  animation: wishEmblemPulse 4.4s ease-in-out infinite;
+}
+
+@keyframes wishEmblemPulse {
+  0%, 100% { opacity: .72; transform: scale(.94) rotate(0); }
+  50% { opacity: 1; transform: scale(1.06) rotate(8deg); }
+}
+
+.message-popover-eyebrow {
+  margin: 0 0 clamp(27px, 4vh, 38px) !important;
+  color: rgba(227, 201, 156, .88);
+  font-family: var(--sans) !important;
+  font-size: clamp(8px, 1.8vw, 11px) !important;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: clamp(.23em, .8vw, .38em);
+  text-transform: uppercase;
+}
+
+.message-popover p#popoverMessage {
+  max-width: 16em;
+  margin: 0 auto clamp(25px, 4vh, 36px);
+  color: var(--wish-copy);
+  font-family: var(--serif);
+  font-size: clamp(25px, 5.5vw, 42px);
+  font-weight: 400;
+  line-height: 1.27;
+  letter-spacing: -.015em;
+  text-wrap: balance;
+}
+
+.message-popover strong {
+  display: block;
+  margin: 0 auto clamp(25px, 4vh, 34px);
+  color: rgba(232, 225, 214, .78);
+  font-family: var(--sans);
+  font-size: clamp(8px, 1.8vw, 10px);
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+}
+
+
+.message-popover-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin: 0 auto 25px;
+  color: var(--wish-frame);
+}
+
+.message-popover-divider::before,
+.message-popover-divider::after {
+  content: "";
+  width: 38px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(214, 190, 148, .52));
+}
+
+.message-popover-divider::after {
+  transform: scaleX(-1);
+}
+
+.message-popover-divider span {
+  width: 7px;
+  height: 7px;
+  transform: rotate(45deg);
+  background: rgba(214, 190, 148, .9);
+}
+
+.message-popover-random {
+  position: relative !important;
+  inset: auto !important;
+  min-height: 0;
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 10px 18px 11px;
+  gap: 9px;
+  border: 1px solid rgba(214, 190, 148, .62);
+  border-radius: 999px;
+  background: rgba(7, 22, 41, .68);
+  color: #ead8b9;
+  font-family: var(--serif);
+  font-size: clamp(13px, 3vw, 17px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: .01em;
+  text-transform: none;
+  white-space: normal;
+  box-shadow: inset 0 0 22px rgba(214, 190, 148, .025);
+}
+
+.message-popover-random:hover {
+  transform: translateY(-1px);
+  border-color: rgba(239, 220, 183, .9);
+  background: rgba(17, 41, 67, .86);
+  color: #fff7e9;
+}
+
+.message-popover-random-icon {
+  flex: 0 0 auto;
+  color: var(--ivory);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* V3.12.2 — keep the CTA legible in idle, hover, focus, and loading states. */
+.message-popover-random,
+.message-popover-random > span,
+.message-popover-random:visited {
+  color: var(--ivory) !important;
+  -webkit-text-fill-color: var(--ivory);
+}
+
+.message-popover-random:focus-visible {
+  border-color: rgba(243, 238, 229, .92);
+  outline: 2px solid rgba(243, 238, 229, .34);
+  outline-offset: 3px;
+}
+
+.message-popover-random:disabled,
+.message-popover-random.is-loading {
+  opacity: 1;
+  cursor: wait;
+  border-color: rgba(214, 190, 148, .72);
+  background: rgba(12, 31, 54, .9);
+  color: var(--ivory) !important;
+}
+
+.message-popover-random-spinner {
+  display: none;
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  border: 1.5px solid rgba(243, 238, 229, .3);
+  border-top-color: var(--ivory);
+  border-radius: 50%;
+  animation: wishButtonSpin .72s linear infinite;
+}
+
+.message-popover-random.is-loading .message-popover-random-icon {
+  display: none;
+}
+
+.message-popover-random.is-loading .message-popover-random-spinner {
+  display: inline-block;
+}
+
+@keyframes wishButtonSpin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 560px) {
+  .message-popover {
+    width: min(calc(100vw - 28px), 500px);
+    max-height: calc(100svh - 34px);
+    padding: 66px 28px 31px;
+  }
+
+  .message-popover::before {
+    inset: 9px;
+  }
+
+  .message-popover::after {
+    inset: 15px;
+  }
+
+  .message-popover button#closeMessage {
+    right: 17px;
+    top: 16px;
+    width: 38px;
+    height: 38px;
+    font-size: 24px;
+  }
+
+  .message-popover-star {
+    margin-bottom: 21px;
+    font-size: 32px;
+  }
+
+  .message-popover-eyebrow {
+    margin-bottom: 25px !important;
+  }
+
+  .message-popover p#popoverMessage {
+    font-size: clamp(24px, 7.2vw, 34px);
+    line-height: 1.25;
+  }
+
+  .message-popover-random {
+    padding: 9px 15px 10px;
+    font-size: clamp(13px, 4vw, 16px);
+  }
+}
+
+@media (max-height: 680px) {
+  .message-popover {
+    max-height: calc(100svh - 24px);
+    padding-top: 58px;
+    padding-bottom: 26px;
+  }
+
+  .message-popover-star {
+    margin-bottom: 15px;
+  }
+
+  .message-popover-eyebrow {
+    margin-bottom: 18px !important;
+  }
+
+  .message-popover p#popoverMessage {
+    margin-bottom: 20px;
+    font-size: clamp(22px, 5.5vw, 34px);
+  }
+
+  .message-popover strong {
+    margin-bottom: 20px;
+  }
+
+  .message-popover-divider {
+    margin-bottom: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .message-popover-star span {
+    animation: none !important;
+  }
+}
+
+/* ================================================================
+   V3.13 — Tiered typography finish
+   Champagne-gold detailing is reserved for display typography and
+   editorial metadata. Body copy, forms, buttons, wishes and parent
+   information remain clean ivory/silver for sustained readability.
+   ================================================================ */
+
+:root {
+  --type-ivory: #f4efe7;
+  --champagne-gold: #d8bd89;
+  --champagne-gold-soft: rgba(216, 189, 137, .64);
+  --champagne-gold-muted: rgba(220, 198, 158, .82);
+  --champagne-gold-glow: rgba(196, 145, 70, .14);
+}
+
+/* Tier 1 — major editorial display typography.
+   A hairline champagne stroke keeps the original ivory fill intact. */
+.prelude-copy h1,
+.hero-title,
+.person-copy h2,
+.story-layout h2,
+.poster-layout h2,
+.venue-copy h2,
+.gallery-heading h2,
+.rsvp-intro h2,
+.guestbook-copy h2,
+.finale-layout h2,
+.rsvp-success h3 {
+  color: var(--type-ivory);
+  -webkit-text-stroke: .34px var(--champagne-gold-soft);
+  paint-order: stroke fill;
+  text-shadow:
+    0 0 1px rgba(246, 226, 187, .46),
+    0 2px 13px var(--champagne-gold-glow),
+    0 4px 22px rgba(0, 0, 0, .38);
+}
+
+/* Existing emphasis elements should remain part of the same lockup. */
+.hero-title em,
+.poster-layout h2 em,
+.venue-copy h2 em,
+.gallery-heading h2 em,
+.rsvp-intro h2 em,
+.guestbook-copy h2 em,
+.finale-layout h2 em {
+  color: inherit;
+}
+
+/* The script logo has finer strokes, so its gold edge is even lighter. */
+.prelude-copy h1 {
+  -webkit-text-stroke-width: .26px;
+  text-shadow:
+    0 0 1px rgba(248, 229, 192, .48),
+    0 2px 11px rgba(196, 145, 70, .12),
+    0 4px 20px rgba(0, 0, 0, .34);
+}
+
+/* Cinematic interludes receive the same finish at a restrained strength. */
+.scroll-narrative p {
+  color: var(--type-ivory);
+  -webkit-text-stroke: .22px rgba(216, 189, 137, .56);
+  paint-order: stroke fill;
+  text-shadow:
+    0 0 1px rgba(246, 226, 187, .36),
+    0 2px 12px rgba(196, 145, 70, .12),
+    0 4px 22px rgba(0, 0, 0, .46);
+}
+
+/* Tier 2 — important supporting values stay ivory with a warm gold lift. */
+.date-lockup strong,
+.event-grid strong,
+.story-meta strong,
+.person-quote,
+.venue-details dd,
+.gallery-caption,
+.rsvp-summary dd,
+.rsvp-success-message {
+  color: var(--type-ivory);
+  text-shadow:
+    0 0 1px rgba(225, 194, 138, .48),
+    0 2px 9px rgba(181, 126, 47, .10),
+    0 2px 14px rgba(0, 0, 0, .34);
+}
+
+/* Editorial metadata becomes a muted champagne accent rather than outlined text. */
+.kicker,
+.eyebrow,
+.prelude-date,
+.chapter-label span,
+.chapter-indicator,
+.date-lockup span,
+.story-meta span,
+.event-grid span,
+.venue-details dt,
+.gallery-location,
+.rsvp-summary dt {
+  color: var(--champagne-gold-muted);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, .5);
+}
+
+/* Preserve the purposefully cleaner third tier. */
+.hero-copy,
+.person-line,
+.parent-info,
+.story-body,
+.poster-note,
+.venue-copy > p:not(.eyebrow),
+.gallery-heading > p:last-child,
+.rsvp-intro > p:last-child,
+.guestbook-copy > p:last-child,
+.finale-layout > p:not(.eyebrow),
+.rsvp-card,
+.message-popover p#popoverMessage {
+  -webkit-text-stroke: 0;
+}
+
+/* Dense Chinese glyphs need a finer edge than Latin display text. */
+html[lang="zh-CN"] .hero-title,
+html[lang="zh-CN"] .person-copy h2,
+html[lang="zh-CN"] .story-layout h2,
+html[lang="zh-CN"] .poster-layout h2,
+html[lang="zh-CN"] .venue-copy h2,
+html[lang="zh-CN"] .gallery-heading h2,
+html[lang="zh-CN"] .rsvp-intro h2,
+html[lang="zh-CN"] .guestbook-copy h2,
+html[lang="zh-CN"] .finale-layout h2,
+html[lang="zh-CN"] .rsvp-success h3 {
+  -webkit-text-stroke-width: .22px;
+}
+
+@media (max-width: 800px) {
+  .hero-title,
+  .person-copy h2,
+  .story-layout h2,
+  .poster-layout h2,
+  .venue-copy h2,
+  .gallery-heading h2,
+  .rsvp-intro h2,
+  .guestbook-copy h2,
+  .finale-layout h2,
+  .rsvp-success h3 {
+    -webkit-text-stroke-width: .26px;
+    text-shadow:
+      0 0 1px rgba(246, 226, 187, .4),
+      0 2px 9px rgba(196, 145, 70, .10),
+      0 3px 16px rgba(0, 0, 0, .4);
+  }
+
+  .prelude-copy h1 {
+    -webkit-text-stroke-width: .2px;
+  }
+
+  .scroll-narrative p {
+    -webkit-text-stroke-width: .18px;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .prelude-copy h1,
+  .hero-title,
+  .person-copy h2,
+  .story-layout h2,
+  .poster-layout h2,
+  .venue-copy h2,
+  .gallery-heading h2,
+  .rsvp-intro h2,
+  .guestbook-copy h2,
+  .finale-layout h2,
+  .rsvp-success h3,
+  .scroll-narrative p {
+    -webkit-text-stroke: 0;
+    color: #fffaf1;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, .8);
+  }
+}

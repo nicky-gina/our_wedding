@@ -567,11 +567,6 @@
     let searchTimer = 0;
     let previouslyFocusedElement = null;
     let newlySubmittedKey = '';
-    const defaultMessages = [
-        { guestName: 'A shared wish', message: 'May your life together be filled with patience, kindness, and laughter.' },
-        { guestName: 'From the night sky', message: 'May every ordinary day become a memory worth keeping.' },
-        { guestName: 'A quiet blessing', message: 'May you always find peace in one another’s presence.' }
-    ];
     function messageKey(item) {
         return `${String(item?.guestName || '').trim()}|${String(item?.message || '').trim()}`;
     }
@@ -626,8 +621,7 @@
         const normalized = query.trim().toLocaleLowerCase();
         const items = uniqueMessages([
             ...getResponses().filter(item => item.message),
-            ...sharedPageMessages,
-            ...defaultMessages
+            ...sharedPageMessages
         ]);
         if (!normalized) return items;
         return items.filter(item => `${item.guestName} ${item.message}`.toLocaleLowerCase().includes(normalized));
@@ -651,7 +645,7 @@
     function renderGuestbook() {
         sky.innerHTML = '';
         const localMessages = getResponses().filter(item => item.message);
-        const fallback = currentPage === 1 ? [...localMessages, ...defaultMessages] : [];
+        const fallback = currentPage === 1 ? localMessages : [];
         let messages = uniqueMessages([...sharedPageMessages, ...fallback]);
         if (searchQuery && !window.EDITORIAL_INVITE_CONFIG?.googleAppsScriptUrl) {
             messages = localSearchMessages(searchQuery);
@@ -702,9 +696,21 @@
             detail: { page: nextPage, pageSize: PAGE_SIZE, search: searchQuery }
         }));
     }
+    function setRandomWishLoading(isLoading) {
+        discoverButton.disabled = isLoading;
+        anotherWishButton.disabled = isLoading;
+        anotherWishButton.classList.toggle('is-loading', isLoading);
+        anotherWishButton.setAttribute('aria-busy', String(isLoading));
+
+        const label = $('#anotherWishLabel');
+        if (label) {
+            label.textContent = isLoading
+                ? t('guestbook.loadingAnother')
+                : t('guestbook.another');
+        }
+    }
     async function discoverRandomWish() {
-        discoverButton.disabled = true;
-        anotherWishButton.disabled = true;
+        setRandomWishLoading(true);
         try {
             const config = window.EDITORIAL_INVITE_CONFIG || {};
             if (config.googleAppsScriptUrl && config.enableSharedGuestbook) {
@@ -723,8 +729,7 @@
             if (available.length) openMessage(available[Math.floor(Math.random() * available.length)]);
         }
         finally {
-            discoverButton.disabled = false;
-            anotherWishButton.disabled = false;
+            setRandomWishLoading(false);
         }
     }
     $('#closeMessage').addEventListener('click', closeMessage);
