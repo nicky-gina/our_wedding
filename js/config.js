@@ -6,7 +6,7 @@ window.EDITORIAL_INVITE_CONFIG = {
     enableSharedGuestbook: true,
     closeRsvpAfterDeadline: false,
     invitationPrefix: 'NG-2026',
-    mapUrl: 'https://www.google.com/maps/dir/?api=1&destination=MDC%20Hall%20Jakarta',
+    mapUrl: 'https://maps.app.goo.gl/r8Xmurpk1Du5aRp16',
     galleryItems: [
         {
             number: '01',
