@@ -36,7 +36,8 @@ if (fs.existsSync(htmlPath)) {
 
   for (const id of [
     'prelude', 'experience', 'main-content', 'rsvpForm', 'messageSky',
-    'messagePopover', 'galleryStage', 'musicToggle'
+    'messagePopover', 'galleryStage', 'musicToggle', 'guestbookSearchForm',
+    'guestbookSearchButton', 'discoverWish'
   ]) {
     if (!html.includes(`id="${id}"`)) failures.push(`Missing required element id: ${id}`);
   }
@@ -78,6 +79,26 @@ for (const file of [
   'assets/branding/icon-512.png'
 ]) {
   requireFile(file);
+}
+
+
+const corePath = requireFile('js/core.js');
+const rsvpPath = requireFile('js/rsvp-guestbook.js');
+const venuePath = requireFile('js/venue-gallery.js');
+
+if (fs.existsSync(corePath)) {
+  const core = fs.readFileSync(corePath, 'utf8');
+  if (!core.includes("root.classList.add('is-locked')")) failures.push('Root opening lock is missing.');
+  if (!core.includes('startWorldStars')) failures.push('Deferred world-star startup is missing.');
+  if (!core.includes("'is-exiting'")) failures.push('Interlude exit-state handling is missing.');
+}
+if (fs.existsSync(rsvpPath)) {
+  const rsvp = fs.readFileSync(rsvpPath, 'utf8');
+  if (!rsvp.includes('activeGuestbookRequestId')) failures.push('Guestbook stale-response protection is missing.');
+}
+if (fs.existsSync(venuePath)) {
+  const venue = fs.readFileSync(venuePath, 'utf8');
+  if (!venue.includes('AbortController')) failures.push('Guestbook request cancellation is missing.');
 }
 
 if (failures.length) {

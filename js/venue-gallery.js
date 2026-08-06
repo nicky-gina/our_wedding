@@ -45,14 +45,26 @@
         }
     });
     // Paginated shared guestbook endpoint. Only one small page is rendered at a time.
-    async function loadSharedGuestbook(page = 1, pageSize = 24, search = '') {
+    let guestbookAbortController = null;
+
+    async function loadSharedGuestbook(page = 1, pageSize = 24, search = '', requestId = 0) {
         if (!config.googleAppsScriptUrl || !config.enableSharedGuestbook)
             return;
+
+        if (guestbookAbortController)
+            guestbookAbortController.abort();
+
+        const controller = new AbortController();
+        guestbookAbortController = controller;
+
         try {
             const separator = config.googleAppsScriptUrl.includes('?') ? '&' : '?';
             const searchPart = search ? `&search=${encodeURIComponent(search)}` : '';
             const url = `${config.googleAppsScriptUrl}${separator}action=guestbook&page=${encodeURIComponent(page)}&pageSize=${encodeURIComponent(pageSize)}${searchPart}`;
-            const response = await fetch(url, { cache: 'no-store' });
+            const response = await fetch(url, {
+                cache: 'no-store',
+                signal: controller.signal
+            });
             if (!response.ok)
                 throw new Error(`Guestbook request failed with ${response.status}.`);
             const json = await response.json();
@@ -64,18 +76,34 @@
             // Keep the startup cache unfiltered. Search result pages should not
             // replace the normal first-page cache used on the next visit.
             if (!search) localStorage.setItem('editorial-v3-guestbook-page', JSON.stringify(payload));
-            window.dispatchEvent(new CustomEvent('editorial:shared-messages', { detail: payload }));
+            window.dispatchEvent(new CustomEvent('editorial:shared-messages', {
+                detail: { ...payload, requestId }
+            }));
         }
         catch (error) {
+            if (error?.name === 'AbortError')
+                return;
+
             console.info('Shared guestbook unavailable; using cached or local wishes.', error);
-            window.dispatchEvent(new CustomEvent('editorial:guestbook-load-failed'));
+            window.dispatchEvent(new CustomEvent('editorial:guestbook-load-failed', {
+                detail: { requestId }
+            }));
+        }
+        finally {
+            if (guestbookAbortController === controller)
+                guestbookAbortController = null;
         }
     }
     window.addEventListener('editorial:guestbook-page-request', event => {
         const detail = event.detail || {};
-        loadSharedGuestbook(Number(detail.page) || 1, Number(detail.pageSize) || 24, String(detail.search || ''));
+        loadSharedGuestbook(
+            Number(detail.page) || 1,
+            Number(detail.pageSize) || 24,
+            String(detail.search || ''),
+            Number(detail.requestId) || 0
+        );
     });
-    loadSharedGuestbook(1, 24);
+    loadSharedGuestbook(1, 24, '', 0);
     // Slow photographic parallax, disabled for reduced motion.
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !matchMedia('(max-width: 800px)').matches) {
         let ticking = false;

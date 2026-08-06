@@ -5,6 +5,7 @@
 
 (() => {
     'use strict';
+    const root = document.documentElement;
     const body = document.body;
     const prelude = document.getElementById('prelude');
     const experience = document.getElementById('experience');
@@ -23,6 +24,12 @@
     const t = (key, vars) => window.inviteI18n?.t(key, vars) || key;
     let invitationOpened = false;
     let musicFadeTimer = null;
+    let worldStarsStarted = false;
+    let stopWorldStars = () => {};
+
+    // iOS/Chrome may still rubber-band a fixed cover when only the body is
+    // overflow-locked. Lock both root and body until the cover is removed.
+    root.classList.add('is-locked');
 
     const getMusicPreference = () =>
         localStorage.getItem(musicPreferenceKey) !== 'false';
@@ -188,20 +195,50 @@
     }
 
     const stopPreludeStars = createStars(document.getElementById('preludeStars'), 150, true);
-    const stopWorldStars = createStars(document.getElementById('starCanvas'), 210, false);
+
+    const startWorldStars = () => {
+        if (worldStarsStarted)
+            return;
+
+        worldStarsStarted = true;
+        stopWorldStars = createStars(document.getElementById('starCanvas'), 210, false);
+    };
+
     enterButton.addEventListener('click', () => {
-        // Reset before unlocking so the invitation always opens on the prologue,
-        // never at a browser-restored or gallery-induced scroll position.
+        if (invitationOpened)
+            return;
+
+        invitationOpened = true;
+        enterButton.disabled = true;
+
+        // Keep the document fully locked while the cover fades. The main star
+        // canvas starts only after the cover is removed, avoiding two animated
+        // full-screen canvases competing during the transition on mobile.
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
         prelude.classList.add('is-hidden');
+        prelude.setAttribute('aria-hidden', 'true');
         stopPreludeStars();
-        window.setTimeout(() => prelude.remove(), 1600);
+
         experience.classList.add('is-visible');
         experience.setAttribute('aria-hidden', 'false');
-        body.classList.remove('is-locked');
-        requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }));
-        setTimeout(() => document.getElementById('prologue').classList.add('is-active'), 300);
-        invitationOpened = true;
+
+        const completeOpening = () => {
+            prelude.remove();
+            root.classList.remove('is-locked');
+            body.classList.remove('is-locked');
+
+            window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+            requestAnimationFrame(() => {
+                window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+                startWorldStars();
+                const prologue = document.getElementById('prologue');
+                scenes.forEach(scene => scene.classList.toggle('is-active', scene === prologue));
+                updateChapterProgress(prologue);
+            });
+        };
+
+        window.setTimeout(completeOpening, reducedMotion ? 0 : 900);
+
         if (getMusicPreference())
             playMusic({ fadeIn: true });
         else
@@ -259,6 +296,9 @@
     };
 
     const observer = new IntersectionObserver(entries => {
+        if (!invitationOpened)
+            return;
+
         entries.forEach(entry => {
             if (!entry.isIntersecting)
                 return;
@@ -285,29 +325,60 @@
         timelineItems.forEach(item => timelineObserver.observe(item));
     }
 
-    // Cinematic interludes open while in view and softly close as they leave.
-    // Only transform and opacity are animated to keep mobile compositing light.
+    // Cinematic interludes reveal near the viewport centre, then fade upward
+    // as the guest scrolls toward the following chapter. The exit state keeps
+    // transform/opacity-only animation for mobile renderer safety.
     const narratives = [...document.querySelectorAll('[data-narrative]')];
     if (reducedMotion) {
         narratives.forEach(item => item.classList.add('is-visible'));
     } else {
         const narrativeObserver = new IntersectionObserver(entries => {
             entries.forEach(entry => {
-                entry.target.classList.toggle(
-                    'is-visible',
-                    entry.isIntersecting && entry.intersectionRatio >= 0.28
-                );
+                const narrative = entry.target;
+                const hasPassedViewportTop = entry.boundingClientRect.top < 0;
+
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.34) {
+                    narrative.classList.add('is-visible');
+                    return;
+                }
+
+                if (!hasPassedViewportTop) {
+                    narrative.classList.remove('is-visible', 'is-exiting');
+                }
             });
         }, {
-            threshold: [0, 0.28, 0.55],
-            rootMargin: '-8% 0px -8% 0px'
+            threshold: [0, 0.18, 0.34, 0.55, 0.72],
+            rootMargin: '-12% 0px -12% 0px'
         });
         narratives.forEach(item => narrativeObserver.observe(item));
     }
     let ticking = false;
     function updateScroll() {
+        if (!invitationOpened) {
+            ticking = false;
+            return;
+        }
+
         const max = document.documentElement.scrollHeight - innerHeight;
         progressBar.style.width = `${max > 0 ? (scrollY / max) * 100 : 0}%`;
+
+        // Start the interlude exit as soon as its content reaches the top
+        // quarter of the viewport. Checking this in the existing rAF scroll
+        // loop is both precise and inexpensive because there are only four
+        // narrative dividers.
+        if (!reducedMotion) {
+            const exitLine = innerHeight * 0.25;
+            narratives.forEach(narrative => {
+                if (!narrative.classList.contains('is-visible'))
+                    return;
+
+                const content = narrative.querySelector('.scroll-narrative-inner') || narrative;
+                const rect = content.getBoundingClientRect();
+                const shouldExit = rect.top <= exitLine && rect.bottom > 0;
+                narrative.classList.toggle('is-exiting', shouldExit);
+            });
+        }
+
         const allowMotion = !reducedMotion;
         const isMobile = matchMedia('(max-width: 800px)').matches;
         if (allowMotion) {

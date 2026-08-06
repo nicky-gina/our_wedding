@@ -4577,9 +4577,9 @@ p {
 .guestbook-tools {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 12px;
+  gap: 10px;
   align-items: center;
-  margin-bottom: 12px;
+  margin: 0 0 12px;
 }
 
 .guestbook-search-label {
@@ -4618,6 +4618,61 @@ p {
 
 .guestbook-search-label input::placeholder {
   color: rgba(220, 228, 239, .48);
+}
+
+.guestbook-search-button {
+  min-width: 94px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 16px;
+  border: 1px solid rgba(220, 228, 239, .28);
+  border-radius: 999px;
+  background: rgba(16, 39, 68, .82);
+  color: var(--ivory);
+  cursor: pointer;
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  transition: transform .25s ease, border-color .25s ease, background .25s ease;
+}
+
+.guestbook-search-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(214, 190, 148, .7);
+  background: rgba(26, 58, 98, .9);
+}
+
+.guestbook-search-button:disabled {
+  cursor: wait;
+}
+
+.guestbook-search-button-spinner,
+.guestbook-random-spinner {
+  display: none;
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(247, 241, 226, .28);
+  border-top-color: var(--ivory);
+  border-radius: 50%;
+  animation: guestbookControlSpin .8s linear infinite;
+}
+
+.guestbook-search-button.is-loading .guestbook-search-button-icon,
+.guestbook-random-button.is-loading .guestbook-random-icon {
+  display: none;
+}
+
+.guestbook-search-button.is-loading .guestbook-search-button-spinner,
+.guestbook-random-button.is-loading .guestbook-random-spinner {
+  display: inline-block;
+}
+
+@keyframes guestbookControlSpin {
+  to { transform: rotate(360deg); }
 }
 
 .guestbook-random-button,
@@ -4777,10 +4832,6 @@ body.is-reading-wish {
     grid-template-columns: 1fr;
   }
 
-  .guestbook-random-button {
-    width: 100%;
-  }
-
   .message-popover {
     width: min(calc(100vw - 28px), 500px);
     padding: 52px 27px 32px;
@@ -4793,6 +4844,73 @@ body.is-reading-wish {
   .message-popover-backdrop {
     animation: none !important;
     transition: none !important;
+  }
+}
+
+
+.guestbook-random-action {
+  display: flex;
+  justify-content: center;
+  padding-top: 24px;
+}
+
+.guestbook-random-action .guestbook-random-button {
+  width: auto;
+  max-width: 100%;
+  min-height: 42px;
+  padding-inline: 22px;
+  color: var(--ivory);
+  border-color: rgba(214, 190, 148, .38);
+  background: rgba(7, 17, 31, .54);
+}
+
+.guestbook-random-action .guestbook-random-button:hover {
+  border-color: rgba(214, 190, 148, .72);
+  background: rgba(16, 39, 68, .76);
+}
+
+.guestbook-search-button:disabled,
+.guestbook-random-button:disabled,
+.message-popover-random:disabled {
+  opacity: 1;
+}
+
+@media (max-width: 560px) {
+  .guestbook-tools {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .guestbook-search-button {
+    min-width: 46px;
+    width: 46px;
+    padding: 0;
+  }
+
+  .guestbook-search-button #guestbookSearchButtonLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .guestbook-random-action {
+    padding-top: 20px;
+  }
+
+  .guestbook-random-action .guestbook-random-button {
+    width: auto;
+    max-width: calc(100% - 24px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guestbook-search-button-spinner,
+  .guestbook-random-spinner {
+    animation-duration: 1.6s;
   }
 }
 
@@ -5368,5 +5486,155 @@ html[lang="zh-CN"] .rsvp-success h3 {
     -webkit-text-stroke: 0;
     color: #fffaf1;
     text-shadow: 0 2px 5px rgba(0, 0, 0, .8);
+  }
+}
+
+
+/* =========================================================
+   V4.0.2 — Mobile opening stability, interlude exit and
+   compact RSVP composition
+   ========================================================= */
+
+html.is-locked,
+body.is-locked {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+
+body.is-locked {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  -webkit-overflow-scrolling: auto;
+}
+
+.prelude {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
+  overscroll-behavior: none;
+  touch-action: none;
+  contain: strict;
+}
+
+@media (max-width: 800px) {
+  .prelude {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    max-height: 100%;
+  }
+}
+
+.scroll-narrative.is-visible.is-exiting .scroll-narrative-inner {
+  opacity: 0;
+  transform: translate3d(0, -24px, 0) scale(.99);
+  transition-delay: 0ms;
+  transition-duration: 620ms, 760ms;
+}
+
+.scroll-narrative.is-visible.is-exiting .narrative-star {
+  opacity: 0;
+  transform: scale(.68) rotate(18deg);
+  transition-delay: 0ms;
+  transition-duration: 420ms, 620ms;
+}
+
+.scroll-narrative.is-visible.is-exiting .narrative-rule {
+  opacity: 0;
+  transform: translate(-50%, -50%) scaleX(.72);
+  transition-delay: 0ms;
+  transition-duration: 420ms, 620ms;
+}
+
+.scroll-narrative.is-visible.is-exiting .narrative-panel {
+  opacity: 0;
+  transition-delay: 0ms;
+  transition-duration: 680ms;
+}
+
+@media (max-width: 800px) {
+  .rsvp-card {
+    padding-top: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .rsvp-card {
+    padding-top: 1.05rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-narrative.is-visible.is-exiting .scroll-narrative-inner,
+  .scroll-narrative.is-visible.is-exiting .narrative-star,
+  .scroll-narrative.is-visible.is-exiting .narrative-rule,
+  .scroll-narrative.is-visible.is-exiting .narrative-panel {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+
+/* =========================================================
+   V4.0.3 — Earlier interlude exit and RSVP action polish
+   ========================================================= */
+
+.submit-rsvp {
+  min-height: 48px;
+  justify-content: center;
+  gap: 14px;
+  padding: 0 22px;
+  border: 1px solid rgba(214, 190, 148, .48);
+  border-radius: 999px;
+  background: rgba(16, 39, 68, .78);
+  color: var(--ivory);
+  box-shadow: inset 0 0 0 1px rgba(220, 228, 239, .04);
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    background .25s ease,
+    box-shadow .25s ease,
+    opacity .25s ease;
+}
+
+.submit-rsvp i {
+  color: rgba(247, 241, 226, .82);
+  font-size: 13px;
+  transition: transform .25s ease;
+}
+
+.submit-rsvp:hover {
+  transform: translateY(-1px);
+  border-color: rgba(214, 190, 148, .78);
+  background: rgba(26, 58, 98, .9);
+  box-shadow:
+    inset 0 0 0 1px rgba(247, 241, 226, .06),
+    0 10px 24px rgba(2, 8, 18, .18);
+}
+
+.submit-rsvp:hover i {
+  transform: translateX(3px);
+}
+
+.submit-rsvp:focus-visible {
+  outline: 2px solid rgba(247, 241, 226, .88);
+  outline-offset: 3px;
+}
+
+.submit-rsvp:disabled {
+  color: rgba(247, 241, 226, .76);
+  background: rgba(16, 39, 68, .58);
+  border-color: rgba(214, 190, 148, .28);
+}
+
+@media (max-width: 480px) {
+  .submit-rsvp {
+    min-height: 46px;
+    padding-inline: 18px;
   }
 }

@@ -1,8 +1,8 @@
-# Editorial Invitation V4.0 — Production Release
+# Editorial Invitation V4.0.3 — Interlude & RSVP Polish
 
 A cinematic, celestial, editorial-style digital wedding invitation for **Nicky & Gina**.
 
-**Current release:** V4.0  
+**Current release:** V4.0.3  
 **Production date:** 11 October 2026, 19:00 WIB  
 **Venue:** MDC Hall Jakarta
 
@@ -227,6 +227,53 @@ These fixes are part of the current baseline and should be preserved during futu
 - Background animations pause while the page is hidden.
 - Heavy blur-based reveals and multi-layer mobile parallax remain disabled.
 - Guestbook data contains real sheet wishes only.
+
+---
+
+## V4.0.2 — Stability and UX refinements
+
+This patch incorporates findings from end-user testing and the V4.0.1 regression audit.
+
+### Guestbook request consistency
+
+- Every guestbook page or search request carries a unique request ID.
+- Responses belonging to older requests are ignored.
+- Starting a new search or changing the page cancels the previous network request.
+- A stale result can no longer replace the newest search results or dismiss its loading state.
+
+### Cinematic interlude exit
+
+- Interlude text, star, divider, and panels now fade out as the guest scrolls toward the following chapter.
+- The text drifts slightly upward during exit rather than remaining static.
+- Exit transitions have no entrance delay.
+- Only `transform` and `opacity` are animated.
+
+### Mobile opening stability
+
+- The root element and body are locked before JavaScript executes.
+- The landing cover can no longer create the small rubber-band scroll observed on iOS Chrome.
+- The invitation's main star canvas does not run behind the landing cover.
+- The main canvas starts only after the cover is removed.
+- Chapter and scroll processing remain inactive until the invitation has opened.
+- This avoids two simultaneous full-screen animated canvases during the opening transition.
+
+### RSVP mobile spacing
+
+- Reduced unused top padding inside the RSVP card.
+- The first field now sits closer to the inner border, reducing unnecessary scrolling.
+
+### Deployment
+
+This release changes frontend files only. No Google Apps Script redeployment is required.
+
+---
+
+## V4.0.3 — Interlude and RSVP polish
+
+- Interlude fade-out now starts when its content reaches the top quarter of the viewport.
+- The existing requestAnimationFrame scroll loop performs the check, avoiding another scroll listener.
+- The RSVP submit action now uses the invitation’s rounded translucent navy button style, ivory typography, champagne border, and subtle arrow motion.
+- No backend changes are required.
 
 ---
 
@@ -493,5 +540,24 @@ npm run validate
 ```
 
 No package installation is required.
+
+---
+
+
+## V4.0.1 — Guestbook search UX correction
+
+End-user testing showed that the random-discovery control looked like the submit action for the search field. V4.0.1 separates those two intentions clearly.
+
+- Added an explicit Search button beside the wish-search input.
+- Pressing Enter or the Search button performs or repeats the search.
+- Search-as-you-type remains available with a short debounce.
+- Added a search loading indicator and retry feedback.
+- Moved random discovery beneath the star gallery and pagination controls.
+- Renamed it to “Discover a random wish.”
+- Added independent loading feedback for random discovery.
+- Updated English, Bahasa Indonesia and Simplified Chinese labels.
+- Kept the in-card “Discover another wish” action unchanged.
+
+No Google Apps Script update is required.
 
 ---

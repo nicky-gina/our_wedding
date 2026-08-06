@@ -209,7 +209,9 @@
     const controls = $('#guestbookControls');
     const pageStatus = $('#guestbookPageStatus');
     const searchStatus = $('#guestbookSearchStatus');
+    const searchForm = $('#guestbookSearchForm');
     const searchInput = $('#guestbookSearch');
+    const searchButton = $('#guestbookSearchButton');
     const discoverButton = $('#discoverWish');
     const anotherWishButton = $('#anotherWish');
     const newerButton = $('#newerWishes');
@@ -223,6 +225,8 @@
     let searchTimer = 0;
     let previouslyFocusedElement = null;
     let newlySubmittedKey = '';
+    let guestbookRequestSequence = 0;
+    let activeGuestbookRequestId = 0;
     function messageKey(item) {
         return `${String(item?.guestName || '').trim()}|${String(item?.message || '').trim()}`;
     }
@@ -335,32 +339,72 @@
         });
         newlySubmittedKey = '';
         sky.classList.remove('is-loading');
+        setSearchLoading(false);
         updatePageControls();
         updateSearchStatus();
     }
     function requestPage(page) {
         const nextPage = Math.max(1, Math.min(totalPages || page, page));
         const config = window.EDITORIAL_INVITE_CONFIG || {};
+        const requestId = ++guestbookRequestSequence;
+        activeGuestbookRequestId = requestId;
+
         if (!config.googleAppsScriptUrl || !config.enableSharedGuestbook) {
             currentPage = nextPage;
             renderGuestbook();
             return;
         }
+
         sky.classList.add('is-loading');
         sky.innerHTML = '';
         window.dispatchEvent(new CustomEvent('editorial:guestbook-page-request', {
-            detail: { page: nextPage, pageSize: PAGE_SIZE, search: searchQuery }
+            detail: {
+                page: nextPage,
+                pageSize: PAGE_SIZE,
+                search: searchQuery,
+                requestId
+            }
         }));
+    }
+    function setSearchLoading(isLoading) {
+        searchButton.disabled = isLoading;
+        searchButton.classList.toggle('is-loading', isLoading);
+        searchButton.setAttribute('aria-busy', String(isLoading));
+
+        const label = $('#guestbookSearchButtonLabel');
+        if (label) {
+            label.textContent = isLoading
+                ? t('guestbook.searching')
+                : t('guestbook.searchAction');
+        }
+    }
+    function performSearch() {
+        clearTimeout(searchTimer);
+        searchQuery = searchInput.value.trim();
+        currentPage = 1;
+        setSearchLoading(true);
+        requestPage(1);
     }
     function setRandomWishLoading(isLoading) {
         discoverButton.disabled = isLoading;
         anotherWishButton.disabled = isLoading;
+
+        discoverButton.classList.toggle('is-loading', isLoading);
         anotherWishButton.classList.toggle('is-loading', isLoading);
+
+        discoverButton.setAttribute('aria-busy', String(isLoading));
         anotherWishButton.setAttribute('aria-busy', String(isLoading));
 
-        const label = $('#anotherWishLabel');
-        if (label) {
-            label.textContent = isLoading
+        const discoverLabel = $('#discoverWishLabel');
+        if (discoverLabel) {
+            discoverLabel.textContent = isLoading
+                ? t('guestbook.loadingRandom')
+                : t('guestbook.random');
+        }
+
+        const anotherLabel = $('#anotherWishLabel');
+        if (anotherLabel) {
+            anotherLabel.textContent = isLoading
                 ? t('guestbook.loadingAnother')
                 : t('guestbook.another');
         }
@@ -394,13 +438,13 @@
     olderButton.addEventListener('click', () => requestPage(currentPage + 1));
     discoverButton.addEventListener('click', discoverRandomWish);
     anotherWishButton.addEventListener('click', discoverRandomWish);
+    searchForm.addEventListener('submit', event => {
+        event.preventDefault();
+        performSearch();
+    });
     searchInput.addEventListener('input', () => {
         clearTimeout(searchTimer);
-        searchTimer = setTimeout(() => {
-            searchQuery = searchInput.value.trim();
-            currentPage = 1;
-            requestPage(1);
-        }, 320);
+        searchTimer = setTimeout(performSearch, 320);
     });
     document.addEventListener('keydown', event => {
         if (event.key === 'Escape' && !popover.hidden) closeMessage();
@@ -415,10 +459,27 @@
     });
     window.addEventListener('editorial:shared-messages', event => {
         const detail = event.detail || {};
+        const responseRequestId = Number(detail.requestId) || 0;
+
+        // Ignore startup or older responses once a newer search/page request
+        // has become active. This prevents stale results from replacing the
+        // latest query when network requests finish out of order.
+        if (responseRequestId !== activeGuestbookRequestId)
+            return;
+
         sharedPageMessages = Array.isArray(detail.messages) ? detail.messages : [];
         currentPage = Number(detail.page) || 1;
         totalMessages = Number(detail.total) || sharedPageMessages.length;
         totalPages = Math.max(1, Number(detail.totalPages) || Math.ceil(totalMessages / PAGE_SIZE));
+        renderGuestbook();
+    });
+    window.addEventListener('editorial:guestbook-load-failed', event => {
+        const responseRequestId = Number(event.detail?.requestId) || 0;
+        if (responseRequestId !== activeGuestbookRequestId)
+            return;
+
+        sky.classList.remove('is-loading');
+        setSearchLoading(false);
         renderGuestbook();
     });
     const cached = getCachedGuestbookPage();
@@ -434,6 +495,8 @@
         if (savedPayload) renderSuccess(savedPayload, { updated: success.classList.contains('is-updated'), animate: false });
         submitLabel.textContent = t(isEditingExisting ? 'rsvp.updateSubmit' : 'rsvp.submit');
         if (!cancelEditButton.hidden) cancelEditButton.textContent = t('rsvp.cancelEdit');
+        setSearchLoading(false);
+        setRandomWishLoading(false);
         renderGuestbook();
     });
     window.addEventListener('editorial:rsvp-saved', event => {

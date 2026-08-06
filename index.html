@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html class="is-locked" lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
@@ -696,23 +696,31 @@
        </p>
 </div>
 <div class="guestbook-browser reveal">
-<div class="guestbook-tools" role="search">
+<form class="guestbook-tools" id="guestbookSearchForm" role="search">
 <label class="guestbook-search-label" for="guestbookSearch">
 <span class="sr-only" data-i18n="guestbook.searchLabel">Search wishes</span>
 <span aria-hidden="true" class="guestbook-search-icon">⌕</span>
 <input autocomplete="off" data-i18n-placeholder="guestbook.searchPlaceholder" id="guestbookSearch" maxlength="80" placeholder="Search by name or message…" type="search"/>
 </label>
-<button class="guestbook-random-button" data-i18n-aria-label="guestbook.randomAria" id="discoverWish" type="button">
-<span aria-hidden="true">✦</span>
-<span data-i18n="guestbook.random">Discover a wish</span>
+<button aria-busy="false" class="guestbook-search-button" data-i18n-aria-label="guestbook.searchAria" id="guestbookSearchButton" type="submit">
+<span aria-hidden="true" class="guestbook-search-button-icon">⌕</span>
+<span aria-hidden="true" class="guestbook-search-button-spinner"></span>
+<span data-i18n="guestbook.searchAction" id="guestbookSearchButtonLabel">Search</span>
 </button>
-</div>
+</form>
 <p aria-live="polite" class="guestbook-search-status" id="guestbookSearchStatus"></p>
 <div aria-label="Guestbook messages" aria-live="polite" class="message-sky" id="messageSky"></div>
 <div class="guestbook-controls" hidden="" id="guestbookControls">
 <button aria-label="Show newer wishes" class="guestbook-page-button" data-i18n-aria-label="guestbook.newerAria" disabled="" id="newerWishes" type="button"><span aria-hidden="true">←</span> <span data-i18n="guestbook.newer">Newer</span></button>
 <p aria-live="polite" class="guestbook-page-status" id="guestbookPageStatus"></p>
 <button aria-label="Show older wishes" class="guestbook-page-button" data-i18n-aria-label="guestbook.olderAria" id="olderWishes" type="button"><span data-i18n="guestbook.older">Older</span> <span aria-hidden="true">→</span></button>
+</div>
+<div class="guestbook-random-action">
+<button aria-busy="false" class="guestbook-random-button" data-i18n-aria-label="guestbook.randomAria" id="discoverWish" type="button">
+<span aria-hidden="true" class="guestbook-random-icon">✦</span>
+<span aria-hidden="true" class="guestbook-random-spinner"></span>
+<span data-i18n="guestbook.random" id="discoverWishLabel">Discover a random wish</span>
+</button>
 </div>
 </div>
 <div class="message-popover-backdrop" hidden="" id="messagePopoverBackdrop"></div>
