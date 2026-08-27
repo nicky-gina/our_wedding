@@ -7,6 +7,26 @@ window.EDITORIAL_INVITE_CONFIG = {
     closeRsvpAfterDeadline: false,
     invitationPrefix: 'NG-2026',
     mapUrl: 'https://maps.app.goo.gl/r8Xmurpk1Du5aRp16',
+
+    // Optional wedding-gift details. Leave a value blank until you are ready
+    // to publish it. Copy/open buttons stay disabled for incomplete entries.
+    weddingGift: {
+        nicky: {
+            bankName: 'BCA',
+            accountNumber: '1791594486',
+            accountHolder: 'Nicky Louis'
+        },
+        gina: {
+            bankName: 'BCA',
+            accountNumber: '5271262338',
+            accountHolder: 'Gina Archelya Uchov E'
+        },
+        paypal: {
+            handle: '@nickylou88',
+            url: 'https://www.paypal.me/nickylou88',
+            qrImage: 'assets/gift/paypal-qr.png?v=4.1.3'
+        }
+    },
     galleryItems: [
         {
             number: '01',

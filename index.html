@@ -30,7 +30,7 @@
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&amp;family=Great+Vibes&amp;family=Manrope:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
 <link as="image" fetchpriority="high" href="assets/moon/custom-moon.png" rel="preload" type="image/png"/>
-<link href="css/styles.css" rel="stylesheet"/>
+<link href="css/styles.css?v=4.1.3" rel="stylesheet"/>
 </head>
 <body class="is-locked"><a class="skip-link" data-i18n="accessibility.skipToContent" href="#main-content">Skip to invitation content</a>
 <noscript>
@@ -743,7 +743,83 @@
 </article>
 </div>
 </section>
-<section class="scene scene-finale" data-chapter="11" data-i18n-title="chapters.finale" data-title="Until Then" id="finale">
+<section class="scene scene-gift" data-chapter="11" data-i18n-title="chapters.gift" data-title="Wedding Gift" id="gift">
+<div class="scene-inner gift-layout">
+<div class="gift-copy-column">
+<p class="eyebrow reveal" data-i18n="gift.eyebrow">Optional · Wedding Gift</p>
+<h2 class="reveal" data-i18n-html="gift.titleHtml">A token<br/><em>of love.</em></h2>
+<p class="gift-intro reveal" data-i18n="gift.body">
+Your presence and warm wishes are already more than enough for us. Should you wish to send a gift, you may do so through one of the options below.
+</p>
+</div>
+<div class="gift-options reveal">
+<article class="gift-card gift-card-bank" data-gift-card="nicky">
+<div class="gift-card-top">
+<span class="gift-card-owner" data-i18n="gift.nicky">Nicky</span>
+<strong class="gift-card-provider" data-gift-bank-name="nicky">Bank account</strong>
+</div>
+<div aria-hidden="true" class="gift-card-chip"><i></i><i></i><i></i></div>
+<div class="gift-card-details">
+<span data-i18n="gift.accountNumber">Account number</span>
+<strong data-gift-account-number="nicky">—</strong>
+</div>
+<div class="gift-card-bottom">
+<div>
+<span class="gift-card-label" data-i18n="gift.accountHolder">Account holder</span>
+<strong class="gift-card-holder" data-gift-account-holder="nicky">—</strong>
+</div>
+<button class="gift-action gift-copy-button" data-gift-copy="nicky" data-i18n-aria-label="gift.copyNickyAria" disabled type="button">
+<span aria-hidden="true">⧉</span>
+<span data-i18n="gift.copyAccount">Copy account</span>
+</button>
+</div>
+</article>
+
+<article class="gift-card gift-card-bank" data-gift-card="gina">
+<div class="gift-card-top">
+<span class="gift-card-owner" data-i18n="gift.gina">Gina</span>
+<strong class="gift-card-provider" data-gift-bank-name="gina">Bank account</strong>
+</div>
+<div aria-hidden="true" class="gift-card-chip"><i></i><i></i><i></i></div>
+<div class="gift-card-details">
+<span data-i18n="gift.accountNumber">Account number</span>
+<strong data-gift-account-number="gina">—</strong>
+</div>
+<div class="gift-card-bottom">
+<div>
+<span class="gift-card-label" data-i18n="gift.accountHolder">Account holder</span>
+<strong class="gift-card-holder" data-gift-account-holder="gina">—</strong>
+</div>
+<button class="gift-action gift-copy-button" data-gift-copy="gina" data-i18n-aria-label="gift.copyGinaAria" disabled type="button">
+<span aria-hidden="true">⧉</span>
+<span data-i18n="gift.copyAccount">Copy account</span>
+</button>
+</div>
+</article>
+
+<article class="gift-card gift-card-paypal" data-gift-card="paypal">
+<div class="gift-paypal-mark" aria-hidden="true">P</div>
+<div class="gift-paypal-copy">
+<span class="gift-card-owner" data-i18n="gift.international">International</span>
+<strong class="gift-card-provider">PayPal</strong>
+<p data-i18n="gift.paypalNote">For international guests</p>
+<span class="gift-paypal-handle" data-gift-paypal-handle>—</span>
+</div>
+<button aria-haspopup="dialog" class="gift-paypal-qr-trigger" data-gift-paypal-qr-trigger data-i18n-aria-label="gift.qrEnlargeAria" type="button">
+<img alt="PayPal QR code" data-gift-paypal-qr-thumb decoding="async" src="assets/gift/paypal-qr.png?v=4.1.3"/>
+<span data-i18n="gift.qrTap">Tap to enlarge</span>
+</button>
+<a class="gift-action gift-paypal-button" data-gift-paypal-link data-i18n-aria-label="gift.openPaypalAria" href="#" rel="noopener noreferrer" target="_blank">
+<span data-i18n="gift.openPaypal">Open PayPal</span>
+<span aria-hidden="true">↗</span>
+</a>
+</article>
+<p aria-live="polite" class="gift-copy-status" id="giftCopyStatus"></p>
+</div>
+</div>
+</section>
+
+<section class="scene scene-finale" data-chapter="12" data-i18n-title="chapters.finale" data-title="Until Then" id="finale">
 <div class="scene-inner finale-layout">
 <p class="eyebrow reveal" data-i18n="finale.eyebrow">
        Nicky &amp; Gina · 11 October 2026
@@ -769,13 +845,26 @@
 </span>
 </div>
 </div>
+<div aria-hidden="true" aria-labelledby="paypalQrTitle" aria-modal="true" class="gift-qr-modal" id="paypalQrModal" role="dialog">
+<div class="gift-qr-backdrop" data-gift-qr-close></div>
+<div class="gift-qr-dialog" role="document">
+<button class="gift-qr-close" data-gift-qr-close data-i18n-aria-label="gift.qrCloseAria" type="button">×</button>
+<p class="eyebrow" data-i18n="gift.qrEyebrow">PayPal · QR Code</p>
+<h2 id="paypalQrTitle" data-i18n="gift.qrTitle">Scan to send a gift</h2>
+<div class="gift-qr-full-wrap">
+<img alt="PayPal QR code" data-gift-paypal-qr-full decoding="async" src="assets/gift/paypal-qr.png?v=4.1.3"/>
+</div>
+<p class="gift-qr-helper" data-i18n="gift.qrHelper">Scan this code with your phone or PayPal app.</p>
+</div>
+</div>
 <audio id="bgMusic" loop="" playsinline="" preload="auto">
 <source src="assets/music.m4a" type="audio/mp4"/>
 </audio>
-<script src="js/i18n.js"></script>
-<script src="js/config.js"></script>
-<script src="js/core.js"></script>
-<script src="js/rsvp-guestbook.js"></script>
-<script src="js/venue-gallery.js"></script>
+<script src="js/i18n.js?v=4.1.3"></script>
+<script src="js/config.js?v=4.1.3"></script>
+<script src="js/wedding-gift.js?v=4.1.3"></script>
+<script src="js/core.js?v=4.1.3"></script>
+<script src="js/rsvp-guestbook.js?v=4.1.3"></script>
+<script src="js/venue-gallery.js?v=4.1.3"></script>
 <div aria-atomic="true" aria-live="polite" class="sr-only" id="languageAnnouncement"></div></body>
 </html>

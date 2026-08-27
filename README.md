@@ -1,8 +1,8 @@
-# Editorial Invitation V4.0.3 — Interlude & RSVP Polish
+# Editorial Invitation V4.1.3 — PayPal QR DOM Fix
 
 A cinematic, celestial, editorial-style digital wedding invitation for **Nicky & Gina**.
 
-**Current release:** V4.0.3  
+**Current release:** V4.1.3  
 **Production date:** 11 October 2026, 19:00 WIB  
 **Venue:** MDC Hall Jakarta
 
@@ -26,6 +26,7 @@ This README is the single consolidated source for project setup, configuration, 
 - Reduced-motion, keyboard, focus, live-region, and screen-reader support
 - Mobile performance safeguards for canvas, blur, parallax, and background-tab activity
 - Tiered ivory and champagne-gold typography treatment
+- Optional Wedding Gift chapter with two bank accounts, PayPal, copy actions, and multilingual support
 
 ---
 
@@ -94,6 +95,7 @@ Edit `js/config.js` to change deployment-specific settings:
 - `invitationPrefix`
 - `mapUrl`
 - `galleryItems`
+- `weddingGift.nicky`, `weddingGift.gina`, and `weddingGift.paypal`
 
 ### Gallery assets
 
@@ -274,6 +276,121 @@ This release changes frontend files only. No Google Apps Script redeployment is 
 - The existing requestAnimationFrame scroll loop performs the check, avoiding another scroll listener.
 - The RSVP submit action now uses the invitation’s rounded translucent navy button style, ivory typography, champagne border, and subtle arrow motion.
 - No backend changes are required.
+
+---
+
+## V4.1 — Wedding Gift
+
+V4.1 adds an intentionally optional gift chapter immediately before the finale.
+
+### Experience
+
+- Placed after Wishes and before the closing scene, so it reads as an optional epilogue rather than part of the core invitation.
+- Uses the same navy, ivory, and champagne-gold visual language as the rest of the invitation.
+- Separate bank cards for Nicky and Gina.
+- PayPal option for international guests.
+- Bank account numbers can be copied with one tap.
+- Accessible copy confirmation.
+- PayPal opens in a new tab.
+- English, Bahasa Indonesia, and Simplified Chinese support.
+
+### Payment configuration
+
+Edit `js/config.js`:
+
+```js
+weddingGift: {
+    nicky: {
+        bankName: 'Bank name',
+        accountNumber: '1234567890',
+        accountHolder: 'Account holder name'
+    },
+    gina: {
+        bankName: 'Bank name',
+        accountNumber: '1234567890',
+        accountHolder: 'Account holder name'
+    },
+    paypal: {
+        handle: 'paypal.me/yourname',
+        url: 'https://paypal.me/yourname',
+        qrImage: 'assets/gift/paypal-qr.png'
+    }
+}
+```
+
+Blank values appear as an em dash and their action stays disabled, preventing accidental copying of placeholder information.
+
+> Payment information in a static GitHub Pages site is visible to anyone who can access the page source. Publish only details you are comfortable sharing with invited guests.
+
+No Google Apps Script redeployment is required.
+
+---
+
+## V4.1.1 — PayPal QR
+
+- Added an optional PayPal QR thumbnail on the right side of the PayPal card.
+- The QR appears only when `weddingGift.paypal.qrImage` is configured.
+- Tapping the thumbnail opens a full-size accessible QR lightbox.
+- Supports backdrop click, close button, Escape, focus trapping, and focus return.
+- Mobile keeps the QR on the right side of the PayPal card.
+- Added English, Bahasa Indonesia, and Simplified Chinese labels.
+- No Google Apps Script redeployment is required.
+
+Configure the QR image in `js/config.js`:
+
+```js
+paypal: {
+    handle: 'paypal.me/yourname',
+    url: 'https://paypal.me/yourname',
+    qrImage: 'assets/gift/paypal-qr.png'
+}
+```
+
+Use the official PayPal QR generated for your account. V4.1.1 intentionally does not include a fake QR placeholder.
+
+---
+
+## V4.1.2 — PayPal QR render fix
+
+This patch fixes a case where the PayPal QR existed in the project but did not
+appear in the deployed invitation.
+
+### Root cause and fix
+
+- The QR thumbnail was initially hidden in HTML and depended on the latest
+  JavaScript to remove the `hidden` state.
+- Static filenames were unchanged between releases, allowing mobile browsers
+  to reuse older cached CSS/JS/config files after deployment.
+- The real PayPal QR is now rendered directly by HTML, so it is visible even
+  before JavaScript runs.
+- `styles.css` and all runtime JS references now use `?v=4.1.2` cache-busting.
+- The QR image itself also uses a versioned URL.
+- JavaScript now treats the embedded HTML QR source as a valid fallback instead
+  of hiding the QR when an older or empty config is encountered.
+
+The packaged QR asset was verified to decode to a PayPal QR URL.
+
+No Google Apps Script redeployment is required.
+
+---
+
+## V4.1.3 — PayPal QR DOM fix
+
+V4.1.2 still hid the QR because `wedding-gift.js` executed before the QR modal
+markup existed in the DOM. The PayPal population routine required both the
+thumbnail and the modal's full-size image, so the missing latter element caused
+the thumbnail button to be hidden.
+
+### Fix
+
+- Moved the QR modal markup before all runtime scripts.
+- The PayPal QR thumbnail now renders independently of the full-size modal image.
+- The full-size image is populated separately when available.
+- Bumped frontend and QR cache-busters to `v=4.1.3`.
+- Preserved the right-side QR layout on mobile and desktop.
+- Preserved click-to-enlarge, backdrop close, Escape, and keyboard focus behavior.
+
+No Google Apps Script redeployment is required.
 
 ---
 

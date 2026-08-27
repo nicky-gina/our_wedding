@@ -15,6 +15,7 @@ const requireFile = relativePath => {
 for (const file of [
   'js/i18n.js',
   'js/config.js',
+  'js/wedding-gift.js',
   'js/core.js',
   'js/rsvp-guestbook.js',
   'js/venue-gallery.js'
@@ -37,7 +38,7 @@ if (fs.existsSync(htmlPath)) {
   for (const id of [
     'prelude', 'experience', 'main-content', 'rsvpForm', 'messageSky',
     'messagePopover', 'galleryStage', 'musicToggle', 'guestbookSearchForm',
-    'guestbookSearchButton', 'discoverWish'
+    'guestbookSearchButton', 'discoverWish', 'gift', 'giftCopyStatus', 'paypalQrModal'
   ]) {
     if (!html.includes(`id="${id}"`)) failures.push(`Missing required element id: ${id}`);
   }
@@ -99,6 +100,20 @@ if (fs.existsSync(rsvpPath)) {
 if (fs.existsSync(venuePath)) {
   const venue = fs.readFileSync(venuePath, 'utf8');
   if (!venue.includes('AbortController')) failures.push('Guestbook request cancellation is missing.');
+}
+
+
+const giftPath = requireFile('js/wedding-gift.js');
+if (fs.existsSync(giftPath)) {
+  const gift = fs.readFileSync(giftPath, 'utf8');
+  if (!gift.includes('weddingGift')) failures.push('Wedding Gift configuration binding is missing.');
+  if (!gift.includes('navigator.clipboard')) failures.push('Wedding Gift copy behavior is missing.');
+}
+
+const configPath = requireFile('js/config.js');
+if (fs.existsSync(configPath)) {
+  const config = fs.readFileSync(configPath, 'utf8');
+  if (!config.includes('weddingGift')) failures.push('Wedding Gift configuration block is missing.');
 }
 
 if (failures.length) {
