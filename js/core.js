@@ -302,7 +302,16 @@
         entries.forEach(entry => {
             if (!entry.isIntersecting)
                 return;
+
             scenes.forEach(scene => scene.classList.toggle('is-active', scene === entry.target));
+
+            // Couple portraits use a one-way entrance: once the scene first
+            // becomes active, the portrait stays at its final position even
+            // after the guest scrolls to later chapters.
+            if (entry.target.matches('.scene-nicky, .scene-gina')) {
+                entry.target.querySelector('.portrait-frame')?.classList.add('portrait-entered');
+            }
+
             updateChapterProgress(entry.target);
         });
     }, { threshold: .52 });

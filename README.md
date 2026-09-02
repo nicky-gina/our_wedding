@@ -1,8 +1,8 @@
-# Editorial Invitation V4.1.3 — PayPal QR DOM Fix
+# Editorial Invitation V4.1.4 — Couple Portrait Entrance
 
 A cinematic, celestial, editorial-style digital wedding invitation for **Nicky & Gina**.
 
-**Current release:** V4.1.3  
+**Current release:** V4.1.4  
 **Production date:** 11 October 2026, 19:00 WIB  
 **Venue:** MDC Hall Jakarta
 
@@ -389,6 +389,20 @@ the thumbnail button to be hidden.
 - Bumped frontend and QR cache-busters to `v=4.1.3`.
 - Preserved the right-side QR layout on mobile and desktop.
 - Preserved click-to-enlarge, backdrop close, Escape, and keyboard focus behavior.
+
+No Google Apps Script redeployment is required.
+
+---
+
+## V4.1.4 — Couple portrait entrance
+
+- Groom portrait now begins completely outside the left edge of the viewport.
+- Bride portrait now begins completely outside the right edge of the viewport.
+- Both portraits fade in while sliding into their existing final positions.
+- Once shown, each portrait receives a permanent `portrait-entered` state and no longer slides or fades out when its chapter becomes inactive.
+- Existing portrait borders, dimensions, captions and final layout are unchanged.
+- Reduced-motion users see the portraits immediately without sliding.
+- Frontend cache-busters were advanced to V4.1.4.
 
 No Google Apps Script redeployment is required.
 

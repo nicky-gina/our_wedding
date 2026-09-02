@@ -6188,3 +6188,64 @@ body.gift-qr-open { overflow: hidden; }
     grid-template-columns: 46px minmax(0, 1fr) 78px;
   }
 }
+
+
+/* =========================================================
+   V4.1.4 — One-way couple portrait slide entrance
+   ========================================================= */
+
+/* Start both portraits completely outside the viewport. The percentage is
+   relative to the portrait itself, while 100vw guarantees the entire frame
+   begins beyond the visible screen edge. */
+.scene-nicky .portrait-nicky.reveal {
+  opacity: 0;
+  transform: translate3d(calc(-100vw - 100%), 0, 0) scale(1);
+  clip-path: none;
+  filter: none;
+  transition:
+    transform 1.45s var(--ease),
+    opacity 1.05s ease;
+  transition-delay: .08s;
+  will-change: transform, opacity;
+}
+
+.scene-gina .portrait-gina.reveal {
+  opacity: 0;
+  transform: translate3d(calc(100vw + 100%), 0, 0) scale(1);
+  clip-path: none;
+  filter: none;
+  transition:
+    transform 1.45s var(--ease),
+    opacity 1.05s ease;
+  transition-delay: .08s;
+  will-change: transform, opacity;
+}
+
+/* A permanent state independent of .scene.is-active. This deliberately wins
+   over the older reveal rules, so portraits never slide/fade out on scroll. */
+.scene-nicky .portrait-nicky.reveal.portrait-entered,
+.scene-gina .portrait-gina.reveal.portrait-entered,
+.scene-nicky.is-active .portrait-nicky.reveal.portrait-entered,
+.scene-gina.is-active .portrait-gina.reveal.portrait-entered {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  clip-path: none;
+  filter: none;
+  will-change: auto;
+}
+
+@media (max-width: 800px) {
+  .scene-nicky .portrait-nicky.reveal,
+  .scene-gina .portrait-gina.reveal {
+    transition-duration: 1.25s, .9s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-nicky .portrait-nicky.reveal,
+  .scene-gina .portrait-gina.reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
