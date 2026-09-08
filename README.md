@@ -1,8 +1,8 @@
-# Editorial Invitation V4.1.4 — Couple Portrait Entrance
+# Editorial Invitation V4.2 — Couple Portrait Carousels
 
 A cinematic, celestial, editorial-style digital wedding invitation for **Nicky & Gina**.
 
-**Current release:** V4.1.4  
+**Current release:** V4.2  
 **Production date:** 11 October 2026, 19:00 WIB  
 **Venue:** MDC Hall Jakarta
 
@@ -403,6 +403,47 @@ No Google Apps Script redeployment is required.
 - Existing portrait borders, dimensions, captions and final layout are unchanged.
 - Reduced-motion users see the portraits immediately without sliding.
 - Frontend cache-busters were advanced to V4.1.4.
+
+No Google Apps Script redeployment is required.
+
+---
+
+## V4.2 — Couple Portrait Carousels
+
+The Nicky and Gina profile chapters now support three swipeable portraits each.
+
+### Expected filenames
+
+Place these files in `assets/portraits/`:
+
+```text
+Groom1.png
+Groom2.png
+Groom3.png
+Bride1.png
+Bride2.png
+Bride3.png
+```
+
+The filenames are configured centrally in `js/config.js`.
+
+### Interaction
+
+- Nicky's entire carousel retains the one-way V4.1.4 entrance from the left.
+- Gina's entire carousel retains the one-way V4.1.4 entrance from the right.
+- After entering, each carousel stays in place.
+- Guests can use in-frame previous/next arrows.
+- Mobile/tablet guests can swipe horizontally.
+- Keyboard left/right arrows work while the portrait is focused.
+- Three compact position dots replace a filmstrip to keep the profile composition restrained.
+- The caption includes a subtle `01 / 03` position counter.
+
+### Missing-image fallback
+
+The uploaded V4.1.4 package does not yet contain the six new PNG portraits.
+Until they are added, each page gracefully keeps its existing groom/bride portrait instead of showing broken images. Once the named PNG files are added, the carousel activates automatically.
+
+For mobile stability and loading performance, optimize the PNG files before deployment where practical. The site accepts the exact PNG filenames above, but extremely large source images can consume significant memory on iOS browsers.
 
 No Google Apps Script redeployment is required.
 

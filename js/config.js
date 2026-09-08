@@ -27,6 +27,25 @@ window.EDITORIAL_INVITE_CONFIG = {
             qrImage: 'assets/gift/paypal-qr.png?v=4.1.3'
         }
     },
+    couplePortraits: {
+        nicky: {
+            images: [
+                'assets/portraits/originals/Groom1.png',
+                'assets/portraits/originals/Groom2.png',
+                'assets/portraits/originals/Groom3.png'
+            ],
+            fallback: 'assets/portraits/groom.webp'
+        },
+        gina: {
+            images: [
+                'assets/portraits/originals/Bride1.png',
+                'assets/portraits/originals/Bride2.png',
+                'assets/portraits/originals/Bride3.png'
+            ],
+            fallback: 'assets/portraits/bride.webp'
+        }
+    },
+
     galleryItems: [
         {
             number: '01',

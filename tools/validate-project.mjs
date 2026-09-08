@@ -15,6 +15,7 @@ const requireFile = relativePath => {
 for (const file of [
   'js/i18n.js',
   'js/config.js',
+  'js/couple-portraits.js',
   'js/wedding-gift.js',
   'js/core.js',
   'js/rsvp-guestbook.js',
@@ -114,6 +115,21 @@ const configPath = requireFile('js/config.js');
 if (fs.existsSync(configPath)) {
   const config = fs.readFileSync(configPath, 'utf8');
   if (!config.includes('weddingGift')) failures.push('Wedding Gift configuration block is missing.');
+}
+
+
+const couplePath = requireFile('js/couple-portraits.js');
+if (fs.existsSync(couplePath)) {
+  const couple = fs.readFileSync(couplePath, 'utf8');
+  if (!couple.includes('data-couple-carousel')) failures.push('Couple portrait carousel binding is missing.');
+  if (!couple.includes('pointerdown')) failures.push('Couple portrait swipe support is missing.');
+  if (!couple.includes("event.key === 'ArrowLeft'")) failures.push('Couple portrait keyboard navigation is missing.');
+}
+
+if (fs.existsSync(htmlPath)) {
+  const html = fs.readFileSync(htmlPath, 'utf8');
+  if (!html.includes('data-couple-carousel="nicky"')) failures.push('Nicky portrait carousel markup is missing.');
+  if (!html.includes('data-couple-carousel="gina"')) failures.push('Gina portrait carousel markup is missing.');
 }
 
 if (failures.length) {
