@@ -6699,3 +6699,104 @@ body.gift-qr-open { overflow: hidden; }
     will-change: auto !important;
   }
 }
+
+
+/* =========================================================
+   V4.2.13 — Late Page iOS Stability
+   ========================================================= */
+
+@media (max-width: 800px) {
+  /* RSVP: replace expensive live backdrop blur with opaque editorial surfaces. */
+  .countdown div {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(7, 17, 31, .92) !important;
+  }
+
+  .rsvp-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: linear-gradient(145deg, rgba(18,43,75,.97), rgba(7,17,31,.99)) !important;
+    box-shadow: 0 14px 34px rgba(0,0,0,.24) !important;
+  }
+
+  .rsvp-success {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Keep the success state celestial but eliminate permanent filtered pulses. */
+  .rsvp-success .success-star,
+  .rsvp-success.is-celebrating .success-star {
+    animation: none !important;
+    filter: none !important;
+    opacity: .92 !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .rsvp-success.is-celebrating .success-orbit,
+  .rsvp-success.is-celebrating .success-particle {
+    animation-duration: .45s !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  /* Ordinary wishes are static on mobile: no infinite transform/filter layers. */
+  .guest-star {
+    animation: none !important;
+    filter: none !important;
+    opacity: .86;
+    transform: translate(-50%, -50%) !important;
+    will-change: auto !important;
+  }
+
+  .guest-star span {
+    text-shadow: 0 0 7px rgba(190,214,255,.58);
+  }
+
+  /* Newly submitted wish gets one lightweight arrival only. */
+  .guest-star.is-new {
+    animation: guestStarArrivalMobile .62s cubic-bezier(.22,1,.36,1) both !important;
+    filter: none !important;
+  }
+
+  @keyframes guestStarArrivalMobile {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -44%) scale(.72);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  /* When RSVP takes over, Gallery's opening curtains are discarded rather
+     than kept as off-screen transformed compositor layers. */
+  .gallery-viewer.is-gallery-parked .gallery-slide::before,
+  .gallery-viewer.is-gallery-parked .gallery-slide::after {
+    display: none !important;
+  }
+
+  .gallery-viewer.is-gallery-parked .gallery-image,
+  .gallery-viewer.is-gallery-parked .gallery-slide,
+  .gallery-viewer.is-gallery-parked .gallery-stage {
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+
+  /* Late-page panels do not need large blur/shadow surfaces on iOS. */
+  .message-sky {
+    box-shadow: inset 0 0 42px rgba(0,0,0,.36) !important;
+  }
+
+  .message-popover {
+    box-shadow: 0 20px 54px rgba(0,0,0,.48) !important;
+  }
+
+  .message-popover-star {
+    filter: none !important;
+    text-shadow: 0 0 8px rgba(190,214,255,.58);
+  }
+}

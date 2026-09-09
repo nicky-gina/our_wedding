@@ -216,7 +216,10 @@
     const anotherWishButton = $('#anotherWish');
     const newerButton = $('#newerWishes');
     const olderButton = $('#olderWishes');
-    const PAGE_SIZE = 24;
+    const mobileGuestbook = matchMedia('(max-width: 800px)').matches;
+    const PAGE_SIZE = mobileGuestbook ? 12 : 24;
+    const guestbookSection = $('#guestbook');
+    let guestbookActivated = false;
     let currentPage = 1;
     let totalPages = 1;
     let totalMessages = 0;
@@ -303,6 +306,9 @@
             : t('guestbook.noSearchResults', { query: searchQuery });
     }
     function renderGuestbook() {
+        if (!guestbookActivated)
+            return;
+
         sky.innerHTML = '';
         const localMessages = getResponses().filter(item => item.message);
         const fallback = currentPage === 1 ? localMessages : [];
@@ -328,7 +334,8 @@
             button.setAttribute('aria-label', t('guestbook.readFrom', { name: item.guestName }));
             button.style.left = `${pos.left}%`;
             button.style.top = `${pos.top}%`;
-            button.style.animationDelay = `${pos.delay}ms`;
+            if (!mobileGuestbook)
+                button.style.animationDelay = `${pos.delay}ms`;
             button.innerHTML = '<span>✦</span>';
             if (messageKey(item) === newlySubmittedKey) {
                 button.classList.add('is-new');
@@ -507,5 +514,29 @@
         searchInput.value = '';
         renderGuestbook();
     });
-    renderGuestbook();
+
+    const activateGuestbook = () => {
+        if (guestbookActivated)
+            return;
+
+        guestbookActivated = true;
+        requestPage(1);
+    };
+
+    if ('IntersectionObserver' in window && guestbookSection) {
+        const guestbookObserver = new IntersectionObserver(entries => {
+            if (!entries.some(entry => entry.isIntersecting))
+                return;
+
+            activateGuestbook();
+            guestbookObserver.disconnect();
+        }, {
+            // Mobile starts only when Guestbook itself is visible.
+            rootMargin: mobileGuestbook ? '0px' : '420px 0px',
+            threshold: mobileGuestbook ? 0.04 : 0.01
+        });
+        guestbookObserver.observe(guestbookSection);
+    } else {
+        activateGuestbook();
+    }
 })();

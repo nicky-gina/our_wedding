@@ -97,12 +97,13 @@
         const detail = event.detail || {};
         loadSharedGuestbook(
             Number(detail.page) || 1,
-            Number(detail.pageSize) || 24,
+            Number(detail.pageSize) || (matchMedia('(max-width: 800px)').matches ? 12 : 24),
             String(detail.search || ''),
             Number(detail.requestId) || 0
         );
     });
-    loadSharedGuestbook(1, 24, '', 0);
+    // V4.2.13: Guestbook data is requested only when the Guestbook chapter
+    // becomes visible. Do not fetch/render wishes during invitation startup.
     // Slow photographic parallax, disabled for reduced motion.
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches && !matchMedia('(max-width: 800px)').matches) {
         let ticking = false;
@@ -387,6 +388,34 @@ document.addEventListener('DOMContentLoaded', () => {
             threshold: mobileGallery ? 0.05 : 0.01
         });
         activationObserver.observe(gallerySection);
+
+        if (mobileGallery) {
+            const rsvpSection = document.getElementById('rsvp');
+            if (rsvpSection) {
+                const handoffObserver = new IntersectionObserver(entries => {
+                    if (!entries.some(entry => entry.isIntersecting))
+                        return;
+
+                    // Once RSVP takes over, settle any Gallery transition state
+                    // and discard decorative compositor layers. The preview
+                    // image itself remains cached; no image decode churn.
+                    dragging = false;
+                    window.clearTimeout(renderTimer);
+                    stage.classList.remove('is-dragging');
+                    main.classList.remove('is-changing');
+                    main.style.transition = 'none';
+                    main.style.transform = 'none';
+                    main.style.opacity = '1';
+                    main.style.willChange = 'auto';
+                    viewer?.classList.add('is-gallery-parked');
+                    handoffObserver.disconnect();
+                }, {
+                    rootMargin: '0px',
+                    threshold: 0.05
+                });
+                handoffObserver.observe(rsvpSection);
+            }
+        }
     } else {
         activateGallery();
     }

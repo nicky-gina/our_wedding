@@ -217,12 +217,41 @@
     }
   });
 
-  populateBank('nicky', config.nicky);
-  populateBank('gina', config.gina);
-  populatePaypal(config.paypal);
+  const giftSection = document.getElementById('gift');
+  let giftActivated = false;
+
+  const activateGift = () => {
+    if (giftActivated)
+      return;
+
+    giftActivated = true;
+    populateBank('nicky', config.nicky);
+    populateBank('gina', config.gina);
+    populatePaypal(config.paypal);
+  };
+
+  if ('IntersectionObserver' in window && giftSection) {
+    const mobileGift = matchMedia('(max-width: 800px)').matches;
+    const giftObserver = new IntersectionObserver(entries => {
+      if (!entries.some(entry => entry.isIntersecting))
+        return;
+
+      activateGift();
+      giftObserver.disconnect();
+    }, {
+      rootMargin: mobileGift ? '80px 0px' : '500px 0px',
+      threshold: 0.01
+    });
+    giftObserver.observe(giftSection);
+  } else {
+    activateGift();
+  }
 
   window.addEventListener('editorial:language-changed', () => {
     if (status) status.textContent = '';
+
+    if (!giftActivated)
+      return;
 
     const qrThumb = document.querySelector('[data-gift-paypal-qr-thumb]');
     const qrFull = document.querySelector('[data-gift-paypal-qr-full]');

@@ -1,8 +1,8 @@
-# Editorial Invitation V4.2.12 — Mobile Safe Story Transitions
+# Editorial Invitation V4.2.13 — Late Page iOS Stability
 
 A cinematic, celestial, editorial-style digital wedding invitation for **Nicky & Gina**.
 
-**Current release:** V4.2.12
+**Current release:** V4.2.13
 **Production date:** 11 October 2026, 19:00 WIB  
 **Venue:** MDC Hall Jakarta
 
@@ -855,5 +855,24 @@ Focused iOS/WebKit stabilization for First Connected, Officially Dating, and Pro
 - Moon scroll parallax freezes while one of the three story chapters is active on mobile.
 - Desktop cinematic effects remain unchanged.
 - No RSVP, Guestbook, Gallery, Venue, Wedding Gift, or backend behavior was changed.
+
+No Google Apps Script redeployment is required.
+
+
+## V4.2.13 — Late Page iOS Stability
+
+Focused on the Gallery → RSVP → Guestbook → Gift portion of the invitation.
+
+- Removed the startup Guestbook request.
+- Guestbook now initializes only when its chapter actually becomes visible.
+- Mobile Guestbook page size reduced from 24 wishes to 12.
+- Ordinary Guestbook stars are static on mobile: no infinite twinkle and no drop-shadow filter.
+- Newly submitted wishes use a short one-time opacity/scale arrival.
+- Mobile RSVP/countdown backdrop filters are disabled and replaced with opaque navy surfaces.
+- Mobile RSVP success star no longer runs an infinite filtered pulse.
+- Gallery transition/compositor state is parked when RSVP becomes visible, without unloading its image.
+- Wedding Gift data/QR thumbnail initializes only when the Gift chapter approaches.
+- PayPal full-size QR remains on-demand only.
+- V4.2.12 story and landing stability fixes are preserved.
 
 No Google Apps Script redeployment is required.

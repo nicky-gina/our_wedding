@@ -107,10 +107,16 @@ if (fs.existsSync(corePath)) {
 if (fs.existsSync(rsvpPath)) {
   const rsvp = fs.readFileSync(rsvpPath, 'utf8');
   if (!rsvp.includes('activeGuestbookRequestId')) failures.push('Guestbook stale-response protection is missing.');
+  if (!rsvp.includes('guestbookActivated')) failures.push('Lazy Guestbook activation is missing.');
+  if (!rsvp.includes('mobileGuestbook ? 12 : 24')) failures.push('Mobile Guestbook page-size safeguard is missing.');
 }
 if (fs.existsSync(venuePath)) {
   const venue = fs.readFileSync(venuePath, 'utf8');
   if (!venue.includes('AbortController')) failures.push('Guestbook request cancellation is missing.');
+  if (venue.includes("loadSharedGuestbook(1, 24, '', 0);")) {
+    failures.push('Eager Guestbook startup request is present.');
+  }
+  if (!venue.includes('is-gallery-parked')) failures.push('Mobile Gallery-to-RSVP parking is missing.');
 }
 
 
@@ -119,6 +125,7 @@ if (fs.existsSync(giftPath)) {
   const gift = fs.readFileSync(giftPath, 'utf8');
   if (!gift.includes('weddingGift')) failures.push('Wedding Gift configuration binding is missing.');
   if (!gift.includes('navigator.clipboard')) failures.push('Wedding Gift copy behavior is missing.');
+  if (!gift.includes('giftActivated')) failures.push('Lazy Wedding Gift activation is missing.');
 }
 
 const configPath = requireFile('js/config.js');

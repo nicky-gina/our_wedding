@@ -24,7 +24,7 @@ window.EDITORIAL_INVITE_CONFIG = {
         paypal: {
             handle: '@nickylou88',
             url: 'https://www.paypal.me/nickylou88',
-            qrImage: 'assets/gift/paypal-qr.webp?v=4.1.3'
+            qrImage: 'assets/gift/paypal-qr.webp?v=4.2.13'
         }
     },
     couplePortraits: {
