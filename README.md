@@ -1,8 +1,8 @@
-# Editorial Invitation V4.2.11 — Landing Hotfix
+# Editorial Invitation V4.2.12 — Mobile Safe Story Transitions
 
 A cinematic, celestial, editorial-style digital wedding invitation for **Nicky & Gina**.
 
-**Current release:** V4.2.11
+**Current release:** V4.2.12
 **Production date:** 11 October 2026, 19:00 WIB  
 **Venue:** MDC Hall Jakarta
 
@@ -838,5 +838,22 @@ Fix:
 - refreshes its value inside `resize()`;
 - preserves the V4.2.10 static-on-mobile star behavior;
 - no other runtime behavior changed.
+
+No Google Apps Script redeployment is required.
+
+
+## V4.2.12 — Mobile Safe Story Transitions
+
+Focused iOS/WebKit stabilization for First Connected, Officially Dating, and Proposal.
+
+- Disabled the First Connected 3D page-turn panels on mobile only.
+- Story reveal elements are opacity-only on mobile and settle permanently after first entry.
+- Removed transform-based scene-inner transitions from the three story chapters on mobile.
+- Simplified mobile narrative interludes to text/star/rule with opacity-only behavior; sliding panels are disabled.
+- Removed story-photo frame shadow/compositor effects and previous paint containment on mobile.
+- Reduced all three story display WebPs to a maximum 800px long edge.
+- Moon scroll parallax freezes while one of the three story chapters is active on mobile.
+- Desktop cinematic effects remain unchanged.
+- No RSVP, Guestbook, Gallery, Venue, Wedding Gift, or backend behavior was changed.
 
 No Google Apps Script redeployment is required.

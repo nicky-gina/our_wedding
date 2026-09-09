@@ -315,6 +315,19 @@
                 entry.target.querySelector('.portrait-frame')?.classList.add('portrait-entered');
             }
 
+            // iOS story safeguard: First Connected through Proposal keeps
+            // completed reveal states rather than rebuilding transformed layers
+            // whenever the guest scrolls back and forth.
+            const mobileStorySafe = matchMedia('(max-width: 800px)').matches;
+            const storySafeScene = entry.target.matches('#chapter-two, .scene-story');
+            if (mobileStorySafe && storySafeScene) {
+                entry.target.classList.add('story-entered');
+            }
+            body.classList.toggle('story-safe-zone', mobileStorySafe && storySafeScene);
+            if (mobileStorySafe && storySafeScene) {
+                root.style.setProperty('--moon-scroll-y', '0px');
+            }
+
             updateChapterProgress(entry.target);
         });
     }, { threshold: .52 });
@@ -341,8 +354,25 @@
     // as the guest scrolls toward the following chapter. The exit state keeps
     // transform/opacity-only animation for mobile renderer safety.
     const narratives = [...document.querySelectorAll('[data-narrative]')];
+    const mobileNarrativeSafe = matchMedia('(max-width: 800px)').matches;
     if (reducedMotion) {
         narratives.forEach(item => item.classList.add('is-visible'));
+    } else if (mobileNarrativeSafe) {
+        // Mobile interludes reveal once and remain settled. Avoid repeatedly
+        // creating/removing large transformed narrative layers.
+        const narrativeObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting)
+                    return;
+                entry.target.classList.add('is-visible');
+                entry.target.classList.remove('is-exiting');
+                narrativeObserver.unobserve(entry.target);
+            });
+        }, {
+            threshold: 0.18,
+            rootMargin: '-6% 0px -6% 0px'
+        });
+        narratives.forEach(item => narrativeObserver.observe(item));
     } else {
         const narrativeObserver = new IntersectionObserver(entries => {
             entries.forEach(entry => {
@@ -378,7 +408,7 @@
         // quarter of the viewport. Checking this in the existing rAF scroll
         // loop is both precise and inexpensive because there are only four
         // narrative dividers.
-        if (!reducedMotion) {
+        if (!reducedMotion && !mobileNarrativeSafe) {
             const exitLine = innerHeight * 0.25;
             narratives.forEach(narrative => {
                 if (!narrative.classList.contains('is-visible'))
@@ -393,13 +423,14 @@
 
         const allowMotion = !reducedMotion;
         const isMobile = matchMedia('(max-width: 800px)').matches;
+        const freezeStoryMoon = isMobile && body.classList.contains('story-safe-zone');
         if (allowMotion) {
             const viewportHeight = Math.max(innerHeight, 1);
 
             /*
-             * Use a continuous sine wave instead of scrollY % innerHeight.
-             * One complete down-and-up cycle spans two viewport heights,
-             * so crossing a chapter boundary never resets the moon position.
+             * Desktop keeps the smooth sine-wave celestial parallax. Mobile
+             * keeps the moon static through the three image-heavy story scenes
+             * so WebKit does not continuously re-composite that fixed layer.
              */
             const scrollPhase = (scrollY / viewportHeight) * Math.PI;
             const smoothWave = Math.sin(scrollPhase);
@@ -408,10 +439,12 @@
                 '--scene-depth-y',
                 isMobile ? '0px' : `${smoothWave * 24}px`
             );
-            document.documentElement.style.setProperty(
-                '--moon-scroll-y',
-                `${smoothWave * (isMobile ? 18 : 24)}px`
-            );
+            if (!freezeStoryMoon) {
+                document.documentElement.style.setProperty(
+                    '--moon-scroll-y',
+                    `${smoothWave * (isMobile ? 18 : 24)}px`
+                );
+            }
         } else {
             document.documentElement.style.setProperty('--scene-depth-y', '0px');
             document.documentElement.style.setProperty('--moon-scroll-y', '0px');

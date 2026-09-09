@@ -6603,3 +6603,99 @@ body.gift-qr-open { overflow: hidden; }
     contain: paint;
   }
 }
+
+
+/* =========================================================
+   V4.2.12 — Mobile Safe Story Transitions
+   ========================================================= */
+
+@media (max-width: 800px) {
+  /* The First Connected page-flip creates two large perspective layers.
+     Desktop retains the effect; mobile uses the editorial content directly. */
+  #chapter-two .page-panel {
+    display: none !important;
+  }
+
+  /* Story chapters use opacity-only, one-way reveals on mobile. Once the
+     chapter has entered, its content remains in the settled state. */
+  #chapter-two .reveal,
+  .scene-story .reveal {
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+    will-change: auto !important;
+    transition: opacity .34s ease !important;
+  }
+
+  #chapter-two.is-active .reveal,
+  #chapter-two.story-entered .reveal,
+  .scene-story.is-active .reveal,
+  .scene-story.story-entered .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  #chapter-two .scene-inner,
+  .scene-story .scene-inner,
+  #chapter-two.is-active .scene-inner,
+  .scene-story.is-active .scene-inner {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* Remove the large active photo compositor/shadow surface and undo the
+     paint containment added earlier around story-photo frames. */
+  #chapter-two .story-photo-frame,
+  .scene-story .story-photo-frame,
+  #chapter-two.is-active .story-photo-frame,
+  .scene-story.is-active .story-photo-frame {
+    box-shadow: none !important;
+    contain: none !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+
+  #chapter-two .story-photo-frame::before,
+  .scene-story .story-photo-frame::before {
+    transform: none !important;
+  }
+
+  /* Mobile interludes keep the words/star/rule, but discard the two sliding
+     full-width panels and all transform-based enter/exit effects. */
+  .scroll-narrative .narrative-panel {
+    display: none !important;
+  }
+
+  .scroll-narrative .scroll-narrative-inner,
+  .scroll-narrative .narrative-star,
+  .scroll-narrative .narrative-rule,
+  .scroll-narrative.is-visible .scroll-narrative-inner,
+  .scroll-narrative.is-visible .narrative-star,
+  .scroll-narrative.is-visible .narrative-rule,
+  .scroll-narrative.is-visible.is-exiting .scroll-narrative-inner,
+  .scroll-narrative.is-visible.is-exiting .narrative-star,
+  .scroll-narrative.is-visible.is-exiting .narrative-rule {
+    transform: none !important;
+    filter: none !important;
+    will-change: auto !important;
+  }
+
+  .scroll-narrative .scroll-narrative-inner {
+    transition: opacity .36s ease !important;
+  }
+
+  .scroll-narrative.is-visible .scroll-narrative-inner {
+    opacity: 1 !important;
+  }
+
+  .scroll-narrative.is-visible.is-exiting .scroll-narrative-inner {
+    opacity: 1 !important;
+  }
+
+  /* Moon remains visually present, but scroll parallax is frozen only while
+     First Connected / Officially Dating / Proposal is the active chapter. */
+  body.story-safe-zone .moon {
+    transform: translate3d(0, 0, 0) !important;
+    will-change: auto !important;
+  }
+}

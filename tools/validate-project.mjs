@@ -94,6 +94,9 @@ if (fs.existsSync(corePath)) {
   if (!core.includes("root.classList.add('is-locked')")) failures.push('Root opening lock is missing.');
   if (!core.includes('startWorldStars')) failures.push('Deferred world-star startup is missing.');
   if (!core.includes("'is-exiting'")) failures.push('Interlude exit-state handling is missing.');
+  if (!core.includes("'story-entered'")) failures.push('Mobile one-way story state is missing.');
+  if (!core.includes("'story-safe-zone'")) failures.push('Mobile story moon-freeze state is missing.');
+  if (!core.includes("mobileNarrativeSafe")) failures.push('Mobile narrative safe mode is missing.');
   if (!core.includes("let mobile = matchMedia('(max-width: 800px)').matches;")) {
     failures.push('createStars mobile scope safeguard is missing.');
   }
