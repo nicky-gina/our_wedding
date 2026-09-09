@@ -2,7 +2,7 @@
   "images": [
     {
       "number": "01",
-      "filename": "gallery-01.jpg",
+      "filename": "gallery-01.webp",
       "thumbnail": "gallery-01.webp",
       "location": "Kyoto, Japan",
       "caption": "A Moment That Felt Like Forever",
@@ -10,7 +10,7 @@
     },
     {
       "number": "02",
-      "filename": "gallery-02.jpg",
+      "filename": "gallery-02.webp",
       "thumbnail": "gallery-02.webp",
       "location": "Kyoto, Japan",
       "caption": "Every Journey Is Better Together",
@@ -18,7 +18,7 @@
     },
     {
       "number": "03",
-      "filename": "gallery-03.jpg",
+      "filename": "gallery-03.webp",
       "thumbnail": "gallery-03.webp",
       "location": "Tokyo, Japan",
       "caption": "Among the Blossoms, We Found Home",
@@ -26,7 +26,7 @@
     },
     {
       "number": "04",
-      "filename": "gallery-04.jpg",
+      "filename": "gallery-04.webp",
       "thumbnail": "gallery-04.webp",
       "location": "Mount Fuji",
       "caption": "A Dream We Finally Shared",
@@ -34,7 +34,7 @@
     },
     {
       "number": "05",
-      "filename": "gallery-05.jpg",
+      "filename": "gallery-05.webp",
       "thumbnail": "gallery-05.webp",
       "location": "Lake Kawaguchi",
       "caption": "Where the World Quietly Disappeared",
@@ -42,7 +42,7 @@
     },
     {
       "number": "06",
-      "filename": "gallery-06.jpg",
+      "filename": "gallery-06.webp",
       "thumbnail": "gallery-06.webp",
       "location": "Arashiyama, Kyoto",
       "caption": "Hand in Hand, Wherever Life Leads",
@@ -50,7 +50,7 @@
     },
     {
       "number": "07",
-      "filename": "gallery-07.jpg",
+      "filename": "gallery-07.webp",
       "thumbnail": "gallery-07.webp",
       "location": "Tokyo, Japan",
       "caption": "A Kiss Beneath the First Bloom",
@@ -58,7 +58,7 @@
     },
     {
       "number": "08",
-      "filename": "gallery-08.jpg",
+      "filename": "gallery-08.webp",
       "thumbnail": "gallery-08.webp",
       "location": "Ginza, Tokyo",
       "caption": "Laughing Through Every Adventure",
@@ -66,7 +66,7 @@
     },
     {
       "number": "09",
-      "filename": "gallery-09.jpg",
+      "filename": "gallery-09.webp",
       "thumbnail": "gallery-09.webp",
       "location": "Marunouchi, Tokyo",
       "caption": "And Still, You Are My Favourite View",
@@ -74,7 +74,7 @@
     },
     {
       "number": "10",
-      "filename": "gallery-10.jpg",
+      "filename": "gallery-10.webp",
       "thumbnail": "gallery-10.webp",
       "location": "Super Nintendo World",
       "caption": "Growing Older, Never Growing Up",
@@ -82,7 +82,7 @@
     },
     {
       "number": "11",
-      "filename": "gallery-11.jpg",
+      "filename": "gallery-11.webp",
       "thumbnail": "gallery-11.webp",
       "location": "Osaka, Japan",
       "caption": "Home Has Always Been You",
@@ -90,7 +90,7 @@
     },
     {
       "number": "12",
-      "filename": "gallery-12.jpg",
+      "filename": "gallery-12.webp",
       "thumbnail": "gallery-12.webp",
       "location": "Arashiyama, Kyoto",
       "caption": "To the Next Chapter… Forever Together",
