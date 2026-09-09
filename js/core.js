@@ -112,9 +112,10 @@
         let stars = [];
         let raf = 0;
         let running = false;
+        let mobile = matchMedia('(max-width: 800px)').matches;
 
         const resize = () => {
-            const mobile = matchMedia('(max-width: 800px)').matches;
+            mobile = matchMedia('(max-width: 800px)').matches;
             const dpr = Math.min(devicePixelRatio || 1, mobile ? 1 : 1.75);
             const width = Math.max(1, innerWidth);
             const height = Math.max(1, innerHeight);

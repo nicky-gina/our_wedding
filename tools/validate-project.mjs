@@ -94,6 +94,12 @@ if (fs.existsSync(corePath)) {
   if (!core.includes("root.classList.add('is-locked')")) failures.push('Root opening lock is missing.');
   if (!core.includes('startWorldStars')) failures.push('Deferred world-star startup is missing.');
   if (!core.includes("'is-exiting'")) failures.push('Interlude exit-state handling is missing.');
+  if (!core.includes("let mobile = matchMedia('(max-width: 800px)').matches;")) {
+    failures.push('createStars mobile scope safeguard is missing.');
+  }
+  if (core.includes("const mobile = matchMedia('(max-width: 800px)').matches;\n            const dpr")) {
+    failures.push('createStars mobile variable is incorrectly scoped inside resize().');
+  }
 }
 if (fs.existsSync(rsvpPath)) {
   const rsvp = fs.readFileSync(rsvpPath, 'utf8');

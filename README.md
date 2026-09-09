@@ -1,8 +1,8 @@
-# Editorial Invitation V4.2.10 — iOS Conservative Loading
+# Editorial Invitation V4.2.11 — Landing Hotfix
 
 A cinematic, celestial, editorial-style digital wedding invitation for **Nicky & Gina**.
 
-**Current release:** V4.2.10
+**Current release:** V4.2.11
 **Production date:** 11 October 2026, 19:00 WIB  
 **Venue:** MDC Hall Jakarta
 
@@ -822,5 +822,21 @@ predictable one-way loading model for iOS/WebKit stability.
 - Sound-button backdrop blur is disabled.
 - Gallery shadows are reduced.
 - Paint containment is applied to heavier image sections.
+
+No Google Apps Script redeployment is required.
+
+
+## V4.2.11 — Landing hotfix
+
+V4.2.10 introduced a runtime scope regression in the celestial canvas code:
+`draw()` referenced `mobile`, but `mobile` was declared only inside `resize()`.
+The resulting `ReferenceError` occurred during landing-page startup, before the
+Enter button's click handler was registered.
+
+Fix:
+- hoisted `mobile` to the `createStars()` function scope;
+- refreshes its value inside `resize()`;
+- preserves the V4.2.10 static-on-mobile star behavior;
+- no other runtime behavior changed.
 
 No Google Apps Script redeployment is required.
