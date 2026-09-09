@@ -30,19 +30,19 @@ window.EDITORIAL_INVITE_CONFIG = {
     couplePortraits: {
         nicky: {
             images: [
-                'assets/portraits/originals/Groom1.png',
-                'assets/portraits/originals/Groom2.png',
-                'assets/portraits/originals/Groom3.png'
+                'assets/portraits/Groom1.webp',
+                'assets/portraits/Groom2.webp',
+                'assets/portraits/Groom3.webp'
             ],
-            fallback: 'assets/portraits/groom.webp'
+            fallback: 'assets/portraits/Groom1.webp'
         },
         gina: {
             images: [
-                'assets/portraits/originals/Bride1.png',
-                'assets/portraits/originals/Bride2.png',
-                'assets/portraits/originals/Bride3.png'
+                'assets/portraits/Bride1.webp',
+                'assets/portraits/Bride2.webp',
+                'assets/portraits/Bride3.webp'
             ],
-            fallback: 'assets/portraits/bride.webp'
+            fallback: 'assets/portraits/Bride1.webp'
         }
     },
 

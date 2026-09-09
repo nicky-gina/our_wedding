@@ -132,6 +132,48 @@ if (fs.existsSync(htmlPath)) {
   if (!html.includes('data-couple-carousel="gina"')) failures.push('Gina portrait carousel markup is missing.');
 }
 
+
+const performanceCorePath = requireFile('js/core.js');
+const venueGalleryPath = requireFile('js/venue-gallery.js');
+const couplePortraitsPath = requireFile('js/couple-portraits.js');
+
+if (fs.existsSync(htmlPath)) {
+  const html = fs.readFileSync(htmlPath, 'utf8');
+  if (html.includes('<iframe allowfullscreen="" class="venue-map-embed"')) {
+    failures.push('Google Maps iframe is still present in initial HTML.');
+  }
+  if (!html.includes('id="loadVenueMap"')) {
+    failures.push('Deferred Google Maps load button is missing.');
+  }
+}
+
+if (fs.existsSync(performanceCorePath)) {
+  const core = fs.readFileSync(performanceCorePath, 'utf8');
+  if (!core.includes('editorial:pause-world-stars') || !core.includes('editorial:resume-world-stars')) {
+    failures.push('World-star pause/resume resource hooks are missing.');
+  }
+}
+
+if (fs.existsSync(venueGalleryPath)) {
+  const venueGallery = fs.readFileSync(venueGalleryPath, 'utf8');
+  if (!venueGallery.includes('loadVenueMap') || !venueGallery.includes('unloadVenueMap')) {
+    failures.push('Deferred Google Maps lifecycle is missing.');
+  }
+  if (!venueGallery.includes("mobileGallery ? '80px 0px' : '450px 0px'")) {
+    failures.push('Mobile gallery activation margin safeguard is missing.');
+  }
+}
+
+if (fs.existsSync(couplePortraitsPath)) {
+  const couple = fs.readFileSync(couplePortraitsPath, 'utf8');
+  if (couple.includes('Promise.all(candidates.map(loadImage))')) {
+    failures.push('Eager six-portrait probing regression detected.');
+  }
+  if (!couple.includes('releaseExcept')) {
+    failures.push('Mobile portrait decoded-resource release logic is missing.');
+  }
+}
+
 if (failures.length) {
   console.error('Project validation failed:\n');
   failures.forEach(item => console.error(`- ${item}`));

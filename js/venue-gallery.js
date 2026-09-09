@@ -11,6 +11,99 @@
     const t = (key, vars) => window.inviteI18n?.t(key, vars) || key;
     if (config.mapUrl)
         $('#mapLink').href = config.mapUrl;
+
+    // Google Maps is intentionally created on demand. On iOS browsers a live
+    // Maps iframe can be one of the heaviest resources on the page, so mobile
+    // guests explicitly opt in and the iframe is removed again after leaving
+    // the venue area.
+    const venueSection = $('#venue');
+    const mapContainer = $('#venueMapContainer');
+    const mapPlaceholder = $('#venueMapPlaceholder');
+    const mapLoadButton = $('#loadVenueMap');
+    const mapSource = mapContainer?.dataset.mapSrc || '';
+    const mobileMap = matchMedia('(max-width: 800px)').matches;
+    let venueMapIframe = null;
+    let mapUnloadTimer = 0;
+
+    const setMapButtonLoading = isLoading => {
+        if (!mapLoadButton)
+            return;
+        mapLoadButton.disabled = isLoading;
+        mapLoadButton.setAttribute('aria-busy', String(isLoading));
+        const label = mapLoadButton.querySelector('[data-i18n="venue.loadMap"]');
+        if (label)
+            label.textContent = isLoading ? t('venue.mapLoading') : t('venue.loadMap');
+    };
+
+    const loadVenueMap = () => {
+        if (!mapContainer || !mapSource || venueMapIframe)
+            return;
+
+        clearTimeout(mapUnloadTimer);
+        setMapButtonLoading(true);
+
+        const iframe = document.createElement('iframe');
+        iframe.className = 'venue-map-embed';
+        iframe.title = 'MDC Hall Jakarta location';
+        iframe.allowFullscreen = true;
+        iframe.referrerPolicy = 'no-referrer-when-downgrade';
+        iframe.loading = 'eager';
+        iframe.src = mapSource;
+
+        iframe.addEventListener('load', () => {
+            setMapButtonLoading(false);
+            mapPlaceholder?.classList.add('is-hidden');
+        }, { once: true });
+
+        venueMapIframe = iframe;
+        mapContainer.appendChild(iframe);
+        window.dispatchEvent(new CustomEvent('editorial:pause-world-stars'));
+    };
+
+    const unloadVenueMap = () => {
+        clearTimeout(mapUnloadTimer);
+        mapUnloadTimer = 0;
+        if (!venueMapIframe)
+            return;
+
+        venueMapIframe.src = 'about:blank';
+        venueMapIframe.remove();
+        venueMapIframe = null;
+        mapPlaceholder?.classList.remove('is-hidden');
+        setMapButtonLoading(false);
+        window.dispatchEvent(new CustomEvent('editorial:resume-world-stars'));
+    };
+
+    mapLoadButton?.addEventListener('click', loadVenueMap);
+
+    if ('IntersectionObserver' in window && venueSection) {
+        // Desktop retains the previous "map just appears" feel, but waits until
+        // the venue is actually close. Mobile never auto-loads Maps.
+        if (!mobileMap) {
+            const desktopMapObserver = new IntersectionObserver(entries => {
+                if (entries.some(entry => entry.isIntersecting))
+                    loadVenueMap();
+            }, { rootMargin: '160px 0px', threshold: 0.12 });
+            desktopMapObserver.observe(venueSection);
+        }
+
+        // Once the venue is well outside the viewport, destroy the iframe.
+        // Scrolling back on desktop recreates it; mobile shows the lightweight
+        // opt-in card again.
+        const mapLifecycleObserver = new IntersectionObserver(entries => {
+            const nearby = entries.some(entry => entry.isIntersecting);
+            clearTimeout(mapUnloadTimer);
+
+            if (!nearby && venueMapIframe) {
+                mapUnloadTimer = window.setTimeout(unloadVenueMap, 700);
+            } else if (nearby && !mobileMap && !venueMapIframe) {
+                loadVenueMap();
+            }
+        }, { rootMargin: '135% 0px', threshold: 0.01 });
+        mapLifecycleObserver.observe(venueSection);
+    }
+
+    window.addEventListener('pagehide', unloadVenueMap);
     // RSVP adapts to attendance and deadline.
     const form = $('#rsvpForm');
     const count = $('#guestCount');
@@ -140,8 +233,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
 
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const loadedFullImages = new Set();
+    const loadedFullImages = new Map();
     const loadedThumbnails = new Set();
+    const mobileGallery = matchMedia('(max-width: 800px)').matches;
     let idx = 0;
     let galleryActivated = false;
     let dragging = false;
@@ -151,21 +245,45 @@ document.addEventListener('DOMContentLoaded', () => {
     let velocityX = 0;
     let dragOffset = 0;
     let renderTimer = 0;
+    let lastNavigationDirection = 1;
 
     function loadImage(src, cache) {
         if (!src || cache.has(src))
             return;
-        cache.add(src);
+
         const image = new Image();
         image.decoding = 'async';
         image.src = src;
+        cache.set(src, image);
     }
 
-    function preloadAround(index) {
-        [-1, 0, 1].forEach(offset => {
-            const item = items[(index + offset + items.length) % items.length];
-            loadImage(item?.image, loadedFullImages);
+    function releaseFullPreloads(keepSources = []) {
+        if (!mobileGallery)
+            return;
+
+        const keep = new Set(keepSources);
+        loadedFullImages.forEach((image, src) => {
+            if (keep.has(src))
+                return;
+            image.src = '';
+            loadedFullImages.delete(src);
         });
+    }
+
+    function preloadAround(index, direction = 1) {
+        // The displayed frame already requests the current image itself.
+        // Mobile retains only one directionally useful neighbour. Desktop can
+        // keep both neighbours for its larger memory budget.
+        const offsets = mobileGallery
+            ? [direction >= 0 ? 1 : -1]
+            : [-1, 1];
+
+        const desired = offsets.map(offset =>
+            items[(index + offset + items.length) % items.length]?.image
+        ).filter(Boolean);
+
+        releaseFullPreloads(desired);
+        desired.forEach(src => loadImage(src, loadedFullImages));
     }
 
     function loadThumbnail(index) {
@@ -256,13 +374,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         loadThumbnail(idx);
-        preloadAround(idx);
+        preloadAround(idx, lastNavigationDirection);
         if (centreThumb)
             centreActiveThumb(behavior);
     }
 
     function render(nextIndex, direction = 0) {
         window.clearTimeout(renderTimer);
+        lastNavigationDirection = direction === 0 ? lastNavigationDirection : Math.sign(direction);
         idx = (nextIndex + items.length) % items.length;
         resetDragVisual(false);
         main.dataset.direction = String(direction || 0);
@@ -375,9 +494,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             activateGallery();
             activationObserver.disconnect();
-        }, { rootMargin: '450px 0px', threshold: 0.01 });
+        }, {
+            rootMargin: mobileGallery ? '80px 0px' : '450px 0px',
+            threshold: 0.01
+        });
         activationObserver.observe(gallerySection);
+
+        if (mobileGallery) {
+            const cleanupObserver = new IntersectionObserver(entries => {
+                const nearby = entries.some(entry => entry.isIntersecting);
+                if (nearby || !galleryActivated)
+                    return;
+
+                main.style.backgroundImage = '';
+                main.classList.remove('has-image');
+                releaseFullPreloads([]);
+                galleryActivated = false;
+            }, {
+                rootMargin: '125% 0px',
+                threshold: 0.01
+            });
+            cleanupObserver.observe(gallerySection);
+        }
     } else {
         activateGallery();
     }
+
+    // If a mobile guest explicitly opens Google Maps, free any gallery image
+    // resources that may already be alive before the heavy iframe starts.
+    window.addEventListener('editorial:pause-world-stars', () => {
+        if (!mobileGallery || !galleryActivated)
+            return;
+        main.style.backgroundImage = '';
+        main.classList.remove('has-image');
+        releaseFullPreloads([]);
+        galleryActivated = false;
+    });
 });

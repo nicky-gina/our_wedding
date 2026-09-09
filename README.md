@@ -1,8 +1,8 @@
-# Editorial Invitation V4.2 — Couple Portrait Carousels
+# Editorial Invitation V4.2.1 — Mobile Stability & Resource Management
 
 A cinematic, celestial, editorial-style digital wedding invitation for **Nicky & Gina**.
 
-**Current release:** V4.2  
+**Current release:** V4.2.1  
 **Production date:** 11 October 2026, 19:00 WIB  
 **Venue:** MDC Hall Jakarta
 
@@ -444,6 +444,54 @@ The uploaded V4.1.4 package does not yet contain the six new PNG portraits.
 Until they are added, each page gracefully keeps its existing groom/bride portrait instead of showing broken images. Once the named PNG files are added, the carousel activates automatically.
 
 For mobile stability and loading performance, optimize the PNG files before deployment where practical. The site accepts the exact PNG filenames above, but extremely large source images can consume significant memory on iOS browsers.
+
+No Google Apps Script redeployment is required.
+
+---
+
+## V4.2.1 — Mobile Stability & Resource Management
+
+This release targets intermittent iOS/Chrome tab reloads and scroll lag observed
+around the venue/Google Maps chapter.
+
+### Google Maps lifecycle
+
+- Removed the live Google Maps iframe from initial HTML.
+- Mobile guests see a lightweight celestial map placeholder and explicitly tap
+  **View interactive map** before the iframe is created.
+- Desktop keeps an automatic map experience, but the iframe is created only
+  when the Venue chapter is near the viewport.
+- The iframe is destroyed after the Venue chapter is well out of range.
+- The animated world-star canvas pauses while Google Maps is alive and resumes
+  when the map is unloaded.
+- **Open directions** remains available independently of the embedded map.
+
+### Couple portrait lifecycle
+
+- V4.2 no longer probes all six portrait files at startup.
+- Portrait files now use the lightweight WebP assets already included in the
+  re-uploaded project instead of the large PNG originals.
+- Each carousel activates only as its chapter approaches.
+- On mobile the current image plus at most one useful neighbour is retained;
+  off-screen image `src` values are cleared to give WebKit an opportunity to
+  release decoded bitmap memory.
+
+### Gallery lifecycle
+
+- On mobile the gallery no longer activates 450 px before the chapter; the
+  activation margin is reduced to 80 px.
+- Only one neighbouring full-resolution image is preloaded on mobile.
+- Full gallery preloads and the displayed background are released after the
+  gallery is well outside the viewport.
+- If Google Maps is opened while gallery resources are alive, those gallery
+  image resources are released before the iframe starts.
+
+### Rendering
+
+- Added conservative paint containment for the heaviest later chapters.
+- No celestial/storytelling feature has been removed.
+- Moon rendering, portrait entrance behavior, RSVP, guestbook, Wedding Gift,
+  PayPal QR, and multilingual behavior are preserved.
 
 No Google Apps Script redeployment is required.
 
