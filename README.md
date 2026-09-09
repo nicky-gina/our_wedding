@@ -1,8 +1,8 @@
-# Editorial Invitation V4.2.7 — Venue Map Spacing Fix
+# Editorial Invitation V4.2.8 — Venue Map Spacing Fix
 
 A cinematic, celestial, editorial-style digital wedding invitation for **Nicky & Gina**.
 
-**Current release:** V4.2.7
+**Current release:** V4.2.8
 **Production date:** 11 October 2026, 19:00 WIB  
 **Venue:** MDC Hall Jakarta
 
@@ -56,8 +56,8 @@ This README is the single consolidated source for project setup, configuration, 
     │   └── originals/
     ├── story/
     │   └── originals/
-    ├── couple.png
-    ├── hero.jpg
+    ├── couple.webp
+    ├── hero.webp
     └── music.m4a
 ```
 
@@ -102,7 +102,7 @@ Edit `js/config.js` to change deployment-specific settings:
 The production gallery uses:
 
 ```text
-assets/gallery/full/gallery-01.jpg ... gallery-12.jpg
+assets/gallery/full/gallery-01.webp ... gallery-12.webp
 assets/gallery/thumbs/gallery-01.webp ... gallery-12.webp
 ```
 
@@ -313,7 +313,7 @@ weddingGift: {
     paypal: {
         handle: 'paypal.me/yourname',
         url: 'https://paypal.me/yourname',
-        qrImage: 'assets/gift/paypal-qr.png'
+        qrImage: 'assets/gift/paypal-qr.webp'
     }
 }
 ```
@@ -342,7 +342,7 @@ Configure the QR image in `js/config.js`:
 paypal: {
     handle: 'paypal.me/yourname',
     url: 'https://paypal.me/yourname',
-    qrImage: 'assets/gift/paypal-qr.png'
+    qrImage: 'assets/gift/paypal-qr.webp'
 }
 ```
 
@@ -417,12 +417,12 @@ The Nicky and Gina profile chapters now support three swipeable portraits each.
 Place these files in `assets/portraits/`:
 
 ```text
-Groom1.png
-Groom2.png
-Groom3.png
-Bride1.png
-Bride2.png
-Bride3.png
+Groom1.webp
+Groom2.webp
+Groom3.webp
+Bride1.webp
+Bride2.webp
+Bride3.webp
 ```
 
 The filenames are configured centrally in `js/config.js`.
@@ -748,7 +748,7 @@ The embedded Google Maps experience has been removed completely for mobile stabi
 No Google Apps Script redeployment is required.
 
 
-## V4.2.7 — Venue map spacing fix
+## V4.2.8 — Venue map spacing fix
 
 - Changed the static venue-map inner container from the legacy Google Maps
   portrait ratio to a true `1:1` square.
@@ -756,3 +756,10 @@ No Google Apps Script redeployment is required.
 - Keeps the editorial frame, date/time, and Open Directions link unchanged.
 
 No Google Apps Script redeployment is required.
+
+
+## V4.2.8 — WebP asset optimization
+
+- Converted remaining PNG/JPG/JPEG assets in the invitation into `.webp` versions.
+- Updated code references to use the `.webp` files for lighter loading.
+- Kept the original source PNG/JPG files inside the project for backup/reference.
