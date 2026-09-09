@@ -30,9 +30,10 @@
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&amp;family=Great+Vibes&amp;family=Manrope:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
 <link as="image" fetchpriority="high" href="assets/moon/custom-moon.png" rel="preload" type="image/png"/>
-<link href="css/styles.css?v=4.2.1" rel="stylesheet"/>
+<link href="css/styles.css?v=4.2.4" rel="stylesheet"/>
 </head>
-<body class="is-locked"><a class="skip-link" data-i18n="accessibility.skipToContent" href="#main-content">Skip to invitation content</a>
+<body class="is-locked">
+<a class="skip-link" data-i18n="accessibility.skipToContent" href="#main-content">Skip to invitation content</a>
 <noscript>
    This invitation needs JavaScript enabled.
   </noscript>
@@ -495,18 +496,8 @@
 </dl>
 </div>
 <div class="venue-map-frame">
-<div class="venue-map-inner" data-map-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.5510052147556!2d106.795626375731!3d-6.190781660654837!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f7ae2ebdc6f5%3A0x45d28c592dfff8b2!2sMDC%20Hall%20Jakarta!5e0!3m2!1sen!2sid!4v1785398387423!5m2!1sen!2sid" id="venueMapContainer">
-<div class="venue-map-placeholder" id="venueMapPlaceholder">
-<div aria-hidden="true" class="venue-map-placeholder-orbit"></div>
-<div class="venue-map-placeholder-copy">
-<span aria-hidden="true" class="venue-map-pin">⌖</span>
-<p class="venue-map-placeholder-name">MDC Hall · Jakarta</p>
-<p class="venue-map-placeholder-note" data-i18n="venue.mapDeferredNote">Interactive map loads only when you choose to view it.</p>
-<button class="venue-map-load-button" data-i18n-aria-label="venue.loadMapAria" id="loadVenueMap" type="button">
-<span data-i18n="venue.loadMap">View interactive map</span>
-<span aria-hidden="true">↗</span>
-</button>
-</div>
+<div class="venue-map-inner" id="venueMapContainer">
+<iframe allowfullscreen="" class="venue-map-embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.5510052147556!2d106.795626375731!3d-6.190781660654837!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f7ae2ebdc6f5%3A0x45d28c592dfff8b2!2sMDC%20Hall%20Jakarta!5e0!3m2!1sen!2sid!4v1785398387423!5m2!1sen!2sid" title="MDC Hall Jakarta location"></iframe>
 </div>
 </div>
 <p class="venue-map-date" data-i18n="venue.mapDate">
@@ -539,7 +530,7 @@
 <div class="gallery-viewer">
 <div aria-label="Wedding memory gallery" aria-roledescription="carousel" class="gallery-stage" id="galleryStage" role="region">
 <div aria-live="off" class="gallery-slide">
-<div aria-label="Nicky and Gina looking into each other’s eyes in traditional Japanese attire." class="gallery-image active has-image" id="galleryMain" role="img"></div>
+<div aria-label="Wedding photo" class="gallery-image active has-image" id="galleryMain" role="img"></div>
 <button aria-label="Previous photo" class="gallery-nav prev" data-i18n-aria-label="gallery.previousAria" type="button">
           ❮
          </button>
@@ -837,7 +828,7 @@ Your presence and warm wishes are already more than enough for us. Should you wi
 <span class="gift-paypal-handle" data-gift-paypal-handle>—</span>
 </div>
 <button aria-haspopup="dialog" class="gift-paypal-qr-trigger" data-gift-paypal-qr-trigger data-i18n-aria-label="gift.qrEnlargeAria" type="button">
-<img alt="PayPal QR code" data-gift-paypal-qr-thumb decoding="async" src="assets/gift/paypal-qr.png?v=4.2.0"/>
+<img alt="PayPal QR code" data-gift-paypal-qr-thumb decoding="async" src="assets/gift/paypal-qr.png?v=4.2.4"/>
 <span data-i18n="gift.qrTap">Tap to enlarge</span>
 </button>
 <a class="gift-action gift-paypal-button" data-gift-paypal-link data-i18n-aria-label="gift.openPaypalAria" href="#" rel="noopener noreferrer" target="_blank">
@@ -883,7 +874,7 @@ Your presence and warm wishes are already more than enough for us. Should you wi
 <p class="eyebrow" data-i18n="gift.qrEyebrow">PayPal · QR Code</p>
 <h2 id="paypalQrTitle" data-i18n="gift.qrTitle">Scan to send a gift</h2>
 <div class="gift-qr-full-wrap">
-<img alt="PayPal QR code" data-gift-paypal-qr-full decoding="async" src="assets/gift/paypal-qr.png?v=4.2.0"/>
+<img alt="PayPal QR code" data-gift-paypal-qr-full decoding="async" src="assets/gift/paypal-qr.png?v=4.2.4"/>
 </div>
 <p class="gift-qr-helper" data-i18n="gift.qrHelper">Scan this code with your phone or PayPal app.</p>
 </div>
@@ -891,12 +882,12 @@ Your presence and warm wishes are already more than enough for us. Should you wi
 <audio id="bgMusic" loop="" playsinline="" preload="auto">
 <source src="assets/music.m4a" type="audio/mp4"/>
 </audio>
-<script src="js/i18n.js?v=4.2.1"></script>
-<script src="js/config.js?v=4.2.1"></script>
-<script src="js/couple-portraits.js?v=4.2.1"></script>
-<script src="js/wedding-gift.js?v=4.2.1"></script>
-<script src="js/core.js?v=4.2.1"></script>
-<script src="js/rsvp-guestbook.js?v=4.2.1"></script>
-<script src="js/venue-gallery.js?v=4.2.1"></script>
+<script src="js/i18n.js?v=4.2.4"></script>
+<script src="js/config.js?v=4.2.4"></script>
+<script src="js/couple-portraits.js?v=4.2.4"></script>
+<script src="js/wedding-gift.js?v=4.2.4"></script>
+<script src="js/core.js?v=4.2.4"></script>
+<script src="js/rsvp-guestbook.js?v=4.2.4"></script>
+<script src="js/venue-gallery.js?v=4.2.4"></script>
 <div aria-atomic="true" aria-live="polite" class="sr-only" id="languageAnnouncement"></div></body>
 </html>

@@ -199,8 +199,10 @@
       }
     }
 
+
     viewport.addEventListener('keydown', event => {
       if (sources.length <= 1) return;
+
       if (event.key === 'ArrowLeft') {
         event.preventDefault();
         goTo(current - 1, -1);
@@ -210,13 +212,20 @@
       }
     });
 
+
     let pointerId = null;
     let startX = 0;
     let startY = 0;
 
     viewport.addEventListener('pointerdown', event => {
-      if (sources.length <= 1 || (event.pointerType === 'mouse' && event.button !== 0))
+      if (
+        sources.length <= 1 ||
+        event.pointerType === 'mouse' ||
+        event.target.closest('button')
+      ) {
         return;
+      }
+
       pointerId = event.pointerId;
       startX = event.clientX;
       startY = event.clientY;

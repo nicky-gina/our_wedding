@@ -133,34 +133,38 @@ if (fs.existsSync(htmlPath)) {
 }
 
 
-const performanceCorePath = requireFile('js/core.js');
 const venueGalleryPath = requireFile('js/venue-gallery.js');
 const couplePortraitsPath = requireFile('js/couple-portraits.js');
 
 if (fs.existsSync(htmlPath)) {
   const html = fs.readFileSync(htmlPath, 'utf8');
-  if (html.includes('<iframe allowfullscreen="" class="venue-map-embed"')) {
-    failures.push('Google Maps iframe is still present in initial HTML.');
+  if (!html.includes('<iframe allowfullscreen="" class="venue-map-embed" loading="lazy"')) {
+    failures.push('Stable lazy Google Maps iframe is missing.');
   }
-  if (!html.includes('id="loadVenueMap"')) {
-    failures.push('Deferred Google Maps load button is missing.');
+  if (html.includes('id="loadVenueMap"')) {
+    failures.push('Manual Google Maps load control should not be present.');
   }
-}
-
-if (fs.existsSync(performanceCorePath)) {
-  const core = fs.readFileSync(performanceCorePath, 'utf8');
-  if (!core.includes('editorial:pause-world-stars') || !core.includes('editorial:resume-world-stars')) {
-    failures.push('World-star pause/resume resource hooks are missing.');
+  if (html.includes('id="imageLightbox"') || html.includes('js/image-lightbox.js')) {
+    failures.push('Full-size image lightbox should not be present in V4.2.4.');
+  }
+  if (html.includes('is-enlargeable')) {
+    failures.push('Photo elements should not be marked enlargeable.');
   }
 }
 
 if (fs.existsSync(venueGalleryPath)) {
   const venueGallery = fs.readFileSync(venueGalleryPath, 'utf8');
-  if (!venueGallery.includes('loadVenueMap') || !venueGallery.includes('unloadVenueMap')) {
-    failures.push('Deferred Google Maps lifecycle is missing.');
+  if (venueGallery.includes('loadVenueMap') || venueGallery.includes('unloadVenueMap')) {
+    failures.push('Dynamic Google Maps create/destroy lifecycle is still present.');
+  }
+  if (!venueGallery.includes('item.preview || item.thumbnail')) {
+    failures.push('Gallery WebP preview browsing strategy is missing.');
   }
   if (!venueGallery.includes("mobileGallery ? '80px 0px' : '450px 0px'")) {
     failures.push('Mobile gallery activation margin safeguard is missing.');
+  }
+  if (venueGallery.includes('editorial:open-image') || venueGallery.includes('item.image')) {
+    failures.push('Gallery full-size image behavior should be disabled.');
   }
 }
 
@@ -172,6 +176,29 @@ if (fs.existsSync(couplePortraitsPath)) {
   if (!couple.includes('releaseExcept')) {
     failures.push('Mobile portrait decoded-resource release logic is missing.');
   }
+  if (couple.includes('fullImages') || couple.includes('fullSrc') || couple.includes('editorial:open-image')) {
+    failures.push('Portrait full-size image behavior should be disabled.');
+  }
+  if (!couple.includes("event.pointerType === 'mouse'")) {
+    failures.push('Desktop mouse pointer-capture exclusion is missing.');
+  }
+  if (!couple.includes("event.target.closest('button')")) {
+    failures.push('Portrait control pointer exclusion is missing.');
+  }
+}
+
+if (fs.existsSync(configPath)) {
+  const config = fs.readFileSync(configPath, 'utf8');
+  if (!config.includes('assets/gallery/previews/gallery-01.webp')) {
+    failures.push('Gallery preview configuration is missing.');
+  }
+  if (config.includes('fullImages:') || config.includes('assets/gallery/full/')) {
+    failures.push('Runtime config should not reference full-size photo originals.');
+  }
+}
+
+for (let i = 1; i <= 12; i += 1) {
+  requireFile(`assets/gallery/previews/gallery-${String(i).padStart(2, '0')}.webp`);
 }
 
 if (failures.length) {
