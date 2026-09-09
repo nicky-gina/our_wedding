@@ -115,7 +115,7 @@
 
         const resize = () => {
             const mobile = matchMedia('(max-width: 800px)').matches;
-            const dpr = Math.min(devicePixelRatio || 1, mobile ? 1.25 : 1.75);
+            const dpr = Math.min(devicePixelRatio || 1, mobile ? 1 : 1.75);
             const width = Math.max(1, innerWidth);
             const height = Math.max(1, innerHeight);
 
@@ -126,7 +126,7 @@
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
             const responsiveCount = Math.max(
-                mobile ? 45 : 70,
+                mobile ? 32 : 70,
                 Math.round(count * width / 1440)
             );
 

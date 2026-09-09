@@ -139,7 +139,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
 
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const loadedFullImages = new Set();
+    const mobileGallery = matchMedia('(max-width: 800px)').matches;
+    const loadedPreviewImages = new Set();
     const loadedThumbnails = new Set();
     let idx = 0;
     let galleryActivated = false;
@@ -161,10 +162,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function preloadAround(index) {
-        [-1, 0, 1].forEach(offset => {
+        const offsets = mobileGallery ? [0, 1] : [-1, 0, 1];
+        offsets.forEach(offset => {
             const item = items[(index + offset + items.length) % items.length];
-            loadImage(item?.image, loadedFullImages);
+            loadImage(item?.preview || item?.thumbnail, loadedPreviewImages);
         });
+    }
+
+    function releaseGalleryMain() {
+        if (!mobileGallery)
+            return;
+        main.style.backgroundImage = '';
+        main.classList.remove('has-image');
+        loadedPreviewImages.clear();
     }
 
     function loadThumbnail(index) {
@@ -233,8 +243,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function applyFrame({ centreThumb = false, behavior = 'smooth' } = {}) {
         const item = items[idx];
-        main.style.backgroundImage = `linear-gradient(180deg,transparent 58%,rgba(2,7,14,.22)),url("${item.image}")`;
-        main.classList.add('has-image');
+        const preview = item.preview || item.thumbnail;
+        main.style.backgroundImage = preview
+            ? `linear-gradient(180deg,transparent 58%,rgba(2,7,14,.22)),url("${preview}")`
+            : '';
+        main.classList.toggle('has-image', Boolean(preview));
         main.setAttribute('aria-label', item.alt || (window.inviteI18n?.galleryItem(idx)?.[1] || item.caption));
 
         if (current)
@@ -374,8 +387,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             activateGallery();
             activationObserver.disconnect();
-        }, { rootMargin: '450px 0px', threshold: 0.01 });
+        }, {
+            rootMargin: mobileGallery ? '80px 0px' : '450px 0px',
+            threshold: 0.01
+        });
         activationObserver.observe(gallerySection);
+
+        if (mobileGallery) {
+            const releaseObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting && galleryActivated) {
+                        releaseGalleryMain();
+                    } else if (entry.isIntersecting && galleryActivated && !main.classList.contains('has-image')) {
+                        applyFrame({ behavior: 'auto' });
+                    }
+                });
+            }, {
+                rootMargin: '1000px 0px',
+                threshold: 0
+            });
+            releaseObserver.observe(gallerySection);
+        }
     } else {
         activateGallery();
     }

@@ -6527,3 +6527,46 @@ body.gift-qr-open { overflow: hidden; }
     margin-top: 14px;
   }
 }
+
+
+/* =========================================================
+   V4.2.9 — Mobile memory/compositor stability
+   ========================================================= */
+
+.story-photo-image.story-photo-lazy,
+.portrait-image.portrait-image-lazy {
+  transition: opacity .35s ease;
+}
+
+.story-photo-image.story-photo-lazy:not(.is-loaded),
+.portrait-image.portrait-image-lazy:not(.is-loaded) {
+  opacity: 0;
+}
+
+.story-photo-frame,
+.portrait-carousel-viewport {
+  background:
+    radial-gradient(circle at 50% 38%, rgba(91, 124, 166, .08), transparent 48%),
+    #0b1728;
+}
+
+@media (max-width: 800px) {
+  /* Grain animation and full-screen cloud blur cost GPU memory without
+     materially changing the mobile visual identity. */
+  .grain {
+    animation: none !important;
+    transform: none !important;
+    opacity: .022;
+  }
+
+  .cloud,
+  .prelude-cloud {
+    filter: none !important;
+    will-change: auto !important;
+  }
+
+  .story-photo-image,
+  .portrait-image {
+    will-change: auto !important;
+  }
+}

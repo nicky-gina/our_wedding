@@ -1,8 +1,8 @@
-# Editorial Invitation V4.2.8 — Venue Map Spacing Fix
+# Editorial Invitation V4.2.9 — Mobile Memory Stability
 
 A cinematic, celestial, editorial-style digital wedding invitation for **Nicky & Gina**.
 
-**Current release:** V4.2.8
+**Current release:** V4.2.9
 **Production date:** 11 October 2026, 19:00 WIB  
 **Venue:** MDC Hall Jakarta
 
@@ -763,3 +763,29 @@ No Google Apps Script redeployment is required.
 - Converted remaining PNG/JPG/JPEG assets in the invitation into `.webp` versions.
 - Updated code references to use the `.webp` files for lighter loading.
 - Kept the original source PNG/JPG files inside the project for backup/reference.
+
+
+## V4.2.9 — Mobile Memory Stability
+
+This release targets intermittent mobile reloads around the Proposal chapter.
+
+### Image memory lifecycle
+
+- Groom/Bride carousel images no longer probe/load all six files at startup.
+- Each portrait carousel activates only when its chapter approaches the viewport.
+- Mobile keeps the current portrait plus one neighboring portrait loaded and releases distant portrait `src` values.
+- Story images now use optimized 1200px-long-edge WebPs and load only near their chapter.
+- Mobile releases story image sources after the chapter moves sufficiently far away.
+- Main gallery browsing now uses 1200px WebP previews rather than the archived full-resolution images.
+- Mobile gallery activation is delayed until 80px from the viewport and releases its main preview when far away.
+- Full-size PayPal QR is loaded only if the guest opens the QR dialog and is released on close.
+
+### Mobile compositor budget
+
+- Star canvas DPR is capped at 1.0 on mobile and the minimum star count is reduced.
+- Animated grain becomes static on mobile.
+- Full-screen cloud blur is disabled on mobile.
+
+Desktop visuals and the invitation's established moon, portrait entrance, RSVP, guestbook, static venue map, gift section, and gallery interactions remain intact.
+
+No Google Apps Script redeployment is required.

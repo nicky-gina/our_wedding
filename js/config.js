@@ -30,17 +30,17 @@ window.EDITORIAL_INVITE_CONFIG = {
     couplePortraits: {
         nicky: {
             images: [
-                'assets/portraits/Groom1.webp',
-                'assets/portraits/Groom2.webp',
-                'assets/portraits/Groom3.webp'
+                'assets/portraits/optimized/Groom1.webp',
+                'assets/portraits/optimized/Groom2.webp',
+                'assets/portraits/optimized/Groom3.webp'
             ],
             fallback: 'assets/portraits/groom.webp'
         },
         gina: {
             images: [
-                'assets/portraits/Bride1.webp',
-                'assets/portraits/Bride2.webp',
-                'assets/portraits/Bride3.webp'
+                'assets/portraits/optimized/Bride1.webp',
+                'assets/portraits/optimized/Bride2.webp',
+                'assets/portraits/optimized/Bride3.webp'
             ],
             fallback: 'assets/portraits/bride.webp'
         }
@@ -50,6 +50,7 @@ window.EDITORIAL_INVITE_CONFIG = {
         {
             number: '01',
             image: 'assets/gallery/full/gallery-01.webp',
+            preview: 'assets/gallery/previews/gallery-01.webp',
             thumbnail: 'assets/gallery/thumbs/gallery-01.webp',
             location: "Kyoto, Japan",
             caption: "A Moment That Felt Like Forever",
@@ -58,6 +59,7 @@ window.EDITORIAL_INVITE_CONFIG = {
         {
             number: '02',
             image: 'assets/gallery/full/gallery-02.webp',
+            preview: 'assets/gallery/previews/gallery-02.webp',
             thumbnail: 'assets/gallery/thumbs/gallery-02.webp',
             location: "Kyoto, Japan",
             caption: "Every Journey Is Better Together",
@@ -66,6 +68,7 @@ window.EDITORIAL_INVITE_CONFIG = {
         {
             number: '03',
             image: 'assets/gallery/full/gallery-03.webp',
+            preview: 'assets/gallery/previews/gallery-03.webp',
             thumbnail: 'assets/gallery/thumbs/gallery-03.webp',
             location: "Tokyo, Japan",
             caption: "Among the Blossoms, We Found Home",
@@ -74,6 +77,7 @@ window.EDITORIAL_INVITE_CONFIG = {
         {
             number: '04',
             image: 'assets/gallery/full/gallery-04.webp',
+            preview: 'assets/gallery/previews/gallery-04.webp',
             thumbnail: 'assets/gallery/thumbs/gallery-04.webp',
             location: "Mount Fuji",
             caption: "A Dream We Finally Shared",
@@ -82,6 +86,7 @@ window.EDITORIAL_INVITE_CONFIG = {
         {
             number: '05',
             image: 'assets/gallery/full/gallery-05.webp',
+            preview: 'assets/gallery/previews/gallery-05.webp',
             thumbnail: 'assets/gallery/thumbs/gallery-05.webp',
             location: "Lake Kawaguchi",
             caption: "Where the World Quietly Disappeared",
@@ -90,6 +95,7 @@ window.EDITORIAL_INVITE_CONFIG = {
         {
             number: '06',
             image: 'assets/gallery/full/gallery-06.webp',
+            preview: 'assets/gallery/previews/gallery-06.webp',
             thumbnail: 'assets/gallery/thumbs/gallery-06.webp',
             location: "Arashiyama, Kyoto",
             caption: "Hand in Hand, Wherever Life Leads",
@@ -98,6 +104,7 @@ window.EDITORIAL_INVITE_CONFIG = {
         {
             number: '07',
             image: 'assets/gallery/full/gallery-07.webp',
+            preview: 'assets/gallery/previews/gallery-07.webp',
             thumbnail: 'assets/gallery/thumbs/gallery-07.webp',
             location: "Tokyo, Japan",
             caption: "A Kiss Beneath the First Bloom",
@@ -106,6 +113,7 @@ window.EDITORIAL_INVITE_CONFIG = {
         {
             number: '08',
             image: 'assets/gallery/full/gallery-08.webp',
+            preview: 'assets/gallery/previews/gallery-08.webp',
             thumbnail: 'assets/gallery/thumbs/gallery-08.webp',
             location: "Ginza, Tokyo",
             caption: "Laughing Through Every Adventure",
@@ -114,6 +122,7 @@ window.EDITORIAL_INVITE_CONFIG = {
         {
             number: '09',
             image: 'assets/gallery/full/gallery-09.webp',
+            preview: 'assets/gallery/previews/gallery-09.webp',
             thumbnail: 'assets/gallery/thumbs/gallery-09.webp',
             location: "Marunouchi, Tokyo",
             caption: "And Still, You Are My Favourite View",
@@ -122,6 +131,7 @@ window.EDITORIAL_INVITE_CONFIG = {
         {
             number: '10',
             image: 'assets/gallery/full/gallery-10.webp',
+            preview: 'assets/gallery/previews/gallery-10.webp',
             thumbnail: 'assets/gallery/thumbs/gallery-10.webp',
             location: "Super Nintendo World",
             caption: "Growing Older, Never Growing Up",
@@ -130,6 +140,7 @@ window.EDITORIAL_INVITE_CONFIG = {
         {
             number: '11',
             image: 'assets/gallery/full/gallery-11.webp',
+            preview: 'assets/gallery/previews/gallery-11.webp',
             thumbnail: 'assets/gallery/thumbs/gallery-11.webp',
             location: "Osaka, Japan",
             caption: "Home Has Always Been You",
@@ -138,6 +149,7 @@ window.EDITORIAL_INVITE_CONFIG = {
         {
             number: '12',
             image: 'assets/gallery/full/gallery-12.webp',
+            preview: 'assets/gallery/previews/gallery-12.webp',
             thumbnail: 'assets/gallery/thumbs/gallery-12.webp',
             location: "Arashiyama, Kyoto",
             caption: "To the Next Chapter… Forever Together",

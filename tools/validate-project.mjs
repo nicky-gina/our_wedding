@@ -16,6 +16,7 @@ for (const file of [
   'js/i18n.js',
   'js/config.js',
   'js/couple-portraits.js',
+  'js/story-images.js',
   'js/wedding-gift.js',
   'js/core.js',
   'js/rsvp-guestbook.js',

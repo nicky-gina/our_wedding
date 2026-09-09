@@ -72,12 +72,9 @@
       qrThumb.alt = t('gift.qrEyebrow');
       qrTrigger.hidden = false;
 
-      // The thumbnail must remain usable even if the lightbox image is absent.
-      // Populate the full-size image independently when its DOM node exists.
+      // Keep the full-size QR unloaded until the guest actually opens the modal.
       if (qrFull) {
-        if (configuredQrImage) {
-          qrFull.src = configuredQrImage;
-        }
+        qrFull.dataset.qrSrc = configuredQrImage || qrImage;
         qrFull.alt = t('gift.qrEyebrow');
       }
     } else if (qrTrigger) {
@@ -161,6 +158,12 @@
     if (!qrModal || !qrTrigger || qrTrigger.hidden) return;
 
     lastQrFocus = document.activeElement;
+
+    const qrFull = document.querySelector('[data-gift-paypal-qr-full]');
+    if (qrFull?.dataset.qrSrc && !qrFull.getAttribute('src')) {
+      qrFull.src = qrFull.dataset.qrSrc;
+    }
+
     qrModal.classList.add('is-open');
     qrModal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('gift-qr-open');
@@ -176,6 +179,11 @@
     qrModal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('gift-qr-open');
     lastQrFocus?.focus?.();
+
+    window.setTimeout(() => {
+      const qrFull = document.querySelector('[data-gift-paypal-qr-full]');
+      qrFull?.removeAttribute('src');
+    }, 320);
   };
 
   qrTrigger?.addEventListener('click', openQrModal);

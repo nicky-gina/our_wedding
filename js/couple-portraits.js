@@ -3,21 +3,14 @@
 
   const config = window.EDITORIAL_INVITE_CONFIG?.couplePortraits || {};
   const t = key => window.inviteI18n?.t(key) || key;
-
-  const loadImage = source => new Promise(resolve => {
-    const image = new Image();
-    image.decoding = 'async';
-    image.onload = () => resolve(source);
-    image.onerror = () => resolve(null);
-    image.src = source;
-  });
+  const mobile = matchMedia('(max-width: 800px)').matches;
 
   const formatCount = value => String(value).padStart(2, '0');
 
-  const initialiseCarousel = async figure => {
+  const initialiseCarousel = figure => {
     const key = figure.dataset.coupleCarousel;
     const settings = config[key] || {};
-    const candidates = Array.isArray(settings.images) ? settings.images.filter(Boolean) : [];
+    const sources = Array.isArray(settings.images) ? settings.images.filter(Boolean) : [];
 
     const viewport = figure.querySelector('.portrait-carousel-viewport');
     const track = figure.querySelector('[data-portrait-track]');
@@ -25,49 +18,78 @@
     const next = figure.querySelector('[data-portrait-next]');
     const dots = figure.querySelector('[data-portrait-dots]');
     const count = figure.querySelector('[data-portrait-count]');
-    const fallbackSlide = figure.querySelector('[data-fallback-slide]');
 
-    if (!viewport || !track || !fallbackSlide) return;
-
-    // Probe the configured files. If the six new PNGs have not been added yet,
-    // the existing single portrait remains intact instead of showing broken images.
-    const resolved = (await Promise.all(candidates.map(loadImage))).filter(Boolean);
-    if (!resolved.length) {
-      if (count) count.textContent = '01 / 01';
-      return;
-    }
+    if (!viewport || !track || !sources.length) return;
 
     const personName = key === 'nicky' ? 'Nicky' : 'Gina';
     const personRole = key === 'nicky' ? 'groom' : 'bride';
 
     const fragment = document.createDocumentFragment();
-    resolved.forEach((source, index) => {
+    sources.forEach((source, index) => {
       const slide = document.createElement('div');
       slide.className = `portrait-carousel-slide${index === 0 ? ' is-active' : ''}`;
       slide.setAttribute('aria-hidden', String(index !== 0));
 
       const image = document.createElement('img');
-      image.className = 'portrait-image';
-      image.src = source;
+      image.className = 'portrait-image portrait-image-lazy';
+      image.dataset.src = source;
       image.alt = `${personName}, the ${personRole} — portrait ${index + 1}`;
       image.decoding = 'async';
-      image.loading = index === 0 ? 'eager' : 'lazy';
       image.draggable = false;
 
       slide.appendChild(image);
       fragment.appendChild(slide);
     });
-
     track.replaceChildren(fragment);
 
+    const slides = [...track.children];
     let current = 0;
-    const total = resolved.length;
+    let activated = false;
+    let lastDirection = 1;
+
+    const ensureLoaded = index => {
+      const normalized = (index + sources.length) % sources.length;
+      const image = slides[normalized]?.querySelector('.portrait-image');
+      if (!image || image.getAttribute('src')) return;
+
+      image.addEventListener('load', () => image.classList.add('is-loaded'), { once: true });
+      image.src = image.dataset.src;
+    };
+
+    const releaseExcept = keep => {
+      if (!mobile) return;
+      const keepSet = new Set(keep.map(index => (index + sources.length) % sources.length));
+
+      slides.forEach((slide, index) => {
+        if (keepSet.has(index)) return;
+        const image = slide.querySelector('.portrait-image');
+        if (!image?.getAttribute('src')) return;
+        image.removeAttribute('src');
+        image.classList.remove('is-loaded');
+      });
+    };
+
+    const warmCurrent = (direction = lastDirection) => {
+      ensureLoaded(current);
+      if (mobile && sources.length > 1) {
+        const neighbor = current + (direction || 1);
+        ensureLoaded(neighbor);
+        window.setTimeout(() => releaseExcept([current, neighbor]), 420);
+      } else if (!mobile) {
+        sources.forEach((_, index) => ensureLoaded(index));
+      }
+    };
+
+    const activate = () => {
+      if (!activated) activated = true;
+      warmCurrent(lastDirection);
+    };
 
     const renderDots = () => {
       if (!dots) return;
       dots.replaceChildren();
 
-      for (let index = 0; index < total; index += 1) {
+      sources.forEach((_, index) => {
         const button = document.createElement('button');
         button.className = `portrait-carousel-dot${index === 0 ? ' is-active' : ''}`;
         button.type = 'button';
@@ -77,18 +99,18 @@
           'aria-label',
           t('profiles.photoDotAria').replace('{number}', String(index + 1))
         );
-        button.addEventListener('click', () => goTo(index));
+        button.addEventListener('click', () => goTo(index, index >= current ? 1 : -1));
         dots.appendChild(button);
-      }
+      });
 
-      dots.hidden = total <= 1;
+      dots.hidden = sources.length <= 1;
     };
 
     const update = (animate = true) => {
       track.classList.toggle('no-transition', !animate);
       track.style.transform = `translate3d(${-current * 100}%, 0, 0)`;
 
-      [...track.children].forEach((slide, index) => {
+      slides.forEach((slide, index) => {
         const active = index === current;
         slide.classList.toggle('is-active', active);
         slide.setAttribute('aria-hidden', String(!active));
@@ -102,50 +124,58 @@
         });
       }
 
-      if (count) count.textContent = `${formatCount(current + 1)} / ${formatCount(total)}`;
+      if (count) count.textContent = `${formatCount(current + 1)} / ${formatCount(sources.length)}`;
 
       if (!animate) {
         requestAnimationFrame(() => track.classList.remove('no-transition'));
       }
     };
 
-    const goTo = index => {
-      current = (index + total) % total;
+    const goTo = (index, direction = 0) => {
+      const nextIndex = (index + sources.length) % sources.length;
+      lastDirection = direction || (nextIndex >= current ? 1 : -1);
+      current = nextIndex;
+      activate();
+      warmCurrent(lastDirection);
       update(true);
     };
 
     renderDots();
 
-    if (total > 1) {
+    if (sources.length > 1) {
       if (prev) {
         prev.hidden = false;
-        prev.addEventListener('click', () => goTo(current - 1));
+        prev.addEventListener('click', () => goTo(current - 1, -1));
       }
       if (next) {
         next.hidden = false;
-        next.addEventListener('click', () => goTo(current + 1));
+        next.addEventListener('click', () => goTo(current + 1, 1));
       }
     }
 
     viewport.addEventListener('keydown', event => {
-      if (total <= 1) return;
-
+      if (sources.length <= 1) return;
       if (event.key === 'ArrowLeft') {
         event.preventDefault();
-        goTo(current - 1);
+        goTo(current - 1, -1);
       } else if (event.key === 'ArrowRight') {
         event.preventDefault();
-        goTo(current + 1);
+        goTo(current + 1, 1);
       }
     });
 
-    // Horizontal swipe while preserving normal vertical page scrolling.
     let pointerId = null;
     let startX = 0;
     let startY = 0;
 
     viewport.addEventListener('pointerdown', event => {
-      if (total <= 1 || event.pointerType === 'mouse') return;
+      if (
+        sources.length <= 1 ||
+        event.pointerType === 'mouse' ||
+        event.target.closest('button')
+      ) {
+        return;
+      }
       pointerId = event.pointerId;
       startX = event.clientX;
       startY = event.clientY;
@@ -160,7 +190,7 @@
       pointerId = null;
 
       if (Math.abs(deltaX) < 42 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
-      goTo(deltaX < 0 ? current + 1 : current - 1);
+      goTo(deltaX < 0 ? current + 1 : current - 1, deltaX < 0 ? 1 : -1);
     });
 
     viewport.addEventListener('pointercancel', () => {
@@ -168,6 +198,31 @@
     });
 
     update(false);
+
+    if ('IntersectionObserver' in window) {
+      const activationObserver = new IntersectionObserver(entries => {
+        if (entries.some(entry => entry.isIntersecting)) activate();
+      }, {
+        rootMargin: mobile ? '180px 0px' : '600px 0px',
+        threshold: 0.01
+      });
+      activationObserver.observe(figure);
+
+      if (mobile) {
+        const releaseObserver = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting && activated) releaseExcept([]);
+            if (entry.isIntersecting && activated) warmCurrent(lastDirection);
+          });
+        }, {
+          rootMargin: '900px 0px',
+          threshold: 0
+        });
+        releaseObserver.observe(figure);
+      }
+    } else {
+      activate();
+    }
 
     window.addEventListener('editorial:language-changed', () => {
       if (!dots) return;

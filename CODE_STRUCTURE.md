@@ -1,4 +1,4 @@
-# Code structure — V4.2.8
+# Code structure — V4.2.9
 
 ## Runtime files
 
@@ -7,6 +7,7 @@
 - `js/i18n.js` — translations and language switching.
 - `js/config.js` — editable settings, service endpoint, gallery data and wedding-gift details.
 - `js/couple-portraits.js` — progressive Nicky/Gina portrait carousels, swipe, arrows, dots and keyboard navigation.
+- `js/story-images.js` — viewport-based loading and mobile release of story photos.
 - `js/wedding-gift.js` — payment-card population, copy actions and PayPal linking.
 - `js/core.js` — opening sequence, music, celestial world, chapters, reveals and scroll motion.
 - `js/rsvp-guestbook.js` — personalization, countdown, RSVP and guestbook interface.
