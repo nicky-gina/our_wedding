@@ -1,8 +1,8 @@
-# Editorial Invitation V4.2.4 — Display-Only Photos & Carousel Fix
+# Editorial Invitation V4.2.7 — Venue Map Spacing Fix
 
 A cinematic, celestial, editorial-style digital wedding invitation for **Nicky & Gina**.
 
-**Current release:** V4.2.4  
+**Current release:** V4.2.7
 **Production date:** 11 October 2026, 19:00 WIB  
 **Venue:** MDC Hall Jakarta
 
@@ -449,145 +449,6 @@ No Google Apps Script redeployment is required.
 
 ---
 
-## V4.2.1 — Mobile Stability & Resource Management
-
-This release targets intermittent iOS/Chrome tab reloads and scroll lag observed
-around the venue/Google Maps chapter.
-
-### Google Maps lifecycle
-
-- Removed the live Google Maps iframe from initial HTML.
-- Mobile guests see a lightweight celestial map placeholder and explicitly tap
-  **View interactive map** before the iframe is created.
-- Desktop keeps an automatic map experience, but the iframe is created only
-  when the Venue chapter is near the viewport.
-- The iframe is destroyed after the Venue chapter is well out of range.
-- The animated world-star canvas pauses while Google Maps is alive and resumes
-  when the map is unloaded.
-- **Open directions** remains available independently of the embedded map.
-
-### Couple portrait lifecycle
-
-- V4.2 no longer probes all six portrait files at startup.
-- Portrait files now use the lightweight WebP assets already included in the
-  re-uploaded project instead of the large PNG originals.
-- Each carousel activates only as its chapter approaches.
-- On mobile the current image plus at most one useful neighbour is retained;
-  off-screen image `src` values are cleared to give WebKit an opportunity to
-  release decoded bitmap memory.
-
-### Gallery lifecycle
-
-- On mobile the gallery no longer activates 450 px before the chapter; the
-  activation margin is reduced to 80 px.
-- Only one neighbouring full-resolution image is preloaded on mobile.
-- Full gallery preloads and the displayed background are released after the
-  gallery is well outside the viewport.
-- If Google Maps is opened while gallery resources are alive, those gallery
-  image resources are released before the iframe starts.
-
-### Rendering
-
-- Added conservative paint containment for the heaviest later chapters.
-- No celestial/storytelling feature has been removed.
-- Moon rendering, portrait entrance behavior, RSVP, guestbook, Wedding Gift,
-  PayPal QR, and multilingual behavior are preserved.
-
-No Google Apps Script redeployment is required.
-
----
-
-## V4.2.2 — Image Preview Stability
-
-This release reverts the dynamic Google Maps lifecycle introduced in V4.2.1 and moves the main performance strategy to image previews.
-
-### Google Maps
-
-- Restored a normal embedded Google Maps iframe with native `loading="lazy"`.
-- The map loads automatically as the Location chapter approaches.
-- The iframe is never destroyed or recreated while the guest scrolls.
-- Removed the manual “View interactive map” control and map unload lifecycle.
-
-### Couple portraits
-
-- Carousel browsing continues to use the lightweight WebP files.
-- Full PNG originals in `assets/portraits/originals/` are not requested during ordinary carousel browsing.
-- Tapping/clicking a portrait or pressing Enter/Space loads that portrait's full PNG in a full-screen viewer.
-- Closing the viewer clears the full-resolution image source so its decoded bitmap can be released.
-
-### Main gallery
-
-- Added `assets/gallery/previews/` with 1440px-max-edge WebP browsing images.
-- The main gallery and neighbour preload now use these WebP previews instead of the full originals.
-- Existing filmstrip thumbnails remain unchanged.
-- Tapping/clicking the main gallery image loads the original full JPG only in the full-screen viewer.
-- Full originals are cleared from the viewer after closing.
-
-The canonical gallery originals are JPG rather than PNG, so V4.2.2 preserves those files as the full-resolution source instead of converting them to larger PNGs.
-
-No Google Apps Script redeployment is required.
-
----
-
-## V4.2.3 — Full-size image lightbox scroll fix
-
-On mobile Chrome, opening either a groom/bride portrait or a gallery image
-could move the underlying invitation to the final chapter.
-
-The portrait viewer and gallery viewer share the same fixed image lightbox.
-That lightbox previously lived near the end of the HTML document. Moving
-keyboard focus to its close button could make iOS/WebKit scroll the underlying
-document toward that DOM position even though the viewer itself is fixed.
-
-### Fix
-
-- Moved the shared image lightbox near the start of `<body>`.
-- Save the exact invitation scroll position before opening.
-- Use `focus({ preventScroll: true })` when entering and leaving the lightbox.
-- Restore the saved scroll position as a fallback for WebKit versions that
-  still move the document during focus.
-- Lock both `<html>` and `<body>` while the viewer is open.
-- Restore the original chapter position when the viewer closes.
-- Preserve the V4.2.2 WebP-preview / full-original-on-click strategy.
-
-No Google Apps Script redeployment is required.
-
----
-
-## V4.2.4 — Display-only photos & portrait carousel control fix
-
-### Photo interaction
-
-Full-size image viewing has been removed completely.
-
-- Clicking or tapping a groom/bride portrait does nothing.
-- Clicking or tapping the main wedding-gallery image does nothing.
-- The shared image-lightbox runtime and markup have been removed.
-- Groom/bride carousels browse WebP images only.
-- The wedding gallery browses WebP previews/thumbnails only.
-- Full PNG/JPG originals remain in the project archive, but the runtime no
-  longer references them and therefore does not load them.
-- Removed zoom cursors and the gallery expand indicator.
-
-### Desktop groom/bride arrow fix
-
-The portrait viewport previously participated in pointer capture even for a
-normal desktop left-mouse click. Because the previous/next arrows are inside
-that viewport, the swipe layer could take ownership of the pointer sequence
-before the button received its normal click.
-
-V4.2.4 now:
-
-- restricts carousel swipe pointer capture to touch/pen;
-- ignores pointerdown originating from buttons;
-- keeps previous/next arrows and dots on a higher pointer layer;
-- retains mobile swipe;
-- retains left/right keyboard navigation while the carousel is focused.
-
-No Google Apps Script redeployment is required.
-
----
-
 # Consolidated version history
 
 ## Iteration 4 foundation
@@ -872,3 +733,26 @@ End-user testing showed that the random-discovery control looked like the submit
 No Google Apps Script update is required.
 
 ---
+
+
+## V4.2.6 — Static venue map
+
+The embedded Google Maps experience has been removed completely for mobile stability.
+
+- Uses `assets/venue/MapArtwork.webp` as the square venue map.
+- Removes Google Maps iframe creation/loading/unloading code.
+- Keeps Google Maps only as an external **Open Directions** link.
+- Preserves the existing Location-section framing and date/time content.
+- The venue artwork is responsive at a true 1:1 aspect ratio.
+
+No Google Apps Script redeployment is required.
+
+
+## V4.2.7 — Venue map spacing fix
+
+- Changed the static venue-map inner container from the legacy Google Maps
+  portrait ratio to a true `1:1` square.
+- Removes the unused blank area beneath the approved square artwork.
+- Keeps the editorial frame, date/time, and Open Directions link unchanged.
+
+No Google Apps Script redeployment is required.

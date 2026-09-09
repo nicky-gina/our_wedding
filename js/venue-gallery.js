@@ -9,11 +9,6 @@
     const $ = (s, r = document) => r.querySelector(s);
     const $$ = (s, r = document) => [...r.querySelectorAll(s)];
     const t = (key, vars) => window.inviteI18n?.t(key, vars) || key;
-    if (config.mapUrl)
-        $('#mapLink').href = config.mapUrl;
-
-    // Google Maps is back to the stable static lazy iframe model. The iframe is
-    // never destroyed/recreated while scrolling, avoiding renderer churn on iOS.
 
     // RSVP adapts to attendance and deadline.
     const form = $('#rsvpForm');
@@ -144,13 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
 
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const loadedPreviewImages = new Map();
+    const loadedFullImages = new Set();
     const loadedThumbnails = new Set();
-    const mobileGallery = matchMedia('(max-width: 800px)').matches;
     let idx = 0;
     let galleryActivated = false;
-    let galleryResourcesReleased = false;
-    let suppressFullOpenUntil = 0;
     let dragging = false;
     let startX = 0;
     let lastX = 0;
@@ -158,47 +150,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let velocityX = 0;
     let dragOffset = 0;
     let renderTimer = 0;
-    let lastNavigationDirection = 1;
 
     function loadImage(src, cache) {
         if (!src || cache.has(src))
             return;
-
+        cache.add(src);
         const image = new Image();
         image.decoding = 'async';
         image.src = src;
-        cache.set(src, image);
     }
 
-    function releasePreviewPreloads(keepSources = []) {
-        if (!mobileGallery)
-            return;
-
-        const keep = new Set(keepSources);
-        loadedPreviewImages.forEach((image, src) => {
-            if (keep.has(src))
-                return;
-            image.src = '';
-            loadedPreviewImages.delete(src);
+    function preloadAround(index) {
+        [-1, 0, 1].forEach(offset => {
+            const item = items[(index + offset + items.length) % items.length];
+            loadImage(item?.image, loadedFullImages);
         });
-    }
-
-    function preloadAround(index, direction = 1) {
-        // The displayed frame already requests the current image itself.
-        // Mobile retains only one directionally useful neighbour. Desktop can
-        // keep both neighbours for its larger memory budget.
-        const offsets = mobileGallery
-            ? [direction >= 0 ? 1 : -1]
-            : [-1, 1];
-
-        const desired = offsets.map(offset =>
-            items[(index + offset + items.length) % items.length]?.preview
-            || items[(index + offset + items.length) % items.length]?.thumbnail
-            || items[(index + offset + items.length) % items.length]?.image
-        ).filter(Boolean);
-
-        releasePreviewPreloads(desired);
-        desired.forEach(src => loadImage(src, loadedPreviewImages));
     }
 
     function loadThumbnail(index) {
@@ -267,20 +233,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function applyFrame({ centreThumb = false, behavior = 'smooth' } = {}) {
         const item = items[idx];
-        const local = window.inviteI18n?.galleryItem(idx) || [item.location, item.caption];
-        const preview = item.preview || item.thumbnail;
-        const description = item.alt || local[1] || item.caption;
-        main.style.backgroundImage = preview
-            ? `linear-gradient(180deg,transparent 58%,rgba(2,7,14,.22)),url("${preview}")`
-            : '';
-        main.classList.toggle('has-image', Boolean(preview));
-        main.setAttribute('aria-label', description || 'Wedding photo');
+        main.style.backgroundImage = `linear-gradient(180deg,transparent 58%,rgba(2,7,14,.22)),url("${item.image}")`;
+        main.classList.add('has-image');
+        main.setAttribute('aria-label', item.alt || (window.inviteI18n?.galleryItem(idx)?.[1] || item.caption));
 
         if (current)
             current.textContent = item.number;
         if (total)
             total.textContent = String(items.length).padStart(2, '0');
 
+        const local = window.inviteI18n?.galleryItem(idx) || [item.location, item.caption];
         if (location)
             location.textContent = local[0];
         if (caption)
@@ -293,14 +255,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         loadThumbnail(idx);
-        preloadAround(idx, lastNavigationDirection);
+        preloadAround(idx);
         if (centreThumb)
             centreActiveThumb(behavior);
     }
 
     function render(nextIndex, direction = 0) {
         window.clearTimeout(renderTimer);
-        lastNavigationDirection = direction === 0 ? lastNavigationDirection : Math.sign(direction);
         idx = (nextIndex + items.length) % items.length;
         resetDragVisual(false);
         main.dataset.direction = String(direction || 0);
@@ -323,15 +284,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function activateGallery() {
-        if (galleryActivated) {
-            if (galleryResourcesReleased) {
-                galleryResourcesReleased = false;
-                applyFrame({ behavior: 'auto' });
-            }
+        if (galleryActivated)
             return;
-        }
         galleryActivated = true;
-        galleryResourcesReleased = false;
         viewer?.classList.add('is-gallery-ready');
         initialiseProgressiveThumbnails();
         applyFrame({ behavior: 'auto' });
@@ -343,7 +298,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const delta = index === idx ? 0 : (index > idx ? 1 : -1);
         render(index, delta);
     }));
-
 
     stage.addEventListener('pointerdown', event => {
         if (event.target.closest('button') || event.pointerType === 'mouse' && event.button !== 0)
@@ -385,7 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const distanceThreshold = Math.min(78, stage.clientWidth * 0.16);
         const velocityThreshold = 0.42;
         const shouldNavigate = Math.abs(dragOffset) >= distanceThreshold || Math.abs(velocityX) >= velocityThreshold;
-        if (Math.abs(dragOffset) > 8) suppressFullOpenUntil = performance.now() + 420;
         const direction = dragOffset < 0 || (Math.abs(dragOffset) < 8 && velocityX < 0) ? 1 : -1;
 
         if (shouldNavigate)
@@ -421,38 +374,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             activateGallery();
             activationObserver.disconnect();
-        }, {
-            rootMargin: mobileGallery ? '80px 0px' : '450px 0px',
-            threshold: 0.01
-        });
+        }, { rootMargin: '450px 0px', threshold: 0.01 });
         activationObserver.observe(gallerySection);
-
-        if (mobileGallery) {
-            const cleanupObserver = new IntersectionObserver(entries => {
-                const nearby = entries.some(entry => entry.isIntersecting);
-                if (!galleryActivated) return;
-
-                if (nearby && galleryResourcesReleased) {
-                    galleryResourcesReleased = false;
-                    applyFrame({ behavior: 'auto' });
-                    return;
-                }
-
-                if (!nearby && !galleryResourcesReleased) {
-                    main.style.backgroundImage = '';
-                    main.classList.remove('has-image');
-                    releasePreviewPreloads([]);
-                    galleryResourcesReleased = true;
-                }
-            }, {
-                rootMargin: '125% 0px',
-                threshold: 0.01
-            });
-            cleanupObserver.observe(gallerySection);
-        }
     } else {
         activateGallery();
     }
-
-
 });

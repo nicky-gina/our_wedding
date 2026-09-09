@@ -6446,79 +6446,84 @@ body.gift-qr-open { overflow: hidden; }
 
 
 /* =========================================================
-   V4.2.1 — Mobile stability & deferred Google Maps
+   V4.2.6 — Static venue artwork (no embedded Google Maps)
    ========================================================= */
 
-.venue-map-inner {
-  position: relative;
-  isolation: isolate;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-.venue-map-embed {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
+.venue-map-artwork {
+  display: block;
   width: 100%;
-  height: 100%;
-  border: 0;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  background: #f5efe4;
 }
 
-/* Keep complex chapters isolated from each other's paint work where supported. */
-.scene-venue,
-.scene-gallery,
-.scene-rsvp,
-.scene-guestbook,
-.scene-gift {
-  contain: layout paint;
+/* The surrounding invitation frame remains responsible for the editorial
+   double-border treatment. The artwork itself never overflows on mobile. */
+.venue-map-frame,
+.location-map-frame,
+.venue-map-wrap {
+  overflow: hidden;
 }
 
-@media (max-width: 800px) {
-  
-@media (prefers-reduced-motion: reduce) {
-  .venue-map-placeholder,
+.venue-directions-row {
+  margin: 18px 0 0;
+  text-align: center;
+}
+
+.venue-directions-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 0 20px;
+  border: 1px solid rgba(214, 190, 148, .42);
+  border-radius: 999px;
+  background: rgba(7, 17, 31, .56);
+  color: var(--ivory);
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: transform .25s ease, border-color .25s ease, background .25s ease;
+}
+
+.venue-directions-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(214, 190, 148, .75);
+  background: rgba(18, 43, 75, .78);
+}
+
+@media (max-width: 600px) {
+  .venue-map-artwork {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+  }
+
+  .venue-directions-button {
+    width: min(100%, 280px);
+  }
+}
+
 
 /* =========================================================
-   V4.2.4 — Display-only photos & carousel control reliability
+   V4.2.7 — Static venue map spacing fix
    ========================================================= */
 
-.portrait-carousel-slide .portrait-image,
-.gallery-image {
-  cursor: default;
+/* The previous Google Maps container still used 4:5 / 3:4 aspect ratios.
+   The approved artwork is square, so the container must also be square. */
+.venue-map-inner {
+  aspect-ratio: 1 / 1;
+  height: auto;
 }
 
-/* Controls sit above the transformed slide track and keep their own pointer
-   sequence. Swipe capture is now touch/pen only in couple-portraits.js. */
-.portrait-carousel-nav,
-.portrait-carousel-dot {
-  z-index: 8;
-  pointer-events: auto;
-  touch-action: manipulation;
-}
+@media (max-width: 640px) {
+  .venue-map-inner {
+    aspect-ratio: 1 / 1;
+  }
 
-.portrait-carousel-dots {
-  z-index: 8;
-  pointer-events: auto;
-}
-
-.portrait-carousel-track {
-  position: relative;
-  z-index: 1;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .portrait-carousel-viewport {
-    touch-action: auto;
+  .venue-map-date {
+    margin-top: 14px;
   }
 }

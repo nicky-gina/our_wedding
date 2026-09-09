@@ -25,7 +25,6 @@
     let invitationOpened = false;
     let musicFadeTimer = null;
     let worldStarsStarted = false;
-    let worldStarsSuspended = false;
     let stopWorldStars = () => {};
 
     // iOS/Chrome may still rubber-band a fixed cover when only the body is
@@ -198,31 +197,12 @@
     const stopPreludeStars = createStars(document.getElementById('preludeStars'), 150, true);
 
     const startWorldStars = () => {
-        if (worldStarsStarted || worldStarsSuspended)
+        if (worldStarsStarted)
             return;
 
         worldStarsStarted = true;
         stopWorldStars = createStars(document.getElementById('starCanvas'), 210, false);
     };
-
-    const suspendWorldStars = () => {
-        worldStarsSuspended = true;
-        if (!worldStarsStarted)
-            return;
-
-        stopWorldStars();
-        worldStarsStarted = false;
-        stopWorldStars = () => {};
-    };
-
-    const resumeWorldStars = () => {
-        worldStarsSuspended = false;
-        if (invitationOpened && !document.hidden)
-            startWorldStars();
-    };
-
-    window.addEventListener('editorial:pause-world-stars', suspendWorldStars);
-    window.addEventListener('editorial:resume-world-stars', resumeWorldStars);
 
     enterButton.addEventListener('click', () => {
         if (invitationOpened)
