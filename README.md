@@ -1,8 +1,8 @@
-# Editorial Invitation V4.2.9 — Mobile Memory Stability
+# Editorial Invitation V4.2.10 — iOS Conservative Loading
 
 A cinematic, celestial, editorial-style digital wedding invitation for **Nicky & Gina**.
 
-**Current release:** V4.2.9
+**Current release:** V4.2.10
 **Production date:** 11 October 2026, 19:00 WIB  
 **Venue:** MDC Hall Jakarta
 
@@ -787,5 +787,40 @@ This release targets intermittent mobile reloads around the Proposal chapter.
 - Full-screen cloud blur is disabled on mobile.
 
 Desktop visuals and the invitation's established moon, portrait entrance, RSVP, guestbook, static venue map, gift section, and gallery interactions remain intact.
+
+No Google Apps Script redeployment is required.
+
+
+## V4.2.10 — iOS Conservative Loading
+
+This release replaces the aggressive unload/reload strategy with a more
+predictable one-way loading model for iOS/WebKit stability.
+
+### Conservative image lifecycle
+
+- Story photos load once when near the viewport and are never unloaded.
+- Mobile groom/bride carousels decode only the currently visible portrait;
+  previously visited portraits remain cached rather than repeatedly decoded.
+- Gallery does not activate on mobile until the Gallery chapter itself is
+  genuinely visible.
+- Mobile Gallery loads only the current preview; no neighboring preview preload.
+- Filmstrip thumbnail observation begins only after Gallery activation.
+- No mobile `src` removal/reload loops remain.
+
+### Smaller display assets
+
+- Venue map: 800×800 WebP.
+- Story images: maximum 900px long edge.
+- Portrait carousel images: maximum 1080px long edge.
+- Gallery previews: maximum 900px long edge.
+- Gallery thumbnails: maximum 320px long edge.
+
+### Mobile compositor budget
+
+- Celestial canvas is rendered once instead of continuously twinkling on mobile.
+- Topbar blend mode is disabled on mobile.
+- Sound-button backdrop blur is disabled.
+- Gallery shadows are reduced.
+- Paint containment is applied to heavier image sections.
 
 No Google Apps Script redeployment is required.

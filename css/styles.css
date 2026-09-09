@@ -6570,3 +6570,36 @@ body.gift-qr-open { overflow: hidden; }
     will-change: auto !important;
   }
 }
+
+
+/* =========================================================
+   V4.2.10 — iOS conservative rendering budget
+   ========================================================= */
+
+@media (max-width: 800px) {
+  /* Avoid persistent off-screen blend/compositor surfaces. */
+  .topbar {
+    mix-blend-mode: normal !important;
+  }
+
+  .sound-toggle {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: 0 5px 14px rgba(0,0,0,.18) !important;
+  }
+
+  .gallery-image {
+    box-shadow: 0 14px 34px rgba(0,0,0,.24) !important;
+  }
+
+  .gallery-filmstrip .thumb {
+    box-shadow: none !important;
+  }
+
+  .scene-venue,
+  .scene-gallery,
+  .story-photo-frame,
+  .portrait-carousel-viewport {
+    contain: paint;
+  }
+}

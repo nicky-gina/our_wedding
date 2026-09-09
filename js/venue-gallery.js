@@ -162,19 +162,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function preloadAround(index) {
-        const offsets = mobileGallery ? [0, 1] : [-1, 0, 1];
+        const offsets = mobileGallery ? [0] : [-1, 0, 1];
         offsets.forEach(offset => {
             const item = items[(index + offset + items.length) % items.length];
             loadImage(item?.preview || item?.thumbnail, loadedPreviewImages);
         });
-    }
-
-    function releaseGalleryMain() {
-        if (!mobileGallery)
-            return;
-        main.style.backgroundImage = '';
-        main.classList.remove('has-image');
-        loadedPreviewImages.clear();
     }
 
     function loadThumbnail(index) {
@@ -214,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }, {
             root: filmstrip,
-            rootMargin: '0px 180px',
+            rootMargin: mobileGallery ? '0px 32px' : '0px 180px',
             threshold: 0.01
         });
 
@@ -385,29 +377,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const activationObserver = new IntersectionObserver(entries => {
             if (!entries.some(entry => entry.isIntersecting))
                 return;
+
+            // Mobile starts Gallery work only once the Gallery chapter itself
+            // is actually visible. Nothing is decoded while still on Venue.
             activateGallery();
             activationObserver.disconnect();
         }, {
-            rootMargin: mobileGallery ? '80px 0px' : '450px 0px',
-            threshold: 0.01
+            rootMargin: mobileGallery ? '0px' : '350px 0px',
+            threshold: mobileGallery ? 0.05 : 0.01
         });
         activationObserver.observe(gallerySection);
-
-        if (mobileGallery) {
-            const releaseObserver = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting && galleryActivated) {
-                        releaseGalleryMain();
-                    } else if (entry.isIntersecting && galleryActivated && !main.classList.contains('has-image')) {
-                        applyFrame({ behavior: 'auto' });
-                    }
-                });
-            }, {
-                rootMargin: '1000px 0px',
-                threshold: 0
-            });
-            releaseObserver.observe(gallerySection);
-        }
     } else {
         activateGallery();
     }

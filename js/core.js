@@ -157,7 +157,9 @@
                 ctx.fill();
             });
 
-            if (!reducedMotion)
+            // iOS stability: mobile draws the celestial field once rather
+            // than running a permanent full-screen canvas animation loop.
+            if (!reducedMotion && !mobile)
                 raf = requestAnimationFrame(draw);
         };
 

@@ -56,26 +56,13 @@
       image.src = image.dataset.src;
     };
 
-    const releaseExcept = keep => {
-      if (!mobile) return;
-      const keepSet = new Set(keep.map(index => (index + sources.length) % sources.length));
 
-      slides.forEach((slide, index) => {
-        if (keepSet.has(index)) return;
-        const image = slide.querySelector('.portrait-image');
-        if (!image?.getAttribute('src')) return;
-        image.removeAttribute('src');
-        image.classList.remove('is-loaded');
-      });
-    };
-
-    const warmCurrent = (direction = lastDirection) => {
+    const warmCurrent = () => {
       ensureLoaded(current);
-      if (mobile && sources.length > 1) {
-        const neighbor = current + (direction || 1);
-        ensureLoaded(neighbor);
-        window.setTimeout(() => releaseExcept([current, neighbor]), 420);
-      } else if (!mobile) {
+
+      // On mobile, decode only the visible portrait. The next image loads
+      // on demand when the guest navigates to it. Desktop may keep all three.
+      if (!mobile) {
         sources.forEach((_, index) => ensureLoaded(index));
       }
     };
@@ -203,23 +190,11 @@
       const activationObserver = new IntersectionObserver(entries => {
         if (entries.some(entry => entry.isIntersecting)) activate();
       }, {
-        rootMargin: mobile ? '180px 0px' : '600px 0px',
+        rootMargin: mobile ? '80px 0px' : '500px 0px',
         threshold: 0.01
       });
       activationObserver.observe(figure);
 
-      if (mobile) {
-        const releaseObserver = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (!entry.isIntersecting && activated) releaseExcept([]);
-            if (entry.isIntersecting && activated) warmCurrent(lastDirection);
-          });
-        }, {
-          rootMargin: '900px 0px',
-          threshold: 0
-        });
-        releaseObserver.observe(figure);
-      }
     } else {
       activate();
     }
