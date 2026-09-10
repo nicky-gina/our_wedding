@@ -1,8 +1,8 @@
-# Editorial Invitation V4.2.14 — Small iPhone Landing Compatibility
+# Editorial Invitation V4.2.15 — RSVP & Guestbook Reliability Hotfix
 
 A cinematic, celestial, editorial-style digital wedding invitation for **Nicky & Gina**.
 
-**Current release:** V4.2.14
+**Current release:** V4.2.15
 **Production date:** 11 October 2026, 19:00 WIB  
 **Venue:** MDC Hall Jakarta
 
@@ -891,5 +891,24 @@ Enter button could fall below the visible browser area while the cover was locke
 - The main invitation remains locked behind the landing overlay until Enter is used.
 - Taller/newer devices keep the existing V4.2.13 landing layout and animations.
 - All V4.2.13 iOS stability fixes are preserved.
+
+No Google Apps Script redeployment is required.
+
+
+## V4.2.15 — RSVP & Guestbook Reliability Hotfix
+
+- New guests now receive an explicit `rsvp-form-ready` state after the remote
+  RSVP lookup confirms no existing response (or lookup is unavailable).
+- On mobile, that state makes the RSVP form visible independently of the
+  decorative scene-reveal IntersectionObserver threshold.
+- Existing/returning guests continue to see their saved RSVP summary.
+- Guestbook now renders cached/local wishes immediately on activation.
+- The remote Guestbook refresh happens in the background without clearing the
+  visible cached sky.
+- Guestbook network requests time out after 8 seconds and reliably fall back.
+- AbortController is feature-detected for older Safari compatibility.
+- Aborted/stale requests now emit a request-scoped failure event, so only the
+  active request can clear/fallback its state.
+- All V4.2.14 small-iPhone and previous iOS stability changes are preserved.
 
 No Google Apps Script redeployment is required.

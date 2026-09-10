@@ -47,48 +47,76 @@
     let guestbookAbortController = null;
 
     async function loadSharedGuestbook(page = 1, pageSize = 24, search = '', requestId = 0) {
-        if (!config.googleAppsScriptUrl || !config.enableSharedGuestbook)
+        if (!config.googleAppsScriptUrl || !config.enableSharedGuestbook) {
+            window.dispatchEvent(new CustomEvent('editorial:guestbook-load-failed', {
+                detail: { requestId }
+            }));
             return;
+        }
 
-        if (guestbookAbortController)
+        if (guestbookAbortController?.abort)
             guestbookAbortController.abort();
 
-        const controller = new AbortController();
+        const controller = typeof AbortController === 'function'
+            ? new AbortController()
+            : null;
         guestbookAbortController = controller;
+
+        let timeoutId = 0;
 
         try {
             const separator = config.googleAppsScriptUrl.includes('?') ? '&' : '?';
             const searchPart = search ? `&search=${encodeURIComponent(search)}` : '';
             const url = `${config.googleAppsScriptUrl}${separator}action=guestbook&page=${encodeURIComponent(page)}&pageSize=${encodeURIComponent(pageSize)}${searchPart}`;
-            const response = await fetch(url, {
-                cache: 'no-store',
-                signal: controller.signal
+
+            const fetchOptions = { cache: 'no-store' };
+            if (controller)
+                fetchOptions.signal = controller.signal;
+
+            const timeoutPromise = new Promise((_, reject) => {
+                timeoutId = window.setTimeout(() => {
+                    controller?.abort?.();
+                    reject(new Error('Guestbook request timed out.'));
+                }, 8000);
             });
+
+            const response = await Promise.race([
+                fetch(url, fetchOptions),
+                timeoutPromise
+            ]);
+
             if (!response.ok)
                 throw new Error(`Guestbook request failed with ${response.status}.`);
+
             const json = await response.json();
             const payload = Array.isArray(json)
                 ? { messages: json, page: 1, pageSize, total: json.length, totalPages: 1 }
                 : json;
+
             if (!Array.isArray(payload.messages))
                 throw new Error('Guestbook response did not include messages.');
-            // Keep the startup cache unfiltered. Search result pages should not
-            // replace the normal first-page cache used on the next visit.
-            if (!search) localStorage.setItem('editorial-v3-guestbook-page', JSON.stringify(payload));
+
+            if (!search)
+                localStorage.setItem('editorial-v3-guestbook-page', JSON.stringify(payload));
+
             window.dispatchEvent(new CustomEvent('editorial:shared-messages', {
                 detail: { ...payload, requestId }
             }));
         }
         catch (error) {
-            if (error?.name === 'AbortError')
-                return;
+            // Always send a failure event. Stale/aborted requests carry their
+            // old requestId and are ignored by rsvp-guestbook.js, while the
+            // active request can reliably clear its loading state/fall back.
+            if (error?.name !== 'AbortError')
+                console.info('Shared guestbook unavailable; using cached or local wishes.', error);
 
-            console.info('Shared guestbook unavailable; using cached or local wishes.', error);
             window.dispatchEvent(new CustomEvent('editorial:guestbook-load-failed', {
                 detail: { requestId }
             }));
         }
         finally {
+            if (timeoutId)
+                clearTimeout(timeoutId);
             if (guestbookAbortController === controller)
                 guestbookAbortController = null;
         }

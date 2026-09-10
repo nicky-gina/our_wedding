@@ -81,6 +81,7 @@
     updateCountdown();
     setInterval(updateCountdown, 1000);
     const form = $('#rsvpForm');
+    const rsvpSection = $('#rsvp');
     const status = $('#formStatus');
     const success = $('#rsvpSuccess');
     const successEyebrow = $('#successEyebrow');
@@ -139,6 +140,7 @@
         successGuests.textContent = guestCountLabel(payload);
         successMessage.textContent = payload.message || t('rsvp.noMessage');
         form.hidden = true; success.hidden = false;
+        rsvpSection?.classList.remove('rsvp-form-ready');
         success.classList.toggle('is-updated', updated);
         success.classList.remove('is-celebrating');
         if (animate && !matchMedia('(prefers-reduced-motion: reduce)').matches)
@@ -148,6 +150,7 @@
     function beginEditing() {
         if (savedPayload) populate(savedPayload);
         success.hidden = true; form.hidden = false;
+        rsvpSection?.classList.add('rsvp-form-ready');
         isEditingExisting = Boolean(savedPayload);
         existingNote.hidden = !isEditingExisting;
         cancelEditButton.hidden = !isEditingExisting;
@@ -158,6 +161,20 @@
         try { return JSON.parse(localStorage.getItem(responseKey) || 'null'); }
         catch (_) { return null; }
     }
+
+    function showNewGuestForm() {
+        if (savedPayload)
+            return;
+
+        success.hidden = true;
+        form.hidden = false;
+        existingNote.hidden = true;
+        cancelEditButton.hidden = true;
+        isEditingExisting = false;
+        submitLabel.textContent = t('rsvp.submit');
+        rsvpSection?.classList.add('rsvp-form-ready');
+    }
+
     async function lookupRemoteResponse() {
         if (!idParam || !config.googleAppsScriptUrl) return null;
         const separator = config.googleAppsScriptUrl.includes('?') ? '&' : '?';
@@ -169,12 +186,34 @@
     }
     async function restoreExistingResponse() {
         const local = readLocalResponse();
-        if (local) { populate(local); renderSuccess(local, { animate: false }); }
-        if (!idParam || !config.googleAppsScriptUrl) return;
+        let hasExistingResponse = Boolean(local);
+
+        if (local) {
+            populate(local);
+            renderSuccess(local, { animate: false });
+        }
+
+        if (!idParam || !config.googleAppsScriptUrl) {
+            if (!hasExistingResponse)
+                showNewGuestForm();
+            return;
+        }
+
         try {
             const remote = await lookupRemoteResponse();
-            if (remote) { saveLocal(remote); populate(remote); renderSuccess(remote, { animate: false }); }
-        } catch (error) { console.info(t('rsvp.lookupError'), error); }
+            if (remote) {
+                hasExistingResponse = true;
+                saveLocal(remote);
+                populate(remote);
+                renderSuccess(remote, { animate: false });
+            } else if (!hasExistingResponse) {
+                showNewGuestForm();
+            }
+        } catch (error) {
+            console.info(t('rsvp.lookupError'), error);
+            if (!hasExistingResponse)
+                showNewGuestForm();
+        }
     }
     async function submitRemote(payload) {
         if (!config.googleAppsScriptUrl) return { mode: 'local', updated: Boolean(savedPayload) };
@@ -350,7 +389,7 @@
         updatePageControls();
         updateSearchStatus();
     }
-    function requestPage(page) {
+    function requestPage(page, { preserveVisible = false } = {}) {
         const nextPage = Math.max(1, Math.min(totalPages || page, page));
         const config = window.EDITORIAL_INVITE_CONFIG || {};
         const requestId = ++guestbookRequestSequence;
@@ -362,8 +401,13 @@
             return;
         }
 
-        sky.classList.add('is-loading');
-        sky.innerHTML = '';
+        if (!preserveVisible) {
+            sky.classList.add('is-loading');
+            sky.innerHTML = '';
+        } else {
+            sky.classList.remove('is-loading');
+        }
+
         window.dispatchEvent(new CustomEvent('editorial:guestbook-page-request', {
             detail: {
                 page: nextPage,
@@ -520,7 +564,11 @@
             return;
 
         guestbookActivated = true;
-        requestPage(1);
+
+        // Render cached/local wishes immediately so the sky is never blank
+        // while waiting for the network. Then refresh page 1 in background.
+        renderGuestbook();
+        requestPage(1, { preserveVisible: true });
     };
 
     if ('IntersectionObserver' in window && guestbookSection) {

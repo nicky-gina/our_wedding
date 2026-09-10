@@ -118,6 +118,8 @@ if (fs.existsSync(rsvpPath)) {
   if (!rsvp.includes('activeGuestbookRequestId')) failures.push('Guestbook stale-response protection is missing.');
   if (!rsvp.includes('guestbookActivated')) failures.push('Lazy Guestbook activation is missing.');
   if (!rsvp.includes('mobileGuestbook ? 12 : 24')) failures.push('Mobile Guestbook page-size safeguard is missing.');
+  if (!rsvp.includes('showNewGuestForm')) failures.push('New-guest RSVP visibility safeguard is missing.');
+  if (!rsvp.includes('preserveVisible')) failures.push('Cached-first Guestbook refresh safeguard is missing.');
 }
 if (fs.existsSync(venuePath)) {
   const venue = fs.readFileSync(venuePath, 'utf8');
@@ -126,6 +128,8 @@ if (fs.existsSync(venuePath)) {
     failures.push('Eager Guestbook startup request is present.');
   }
   if (!venue.includes('is-gallery-parked')) failures.push('Mobile Gallery-to-RSVP parking is missing.');
+  if (!venue.includes('Guestbook request timed out.')) failures.push('Guestbook timeout fallback is missing.');
+  if (!venue.includes("typeof AbortController === 'function'")) failures.push('AbortController compatibility guard is missing.');
 }
 
 

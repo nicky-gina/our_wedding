@@ -6914,3 +6914,23 @@ body.gift-qr-open { overflow: hidden; }
     margin-top: 0 !important;
   }
 }
+
+
+/* =========================================================
+   V4.2.15 — RSVP + Guestbook reliability hotfix
+   ========================================================= */
+
+@media (max-width: 800px) {
+  /*
+   * RSVP can be taller than the viewport, making the global 52% scene
+   * IntersectionObserver threshold unreachable. Once JS confirms this is a
+   * new guest, expose the form independently of that decorative reveal state.
+   */
+  .scene-rsvp.rsvp-form-ready .rsvp-card.reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+    will-change: auto !important;
+  }
+}
