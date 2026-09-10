@@ -1,8 +1,8 @@
-# Editorial Invitation V4.2.13 — Late Page iOS Stability
+# Editorial Invitation V4.2.14 — Small iPhone Landing Compatibility
 
 A cinematic, celestial, editorial-style digital wedding invitation for **Nicky & Gina**.
 
-**Current release:** V4.2.13
+**Current release:** V4.2.14
 **Production date:** 11 October 2026, 19:00 WIB  
 **Venue:** MDC Hall Jakarta
 
@@ -874,5 +874,22 @@ Focused on the Gallery → RSVP → Guestbook → Gift portion of the invitation
 - Wedding Gift data/QR thumbnail initializes only when the Gift chapter approaches.
 - PayPal full-size QR remains on-demand only.
 - V4.2.12 story and landing stability fixes are preserved.
+
+No Google Apps Script redeployment is required.
+
+
+## V4.2.14 — Small iPhone Landing Compatibility
+
+This release fixes the opening screen on short iPhone/Safari viewports where the
+Enter button could fall below the visible browser area while the cover was locked.
+
+- Short-screen rules apply only at `max-width: 480px` and `max-height: 700px`.
+- Extra-short screens (`<=600px` height) receive a slightly tighter layout.
+- The landing overlay itself may scroll vertically only on those short screens.
+- A Visual Viewport safeguard detects Safari browser chrome reducing the actual
+  visible area even when the CSS layout viewport reports a taller value.
+- The main invitation remains locked behind the landing overlay until Enter is used.
+- Taller/newer devices keep the existing V4.2.13 landing layout and animations.
+- All V4.2.13 iOS stability fixes are preserved.
 
 No Google Apps Script redeployment is required.

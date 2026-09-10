@@ -31,6 +31,22 @@
     // overflow-locked. Lock both root and body until the cover is removed.
     root.classList.add('is-locked');
 
+    // V4.2.14: short-iPhone-only landing compatibility.
+    // Use the actual visual viewport when available because older Safari's
+    // browser bars can make the visible area much shorter than the layout viewport.
+    const syncShortLandingViewport = () => {
+        const viewportHeight = window.visualViewport?.height || innerHeight;
+        const viewportWidth = window.visualViewport?.width || innerWidth;
+        const isShortLandingViewport = viewportWidth <= 480 && viewportHeight <= 700;
+
+        root.classList.toggle('short-landing-viewport', isShortLandingViewport);
+        root.style.setProperty('--landing-visible-height', `${Math.round(viewportHeight)}px`);
+    };
+
+    syncShortLandingViewport();
+    window.visualViewport?.addEventListener('resize', syncShortLandingViewport, { passive: true });
+    addEventListener('orientationchange', syncShortLandingViewport, { passive: true });
+
     const getMusicPreference = () =>
         localStorage.getItem(musicPreferenceKey) !== 'false';
 
@@ -229,6 +245,10 @@
             prelude.remove();
             root.classList.remove('is-locked');
             body.classList.remove('is-locked');
+            root.classList.remove('short-landing-viewport');
+            root.style.removeProperty('--landing-visible-height');
+            window.visualViewport?.removeEventListener('resize', syncShortLandingViewport);
+            removeEventListener('orientationchange', syncShortLandingViewport);
 
             window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
             requestAnimationFrame(() => {

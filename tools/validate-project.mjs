@@ -72,6 +72,12 @@ if (fs.existsSync(cssPath)) {
   }
   if (!css.includes('.moon-image')) failures.push('Stable moon-image styles are missing.');
   if (!css.includes('.portrait-frame')) failures.push('Portrait-frame styles are missing.');
+  if (!css.includes('@media (max-width: 480px) and (max-height: 700px)')) {
+    failures.push('Short-screen landing media query is missing.');
+  }
+  if (!css.includes('html.short-landing-viewport .prelude')) {
+    failures.push('Visual Viewport landing fallback styles are missing.');
+  }
 }
 
 for (const file of [
@@ -99,6 +105,9 @@ if (fs.existsSync(corePath)) {
   if (!core.includes("mobileNarrativeSafe")) failures.push('Mobile narrative safe mode is missing.');
   if (!core.includes("let mobile = matchMedia('(max-width: 800px)').matches;")) {
     failures.push('createStars mobile scope safeguard is missing.');
+  }
+  if (!core.includes('syncShortLandingViewport')) {
+    failures.push('Short iPhone landing Visual Viewport safeguard is missing.');
   }
   if (core.includes("const mobile = matchMedia('(max-width: 800px)').matches;\n            const dpr")) {
     failures.push('createStars mobile variable is incorrectly scoped inside resize().');
